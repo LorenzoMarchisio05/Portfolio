@@ -4,7 +4,7 @@
 
 <div
   id="cursor-shadow"
-  class="absolute z-50 w-14 aspect-square rounded-[50%] bg-red-500/30 pointer-events-none"
+  class="fixed z-50 left-1/2 -top-1/2 w-14 aspect-square rounded-[50%] bg-red-500/30 pointer-events-none"
 >
 </div>
 
@@ -17,7 +17,7 @@
   const shadowInitialX = shadowRect.left + shadowRect.width / 2;
   const shadowInitialY = shadowRect.top + shadowRect.height / 2;
 
-  document.addEventListener("pointermove", (e) => {
+  document.addEventListener("mousemove", (e) => {
     const pointerX = e.clientX;
     const pointerY = e.clientY;
 
