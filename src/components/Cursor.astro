@@ -1,0 +1,39 @@
+---
+// Custom cursor component for the portfolio
+---
+
+<div
+  id="cursor-shadow"
+  class="absolute z-50 w-14 aspect-square rounded-[50%] bg-red-500/30 pointer-events-none"
+>
+</div>
+
+<script>
+  import { animate, frame } from "motion";
+
+  const cursorShadow = document.getElementById("cursor-shadow")!;
+
+  const shadowRect = cursorShadow.getBoundingClientRect();
+  const shadowInitialX = shadowRect.left + shadowRect.width / 2;
+  const shadowInitialY = shadowRect.top + shadowRect.height / 2;
+
+  document.addEventListener("pointermove", (e) => {
+    const pointerX = e.clientX;
+    const pointerY = e.clientY;
+
+    frame.postRender(() => {
+      animate(
+        cursorShadow,
+        {
+          x: pointerX - shadowInitialX,
+          y: pointerY - shadowInitialY,
+        },
+        {
+          type: "spring",
+          stiffness: 100,
+          damping: 20,
+        }
+      );
+    });
+  });
+</script>
