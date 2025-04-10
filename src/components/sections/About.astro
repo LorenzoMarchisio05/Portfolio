@@ -1,0 +1,96 @@
+---
+import { motion } from "motion/react";
+
+const events = Array.from({ length: 5 }, (_, i) => ({
+  date: `20${10 + i + 1}`,
+  title: `Event ${i + 1}`,
+  description: `
+        Lorem ipsum, dolor sit amet consectetur adipisicing elit. 
+        Laboriosam numquam neque placeat dignissimos quod ad quidem a, 
+        blanditiis odit voluptates explicabo illo inventore necessitatibus 
+        dicta atque aliquam perspiciatis dolorum molestiae voluptatum 
+        adipisci eveniet sint fugiat dolores tempore! Ratione adipisci 
+        saepe quo voluptates, consequuntur blanditiis temporibus quos, 
+        voluptate magnam deserunt velit.`,
+}));
+
+const firstTimelineEvents = events.filter((_, index) => index % 2 === 1);
+const secondTimelineEvents = events.filter((_, index) => index % 2 === 0);
+---
+
+<section id="about" class="min-h-screen w-screen px-20">
+  <div class="max-w-6xl mx-auto">
+    <h2
+      class="text-7xl font-bold tracking-tighter bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 bg-clip-text text-transparent"
+    >
+      My Journey
+    </h2>
+    <h3
+      class="text-3xl font-semibold bg-gradient-to-l from-5% from-gray-900 to-red-700 bg-clip-text text-transparent mt-8 mb-16"
+    >
+      A Timeline of Growth and Achievement
+    </h3>
+
+    <div class="flex justify-between gap-8">
+      <div class="w-1/2 relative pt-24">
+        <div
+          class="absolute right-3.5 top-0 h-full w-0.5 bg-gradient-to-t from-90% from-gray-200 to-transparent"
+        >
+        </div>
+        {
+          firstTimelineEvents.map((event, i) => (
+            <div class="relative pr-12 my-10">
+              <div class="absolute right-3.5 translate-x-1/2 w-8 aspect-square rounded-full bg-gradient-to-r from-red-900 to-red-700 border-4 border-white shadow-md" />
+              <motion.div
+                client:load
+                initial={{ opacity: 0, y: -10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.25 }}
+                className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+              >
+                <time class="text-sm font-medium text-gray-500">
+                  {event.date}
+                </time>
+                <h3 class="mt-2 text-lg font-semibold text-gray-900">
+                  {event.title}
+                </h3>
+                <p class="mt-2 text-gray-600">{event.description}</p>
+              </motion.div>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="w-1/2 relative">
+        <div
+          class="absolute left-3.5 top-0 h-full w-0.5 bg-gradient-to-b from-90% from-gray-200 to-transparent"
+        >
+        </div>
+        {
+          secondTimelineEvents.map((event, i) => (
+            <div class="relative pl-12 my-10">
+              <div class="absolute left-3.5 -translate-x-1/2 w-8 aspect-square rounded-full bg-gradient-to-r from-red-900 to-red-700 border-4 border-white shadow-md" />
+              <motion.div
+                client:load
+                initial={{ opacity: 0, y: -10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.25 }}
+                className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+              >
+                <time class="text-sm font-medium text-gray-500">
+                  {event.date}
+                </time>
+                <h3 class="mt-2 text-lg font-semibold text-gray-900">
+                  {event.title}
+                </h3>
+                <p class="mt-2 text-gray-600">{event.description}</p>
+              </motion.div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

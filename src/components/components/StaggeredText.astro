@@ -1,0 +1,62 @@
+---
+interface Props {
+  text: string;
+  duration: number;
+  delay?: number;
+  splitWords?: boolean;
+}
+
+import { motion } from "framer-motion";
+
+const { text, duration, delay, splitWords } = Astro.props;
+
+const letter = {
+  from: {
+    opacity: 0,
+    y: 50,
+  },
+  to: {
+    opacity: 1,
+    y: 0,
+  },
+};
+---
+
+{
+  splitWords
+    ? text.split(" ").map((word, _) => (
+        <span class="inline-block mr-2">
+          {word.split("").map((char, i) => (
+            <motion.span
+              client:load
+              key={`${word}-${i}`}
+              className="inline-block"
+              variants={letter}
+              initial="from"
+              animate="to"
+              transition={{
+                duration: duration / word.length,
+                delay: i * 0.05 + (delay ?? 0),
+              }}
+            >
+              {char}
+            </motion.span>
+          ))}
+        </span>
+      ))
+    : text.split("").map((char, i) => (
+        <motion.span
+          client:load
+          key={`${text}-${i}`}
+          variants={letter}
+          initial="from"
+          animate="to"
+          transition={{
+            duration: duration / text.length,
+            delay: i * 0.05 + (delay ?? 0),
+          }}
+        >
+          {char}
+        </motion.span>
+      ))
+}

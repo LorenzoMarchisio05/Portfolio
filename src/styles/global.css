@@ -4,10 +4,25 @@
 ::before,
 ::after {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+  cursor: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
 
 html {
   scroll-behavior: smooth;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@utility bg-dotted {
+  background-image: radial-gradient(
+    circle at center,
+    color-mix(in srgb, currentColor 40%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 50px 50px;
+  background-position: center;
 }

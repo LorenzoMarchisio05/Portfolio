@@ -1,17 +1,25 @@
 {
-  "name": "",
+  "name": "lorenzomarchisio-portfolio",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "wrangler types && astro dev",
     "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
+    "deploy": "npm run build && wrangler pages deploy"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^12.4.0",
+    "@astrojs/node": "^9.1.3",
+    "@astrojs/react": "^4.2.2",
     "@tailwindcss/vite": "^4.0.12",
+    "@types/nodemailer": "^6.4.17",
+    "@types/react": "^19.0.12",
+    "@types/react-dom": "^19.0.4",
     "astro": "^5.4.2",
     "motion": "^12.4.13",
+    "nodemailer": "^6.10.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "tailwindcss": "^4.0.12"
   }
 }

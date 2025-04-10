@@ -1,20 +1,16 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Header from "../components/Header.astro";
-import Hero from "../components/Hero.astro";
-import About from "../components/About.astro";
-import Skills from "../components/Skills.astro";
-import Projects from "../components/Projects.astro";
-import Contact from "../components/Contact.astro";
+import Hero from "../components/sections/Hero.astro";
+import About from "../components/sections/About.astro";
+import Skills from "../components/sections/Skills.astro";
+import Contact from "../components/sections/Contact.astro";
+import Scrollbar from "../components/components/Scrollbar.astro";
 ---
 
 <Layout>
-  <Header />
-  <main class="relative">
-    <Hero />
-    <About />
-    <Skills />
-    <Projects />
-    <Contact />
-  </main>
+  <Scrollbar sections={4} />
+  <Hero />
+  <About />
+  <Skills />
+  <Contact />
 </Layout>

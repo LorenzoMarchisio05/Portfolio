@@ -1,0 +1,27 @@
+---
+interface Props {
+  sections: number;
+}
+
+const { sections } = Astro.props;
+---
+
+<div class="fixed right-10 top-1/2 flex flex-col gap-2 justify-center z-10">
+  {
+    Array.from({
+      length: sections,
+    }).map((_, i) => (
+      <div
+        id={`progress-${i}`}
+        class="w-2 h-2 overflow-hidden bg-gray-900/50 rounded-full"
+      >
+        <div
+          id={`inner-progress-${i}`}
+          class="w-full bg-gray-900 transform origin-center"
+        />
+      </div>
+    ))
+  }
+</div>
+
+<script></script>

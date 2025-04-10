@@ -4,7 +4,13 @@
 
 <div
   id="cursor-shadow"
-  class="fixed z-50 left-1/2 -top-1/2 w-14 aspect-square rounded-[50%] bg-red-500/30 pointer-events-none"
+  class="fixed z-50 left-1/2 -top-1/2 w-10 aspect-square rounded-[50%] bg-red-500/30 pointer-events-none"
+>
+</div>
+
+<div
+  id="cursor"
+  class="fixed z-50 left-1/2 -top-1/2 w-3 aspect-square rounded-[50%] bg-black pointer-events-none"
 >
 </div>
 
@@ -12,10 +18,15 @@
   import { animate, frame } from "motion";
 
   const cursorShadow = document.getElementById("cursor-shadow")!;
+  const cursor = document.getElementById("cursor")!;
 
   const shadowRect = cursorShadow.getBoundingClientRect();
   const shadowInitialX = shadowRect.left + shadowRect.width / 2;
   const shadowInitialY = shadowRect.top + shadowRect.height / 2;
+
+  const cursorRect = cursor.getBoundingClientRect();
+  const cursorInitialX = cursorRect.left + cursorRect.width / 2;
+  const cursorInitialY = cursorRect.top + cursorRect.height / 2;
 
   document.addEventListener("mousemove", (e) => {
     const pointerX = e.clientX;
@@ -32,6 +43,17 @@
           type: "spring",
           stiffness: 100,
           damping: 20,
+        }
+      );
+
+      animate(
+        cursor,
+        {
+          x: pointerX - cursorInitialX,
+          y: pointerY - cursorInitialY,
+        },
+        {
+          duration: 0.1,
         }
       );
     });

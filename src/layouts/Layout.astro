@@ -1,5 +1,5 @@
 ---
-import Cursor from "../components/Cursor.astro";
+import Cursor from "../components/components/Cursor.astro";
 import "../styles/global.css";
 ---
 
@@ -11,7 +11,9 @@ import "../styles/global.css";
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>Lorenzo Marchisio</title>
   </head>
-  <body>
+  <body
+    class="bg-gray-50 selection:bg-red-700/15 overflow-x-hidden overflow-y-auto"
+  >
     <Cursor />
     <slot />
   </body>
