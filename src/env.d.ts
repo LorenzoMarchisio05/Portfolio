@@ -6,3 +6,14 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+declare global {
+  namespace NodeJS {
+    interface ProcessEnv {
+      EMAIL_USER: string;
+      EMAIL_PASS: string;
+    }
+  }
+}
+
+export {};

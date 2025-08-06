@@ -3,59 +3,78 @@
 ---
 
 <div
-  id="cursor-shadow"
-  class="fixed z-50 left-1/2 -top-1/2 w-10 aspect-square rounded-[50%] bg-red-500/30 pointer-events-none"
+    id="cursor-shadow"
+    class="fixed z-40 left-1/2 -top-1/2 w-10 aspect-square rounded-[50%] bg-red-500/30 pointer-events-none"
 >
 </div>
 
 <div
-  id="cursor"
-  class="fixed z-50 left-1/2 -top-1/2 w-3 aspect-square rounded-[50%] bg-black pointer-events-none"
+    id="cursor"
+    class="fixed z-50 left-1/2 -top-1/2 w-3 aspect-square rounded-[50%] bg-black pointer-events-none"
 >
 </div>
 
 <script>
-  import { animate, frame } from "motion";
+    import { animate, frame } from "motion";
 
-  const cursorShadow = document.getElementById("cursor-shadow")!;
-  const cursor = document.getElementById("cursor")!;
+    const cursorShadow = document.getElementById("cursor-shadow")!;
+    const cursor = document.getElementById("cursor")!;
 
-  const shadowRect = cursorShadow.getBoundingClientRect();
-  const shadowInitialX = shadowRect.left + shadowRect.width / 2;
-  const shadowInitialY = shadowRect.top + shadowRect.height / 2;
+    const shadowRect = cursorShadow.getBoundingClientRect();
+    const shadowInitialX = shadowRect.left + shadowRect.width / 2;
+    const shadowInitialY = shadowRect.top + shadowRect.height / 2;
 
-  const cursorRect = cursor.getBoundingClientRect();
-  const cursorInitialX = cursorRect.left + cursorRect.width / 2;
-  const cursorInitialY = cursorRect.top + cursorRect.height / 2;
+    const cursorRect = cursor.getBoundingClientRect();
+    const cursorInitialX = cursorRect.left + cursorRect.width / 2;
+    const cursorInitialY = cursorRect.top + cursorRect.height / 2;
 
-  document.addEventListener("mousemove", (e) => {
-    const pointerX = e.clientX;
-    const pointerY = e.clientY;
-
-    frame.postRender(() => {
-      animate(
-        cursorShadow,
-        {
-          x: pointerX - shadowInitialX,
-          y: pointerY - shadowInitialY,
-        },
-        {
-          type: "spring",
-          stiffness: 100,
-          damping: 20,
-        }
-      );
-
-      animate(
-        cursor,
-        {
-          x: pointerX - cursorInitialX,
-          y: pointerY - cursorInitialY,
-        },
-        {
-          duration: 0.1,
-        }
-      );
+    
+    // Save cursor position before navigation or page unload
+    window.addEventListener("beforeunload", () => {
+        localStorage.setItem("cursorTranslate", cursor.style.transform);
+        localStorage.setItem("cursorShadowTranslate", cursorShadow.style.transform);
     });
-  });
+
+    // On page load, restore cursor position
+    window.addEventListener("load", () => {
+        if (localStorage.getItem("cursorTranslate") !== null && localStorage.getItem("cursorShadowTranslate") !== null) {
+            const transform = localStorage.getItem("cursorTranslate")!;
+            const shadowTransform = localStorage.getItem("cursorShadowTranslate")!;
+
+            cursor.style.transform = transform;
+            cursorShadow.style.transform = shadowTransform;
+        }
+    });
+
+
+    document.addEventListener("mousemove", (e) => {
+        const pointerX = e.clientX;
+        const pointerY = e.clientY;
+
+        frame.postRender(() => {
+            animate(
+                cursorShadow,
+                {
+                    x: pointerX - shadowInitialX,
+                    y: pointerY - shadowInitialY,
+                },
+                {
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 20,
+                }
+            );
+
+            animate(
+                cursor,
+                {
+                    x: pointerX - cursorInitialX,
+                    y: pointerY - cursorInitialY,
+                },
+                {
+                    duration: 0.1,
+                }
+            );
+        });
+    });
 </script>

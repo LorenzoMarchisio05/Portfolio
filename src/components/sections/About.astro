@@ -1,18 +1,10 @@
 ---
 import { motion } from "motion/react";
+import { getCollection } from "astro:content";
 
-const events = Array.from({ length: 5 }, (_, i) => ({
-  date: `20${10 + i + 1}`,
-  title: `Event ${i + 1}`,
-  description: `
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. 
-        Laboriosam numquam neque placeat dignissimos quod ad quidem a, 
-        blanditiis odit voluptates explicabo illo inventore necessitatibus 
-        dicta atque aliquam perspiciatis dolorum molestiae voluptatum 
-        adipisci eveniet sint fugiat dolores tempore! Ratione adipisci 
-        saepe quo voluptates, consequuntur blanditiis temporibus quos, 
-        voluptate magnam deserunt velit.`,
-}));
+const events = await getCollection("journey").then((collection) =>
+  collection.map((x) => x.data)
+);
 
 const firstTimelineEvents = events.filter((_, index) => index % 2 === 1);
 const secondTimelineEvents = events.filter((_, index) => index % 2 === 0);
@@ -38,7 +30,7 @@ const secondTimelineEvents = events.filter((_, index) => index % 2 === 0);
         >
         </div>
         {
-          firstTimelineEvents.map((event, i) => (
+          firstTimelineEvents.map((event, _) => (
             <div class="relative pr-12 my-10">
               <div class="absolute right-3.5 translate-x-1/2 w-8 aspect-square rounded-full bg-gradient-to-r from-red-900 to-red-700 border-4 border-white shadow-md" />
               <motion.div
@@ -49,13 +41,33 @@ const secondTimelineEvents = events.filter((_, index) => index % 2 === 0);
                 transition={{ duration: 0.6, delay: 0.25 }}
                 className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
               >
-                <time class="text-sm font-medium text-gray-500">
-                  {event.date}
-                </time>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2 grow">
+                    <h4 class="text-sm font-medium text-gray-600">{event.company}</h4>
+                    <h1 class="text-sm font-medium text-gray-700">&bull;</h1>
+                    <time class="text-sm font-medium text-gray-500">
+                      {event.date}
+                    </time>
+                  </div>
+                  <h4 class="text-sm font-medium text-gray-600">{event.location}</h4>
+                </div>
                 <h3 class="mt-2 text-lg font-semibold text-gray-900">
                   {event.title}
                 </h3>
                 <p class="mt-2 text-gray-600">{event.description}</p>
+                {
+                  event.linkedContent && (
+                    <div class="w-full mt-2 flex items-center justify-end pe-2">
+                      <a
+                        href={event.linkedContent}
+                        target="_blank"
+                        class="text-sm text-red-700 hover:underline hover:text-red-600 transition-colors duration-200"
+                      >
+                        Learn More
+                      </a>
+                    </div>
+                  )
+                }
               </motion.div>
             </div>
           ))
@@ -68,7 +80,7 @@ const secondTimelineEvents = events.filter((_, index) => index % 2 === 0);
         >
         </div>
         {
-          secondTimelineEvents.map((event, i) => (
+          secondTimelineEvents.map((event, _) => (
             <div class="relative pl-12 my-10">
               <div class="absolute left-3.5 -translate-x-1/2 w-8 aspect-square rounded-full bg-gradient-to-r from-red-900 to-red-700 border-4 border-white shadow-md" />
               <motion.div
@@ -79,13 +91,33 @@ const secondTimelineEvents = events.filter((_, index) => index % 2 === 0);
                 transition={{ duration: 0.6, delay: 0.25 }}
                 className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
               >
-                <time class="text-sm font-medium text-gray-500">
-                  {event.date}
-                </time>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2 grow">
+                    <h4 class="text-sm font-medium text-gray-600">{event.company}</h4>
+                    <h1 class="text-sm font-medium text-gray-700">&bull;</h1>
+                    <time class="text-sm font-medium text-gray-500">
+                      {event.date}
+                    </time>
+                  </div>
+                  <h4 class="text-sm font-medium text-gray-600">{event.location}</h4>
+                </div>
                 <h3 class="mt-2 text-lg font-semibold text-gray-900">
                   {event.title}
                 </h3>
                 <p class="mt-2 text-gray-600">{event.description}</p>
+                {
+                  event.linkedContent && (
+                    <div class="w-full mt-2 flex items-center justify-end pe-2">
+                      <a
+                        href={event.linkedContent}
+                        target="_blank"
+                        class="text-sm text-red-700 hover:underline hover:text-red-600 transition-colors duration-200"
+                      >
+                        Learn More
+                      </a>
+                    </div>
+                  )
+                }
               </motion.div>
             </div>
           ))

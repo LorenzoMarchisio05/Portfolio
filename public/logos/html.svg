@@ -1,0 +1,7 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <path d="M8 8l4.8 43.2L32 56l19.2-4.8L56 8H8z" fill="#E34F26"/>
+  <path d="M32 14v36l15.6-3.9L52 14H32z" fill="#FF5722"/>
+  <path d="M19.2 20h25.6v4.8H24.8v4.8h19.2v4.8H19.2V20z" fill="#FFFFFF"/>
+  <path d="M19.2 40h5.6v-4.8h13.6V40h5.6v-9.6H19.2V40z" fill="#FFFFFF"/>
+  <text x="32" y="48" font-family="Arial, sans-serif" font-size="6" text-anchor="middle" fill="#FFFFFF">HTML</text>
+</svg>

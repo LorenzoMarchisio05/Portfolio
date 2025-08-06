@@ -85,8 +85,9 @@ import StaggeredText from "../components/StaggeredText.astro";
     <motion.div
       client:load
       initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, delay: 0.1 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.45, delay: 0.2 }}
       className="w-4/5 p-8 rounded-xl bg-white shadow-2xl border border-gray-200"
     >
       <form class="space-y-6" id="contact-form">

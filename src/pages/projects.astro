@@ -1,0 +1,40 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout>
+    <section class="h-screen w-screen p-16 overflow-hidden">
+        <div
+            class="block relative w-full h-full rotate-y-[-16deg] translate-z-32 shadow-lg rounded-xl overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700/20"
+        >
+            <div
+                class="absolute inset-[2px] bg-white rounded-lg overflow-hidden"
+            >
+                <div
+                    class="h-10 bg-gray-100 border-b flex items-center px-4 space-x-2"
+                >
+                    <a class="w-4 h-4 rounded-full bg-red-500"  href="/"></a>
+                    <div class="w-4 h-4 rounded-full bg-yellow-500"></div>
+                    <a class="w-4 h-4 rounded-full bg-green-500" href="/projects" /></a>
+                </div>
+                <div class="grid grid-cols-5 gap-4 p-6 h-full">
+                    <div class="col-span-3 space-y-4">
+                        <div class="h-10 bg-gray-200 rounded-md w-3/4 text-2xl text-gray-700 flex items-center px-4">
+                            Seems you found a Work in Progress!
+                        </div>
+                        <div class="h-full bg-gray-200 rounded-lg">
+                        </div>
+                    </div>
+                    <div class="col-span-2 space-y-4">
+                        <div class="h-3/5 bg-gray-200 rounded-lg"></div>
+                        <div class="h-8 bg-gray-200 rounded w-full text-gray-500 text-sm flex items-center px-4">
+                            Click the red button to return home or explore other sections.
+                        </div>
+                        <div class="h-3/5 bg-gray-200 rounded-lg text-gray-700 flex items-center px-4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</Layout>

@@ -13,15 +13,60 @@ const { sections } = Astro.props;
     }).map((_, i) => (
       <div
         id={`progress-${i}`}
-        class="w-2 h-2 overflow-hidden bg-gray-900/50 rounded-full"
+        class="w-2 h-2 overflow-hidden bg-gray-900/50 rounded-full transition-all duration-300 ease-in-out"
       >
-        <div
-          id={`inner-progress-${i}`}
-          class="w-full bg-gray-900 transform origin-center"
-        />
       </div>
     ))
   }
 </div>
+<script>
+  function updateProgressDots() {
+    const sections = document.querySelectorAll('section');
+    sections.forEach((section, i) => {
+      const dot = document.getElementById(`progress-${i}`) as HTMLDivElement;
+      const innerDot = document.getElementById(`inner-progress-${i}`) as HTMLDivElement;
+      const rect = section.getBoundingClientRect();
+      
+      // Calculate how much of the section is in the center viewport area
+      const centerTop = window.innerHeight * 0.3;
+      const centerBottom = window.innerHeight * 0.7;
+      const sectionCenterTop = Math.max(rect.top, centerTop);
+      const sectionCenterBottom = Math.min(rect.bottom, centerBottom);
+      const centerVisibleHeight = Math.max(sectionCenterBottom - sectionCenterTop, 0);
+      const centerArea = centerBottom - centerTop;
+      const centerProgress = Math.min(centerVisibleHeight / centerArea, 1);
+      
+      // Base height for dots
+      const baseHeight = 8; // 2rem = 8px
+      // Maximum height when section is in center
+      const maxHeight = Math.min(rect.height / window.innerHeight * 160, 50);
+      
+      // Interpolate between base and max height based on center progress
+      const targetHeight = baseHeight + (maxHeight - baseHeight) * centerProgress;
+      
+      // Set the outer container height with smooth transition
+      dot.style.height = `${targetHeight}px`;
+      
+      // Adjust border radius based on height for smooth transition
+      const borderRadius = Math.max(2, Math.min(targetHeight / 2, 8));
+      dot.style.borderRadius = `${borderRadius}px`;
+    });
+  }
 
-<script></script>
+  // Use requestAnimationFrame for smoother animations
+  let ticking = false;
+  function requestUpdate() {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        updateProgressDots();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', requestUpdate);
+  window.addEventListener('resize', requestUpdate);
+  window.addEventListener('DOMContentLoaded', updateProgressDots);
+</script>
+

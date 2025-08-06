@@ -43,7 +43,7 @@ import StaggeredText from "../components/StaggeredText.astro";
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, delay: 0.1 }}
-      className="block relative w-4/5 h-[375px] rotate-y-[-16deg] translate-z-32 shadow-2xl rounded-xl overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700/20 "
+      className="block relative w-4/5 h-[350px] rotate-y-[-16deg] translate-z-32 shadow-2xl rounded-xl overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700/20 "
     >
       <div class="absolute inset-[2px] bg-white rounded-lg overflow-hidden">
         <div class="h-10 bg-gray-100 border-b flex items-center px-4 space-x-2">
@@ -51,22 +51,23 @@ import StaggeredText from "../components/StaggeredText.astro";
           <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
           <div class="w-3 h-3 rounded-full bg-green-500"></div>
         </div>
-        <div class="grid grid-cols-5 gap-4 p-6">
+        <div class="grid grid-cols-5 gap-4 p-6 h-full">
           <div class="col-span-3 space-y-4">
-            <div class="h-8 bg-gray-200 rounded-md w-3/4"></div>
-            <div class="h-32 bg-gray-200 rounded-lg"></div>
-            <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+            <div class="h-6 bg-gray-200 rounded-md w-3/4"></div>
+            <div class="h-4/5 bg-gray-200 rounded-lg"></div>
+            <div class="h-10 bg-gray-200 rounded w-full"></div>
           </div>
           <div class="col-span-2 space-y-4">
             <div class="h-48 bg-gray-200 rounded-lg"></div>
-            <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+            <div class="h-4 bg-gray-200 rounded w-full"></div>
+            <div class="h-24 bg-gray-200 rounded-lg"></div>
           </div>
         </div>
       </div>
     </motion.div>
     <div class="flex space-x-6 mt-10">
       <a
-        href="#projects"
+        href="/projects"
         class="px-8 py-3 bg-gradient-to-r from-red-900 to-red-700 text-white rounded-lg shadow-lg font-medium tracking-wide"
       >
         My Works
