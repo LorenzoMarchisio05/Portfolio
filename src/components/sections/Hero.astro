@@ -1,5 +1,4 @@
 ---
-import { motion } from "motion/react";
 import StaggeredText from "../components/StaggeredText.astro";
 ---
 
@@ -38,12 +37,9 @@ import StaggeredText from "../components/StaggeredText.astro";
     </div>
   </div>
   <div class="col pb-20 lg:py-20 flex items-center justify-center flex-col">
-    <motion.div
-      client:load
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, delay: 0.1 }}
-      className="block relative w-full sm:w-4/5 h-[240px] sm:h-[320px] lg:h-[350px] lg:rotate-y-[-16deg] lg:translate-z-32 shadow-2xl rounded-xl overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700/20 "
+    <div
+      class="reveal block relative w-full sm:w-4/5 h-[240px] sm:h-[320px] lg:h-[350px] lg:rotate-y-[-16deg] lg:translate-z-32 shadow-2xl rounded-xl overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700/20"
+      style="--reveal-delay:0.1s"
     >
       <div class="absolute inset-[2px] bg-white rounded-lg overflow-hidden">
         <div class="h-10 bg-gray-100 border-b flex items-center px-4 space-x-2">
@@ -64,7 +60,7 @@ import StaggeredText from "../components/StaggeredText.astro";
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
     <div class="flex flex-wrap justify-center gap-4 sm:gap-6 mt-10">
       <a
         href="#contact"

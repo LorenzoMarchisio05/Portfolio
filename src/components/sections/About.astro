@@ -1,5 +1,4 @@
 ---
-import { motion } from "motion/react";
 import { getCollection } from "astro:content";
 
 const events = await getCollection("journey").then((collection) =>
@@ -46,6 +45,12 @@ const events = await getCollection("journey").then((collection) =>
               index % 2 === 0
                 ? "lg:ml-auto lg:pl-12"
                 : "lg:mr-auto lg:pr-12",
+              // Each card owns a full row, so in the two-column layout the side
+              // opposite a card stays blank for that card's whole height. Pulling
+              // every entry up interleaves them; the offset counts twice between
+              // two cards on the same side, so 5rem closes about half the run.
+              // ponytail: fixed offset, tuned to the current ~216px card height.
+              index > 0 && "lg:-mt-20",
             ]}
           >
             <div
@@ -55,13 +60,10 @@ const events = await getCollection("journey").then((collection) =>
                   "lg:left-auto lg:right-3.5 lg:translate-x-1/2",
               ]}
             />
-            <motion.div
-              client:load
-              initial={{ opacity: 0, y: -10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.25 }}
-              className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+            <div
+              data-reveal
+              style="--reveal-delay:0.25s"
+              class="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
             >
               <div class="flex flex-wrap items-center justify-between gap-x-2">
                 <div class="flex items-center gap-2 grow">
@@ -92,7 +94,7 @@ const events = await getCollection("journey").then((collection) =>
                   </a>
                 </div>
               )}
-            </motion.div>
+            </div>
           </div>
         ))
       }

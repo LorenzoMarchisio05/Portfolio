@@ -1,5 +1,4 @@
 ---
-import { motion } from "motion/react";
 import StaggeredText from "../components/StaggeredText.astro";
 ---
 
@@ -87,15 +86,12 @@ import StaggeredText from "../components/StaggeredText.astro";
     </div>
   </div>
   <div class="col pb-10 lg:py-20 flex items-center justify-center">
-    <motion.div
-      client:load
-      initial={{ opacity: 0, y: -10 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.45, delay: 0.2 }}
-      className="w-full sm:w-4/5 p-6 sm:p-8 rounded-xl bg-white shadow-2xl border border-gray-200"
+    <div
+      data-reveal
+      style="--reveal-delay:0.2s"
+      class="w-full sm:w-4/5 p-6 sm:p-8 rounded-xl bg-white shadow-2xl border border-gray-200"
     >
-      <form class="space-y-6" id="contact-form">
+      <form class="space-y-6 relative" id="contact-form">
         <div class="space-y-2">
           <label for="contact-name" class="block text-sm font-medium text-gray-700"
             >Name</label
@@ -133,6 +129,17 @@ import StaggeredText from "../components/StaggeredText.astro";
             class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-transparent transition h-32 outline-0"
             placeholder="Your message"></textarea>
         </div>
+        {/* Bots fill every field they find; people never see this one. */}
+        <div class="absolute -left-[9999px]" aria-hidden="true">
+          <label for="contact-company">Company</label>
+          <input
+            id="contact-company"
+            type="text"
+            name="company"
+            tabindex="-1"
+            autocomplete="off"
+          />
+        </div>
         <button
           type="submit"
           class="w-full py-3 px-6 text-white font-medium rounded-lg bg-gradient-to-r from-red-900 to-red-700 hover:from-red-800 hover:to-red-600 transition shadow-md"
@@ -147,7 +154,7 @@ import StaggeredText from "../components/StaggeredText.astro";
         >
         </p>
       </form>
-    </motion.div>
+    </div>
   </div>
 </section>
 
@@ -156,6 +163,7 @@ import StaggeredText from "../components/StaggeredText.astro";
     name: string;
     email: string;
     message: string;
+    company: string;
   }
 
   const handleSubmit = async (formData: FormData) => {
@@ -183,6 +191,7 @@ import StaggeredText from "../components/StaggeredText.astro";
       name: formData.get("name") as string,
       email: formData.get("email") as string,
       message: formData.get("message") as string,
+      company: formData.get("company") as string,
     };
 
     const submitButton = form.querySelector(

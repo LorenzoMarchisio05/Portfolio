@@ -1,118 +1,71 @@
 import type { APIRoute } from "astro";
-import nodemailer from "nodemailer";
-
 import { getSecret } from "astro:env/server";
 
 export const prerender = false;
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.mail.me.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user: getSecret("EMAIL_USER") ?? process.env.EMAIL_USER,
-    pass: getSecret("EMAIL_PASS") ?? process.env.EMAIL_PASS,
-  },
-  tls: {
-    rejectUnauthorized: true,
-    ciphers: "SSLv3",
-  },
-});
+const TO = "me@lorenzomarchisio.dev";
+// Must be an address on a domain verified in Resend.
+const FROM = "Portfolio <noreply@lorenzomarchisio.dev>";
+
+const LIMITS = { name: 100, email: 200, message: 5000 };
+
+const json = (message: string, status: number) =>
+  new Response(JSON.stringify({ message }), {
+    status,
+    headers: { "Content-Type": "application/json" },
+  });
 
 export const POST: APIRoute = async ({ request }) => {
+  let body: Record<string, unknown>;
   try {
-    const data = (await request.json()) as {
-      name: string;
-      email: string;
-      message: string;
-    };
-    const { name, email, message } = data;
-
-    // Validate input
-    if (!name || !email || !message) {
-      return new Response(
-        JSON.stringify({
-          message: "Please fill in all fields",
-        }),
-        { status: 400 }
-      );
-    }
-
-    // Send email
-    await transporter.sendMail({
-      from: import.meta.env.EMAIL_USER,
-      to: import.meta.env.EMAIL_USER,
-      subject: `Portfolio Contact Form - Message from ${name}`,
-      text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
-      html: `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <meta charset="utf-8">
-            <style>
-              .email-container {
-                max-width: 600px;
-                margin: 0 auto;
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-                line-height: 1.5;
-                color: #333;
-                padding: 20px;
-              }
-              .header {
-                border-bottom: 2px solid #991b1b;
-                padding-bottom: 15px;
-                margin-bottom: 20px;
-              }
-              .field {
-                margin-bottom: 15px;
-              }
-              .label {
-                font-weight: 600;
-                color: #991b1b;
-              }
-              .message-content {
-                background-color: #f9fafb;
-                padding: 15px;
-                border-radius: 6px;
-                margin-top: 10px;
-                white-space: pre-wrap;
-              }
-            </style>
-          </head>
-          <body>
-            <div class="email-container">
-              <div class="header">
-                <h2 style="margin: 0; color: #991b1b;">New Contact Form Message</h2>
-              </div>
-              <div class="field">
-                <span class="label">Name:</span> ${name}
-              </div>
-              <div class="field">
-                <span class="label">Email:</span> ${email}
-              </div>
-              <div class="field">
-                <span class="label">Message:</span>
-                <div class="message-content">${message}</div>
-              </div>
-            </div>
-          </body>
-        </html>
-      `,
-    });
-
-    return new Response(
-      JSON.stringify({
-        message: "Email sent successfully",
-      }),
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("Error sending email:", error);
-    return new Response(
-      JSON.stringify({
-        message: "Failed to send email",
-      }),
-      { status: 500 }
-    );
+    body = await request.json();
+  } catch {
+    return json("Please fill in all fields", 400);
   }
+
+  // Honeypot: hidden in the form, so anything here is a bot. Answer 200 so it
+  // has no signal to retry against.
+  if (String(body.company ?? "").trim()) {
+    return json("Email sent successfully", 200);
+  }
+
+  const name = String(body.name ?? "").trim();
+  const email = String(body.email ?? "").trim();
+  const message = String(body.message ?? "").trim();
+
+  if (!name || !email || !message) {
+    return json("Please fill in all fields", 400);
+  }
+  if (
+    name.length > LIMITS.name ||
+    email.length > LIMITS.email ||
+    message.length > LIMITS.message
+  ) {
+    return json("That message is too long", 400);
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return json("Please enter a valid email address", 400);
+  }
+
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${getSecret("RESEND_API_KEY")}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: FROM,
+      to: TO,
+      reply_to: email,
+      subject: `Portfolio contact — ${name}`,
+      text: `Name: ${name}\nEmail: ${email}\n\n${message}`,
+    }),
+  });
+
+  if (!response.ok) {
+    console.error("Resend rejected the message:", response.status, await response.text());
+    return json("Failed to send message. Please try again.", 502);
+  }
+
+  return json("Email sent successfully", 200);
 };

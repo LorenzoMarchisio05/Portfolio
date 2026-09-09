@@ -1,5 +1,4 @@
 ---
-import { motion } from "motion/react";
 import { getCollection } from "astro:content";
 
 const svgs = await getCollection("skills").then((collection) =>
@@ -116,84 +115,53 @@ dotsPerCircle[circleCount - 1] +=
       Array.from({ length: circleCount }).flatMap((_, circleIndex) => {
         const currentDotsCount = dotsPerCircle[circleIndex];
         const currentRadius = baseRadius + circleIndex * radiusIncrement;
+        const duration = 15 + (50 / (circleIndex + 1)) * circleIndex;
 
         return (
-          <motion.div
-            className="rounded-full absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 origin-center"
-            client:load
-            key={`circle-${circleIndex}`}
-            initial={{
-              rotateZ: 0,
-            }}
-            animate={{
-              rotateZ: 360 * (circleIndex % 2 == 0 ? 1 : -1),
-            }}
-            transition={{
-              duration: 15 + (50 / (circleIndex + 1)) * circleIndex,
-              repeat: Infinity,
-              ease: "linear",
-            }}
+          <div
+            class:list={[
+              "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
+              circleIndex % 2 === 1 && "orbit-reverse",
+            ]}
+            style={`--orbit-duration:${duration}s`}
           >
-            {Array.from({ length: currentDotsCount }).map((_, dotIndex) => {
-              const angle = (dotIndex / currentDotsCount) * 2 * Math.PI;
+            {/* The centring translate and the spin live on separate elements so
+                the rotation keyframe does not clobber the translate. */}
+            <div class="orbit-ring rounded-full origin-center">
+              {Array.from({ length: currentDotsCount }).map((_, dotIndex) => {
+                const angle = (dotIndex / currentDotsCount) * 2 * Math.PI;
 
-              const dotSize = dotsBaseSize - circleIndex * 2;
+                const dotSize = dotsBaseSize - circleIndex * 2;
 
-              const x = Math.cos(angle) * currentRadius;
-              const y = Math.sin(angle) * currentRadius;
+                const x = Math.cos(angle) * currentRadius;
+                const y = Math.sin(angle) * currentRadius;
 
-              index++;
+                index++;
 
-              return (
-                <div
-                  class="absolute rounded-full aspect-square"
-                  style={{
-                    width: `${dotSize}px`,
-                    left: `${x}px`,
-                    top: `${y}px`,
-                    transform: `translate(-${dotSize / 2}px, -${dotSize / 2}px)`,
-                  }}
-                >
-                  <motion.img
-                    src={svgs[index % svgs.length].logo}
-                    alt={svgs[index % svgs.length].name}
-                    aria-label={svgs[index % svgs.length].name}
-                    client:load
-                    className="w-full h-full rounded-full object-cover object-center"
-                    key={`dot-${circleIndex}`}
-                    initial={{
-                      rotateZ: 0,
+                return (
+                  <div
+                    class="absolute rounded-full aspect-square"
+                    style={{
+                      width: `${dotSize}px`,
+                      left: `${x}px`,
+                      top: `${y}px`,
+                      transform: `translate(-${dotSize / 2}px, -${dotSize / 2}px)`,
                     }}
-                    animate={{
-                      rotateZ: 360 * (circleIndex % 2 == 1 ? 1 : -1),
-                    }}
-                    transition={{
-                      duration: 15 + (50 / (circleIndex + 1)) * circleIndex,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                  />
-                </div>
-              );
-            })}
-          </motion.div>
+                  >
+                    <img
+                      src={svgs[index % svgs.length].logo}
+                      alt={svgs[index % svgs.length].name}
+                      loading="lazy"
+                      decoding="async"
+                      class="orbit-logo w-full h-full rounded-full object-cover object-center"
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         );
       })
     }
   </div>
 </section>
-
-<script>
-  // Motion drives the orbits through the Web Animations API, so CSS cannot stop
-  // them — cancel the animations directly once the islands have hydrated.
-  // ponytail: two passes instead of observing hydration; revisit if it ever misses.
-  const stopOrbits = () => {
-    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    document
-      .querySelectorAll("#skills *")
-      .forEach((el) => el.getAnimations().forEach((a) => a.cancel()));
-  };
-
-  window.addEventListener("load", stopOrbits);
-  setTimeout(stopOrbits, 1500);
-</script>

@@ -1,6 +1,5 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { motion } from "motion/react";
 ---
 
 <Layout
@@ -15,43 +14,30 @@ import { motion } from "motion/react";
     <div
       class="text-center space-y-6 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl px-4"
     >
-      <motion.h1
-        client:load
-        initial={{ scale: 0.5, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-        className="text-[6rem] sm:text-[9rem] lg:text-[12rem] font-bold bg-gradient-to-r from-red-900 via-red-700 to-red-500 bg-clip-text text-transparent mb-8 leading-none select-none"
+      <h1
+        class="reveal text-[6rem] sm:text-[9rem] lg:text-[12rem] font-bold bg-gradient-to-r from-red-900 via-red-700 to-red-500 bg-clip-text text-transparent mb-8 leading-none select-none"
       >
         404
-      </motion.h1>
-      <motion.p
-        client:load
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.3, delay: 0.3 }}
-        className="text-2xl sm:text-3xl lg:text-4xl text-gray-600 mb-4 font-light"
+      </h1>
+      <p
+        style="--reveal-delay:0.3s"
+        class="reveal text-2xl sm:text-3xl lg:text-4xl text-gray-600 mb-4 font-light"
       >
         Seems you got lost in space
-      </motion.p>
-      <motion.p
-        client:load
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.3, delay: 0.45 }}
-        className="text-base sm:text-xl lg:text-2xl text-gray-500 mb-12 font-light"
+      </p>
+      <p
+        style="--reveal-delay:0.45s"
+        class="reveal text-base sm:text-xl lg:text-2xl text-gray-500 mb-12 font-light"
       >
         The page you're looking for doesn't exist or has been moved
-      </motion.p>
-      <motion.a
-        client:load
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.3, delay: 0.6 }}
+      </p>
+      <a
         href="/"
-        className="inline-block px-6 sm:px-8 py-3 sm:py-4 text-lg sm:text-xl bg-gradient-to-r from-red-900 via-red-700 to-red-500 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+        style="--reveal-delay:0.6s"
+        class="reveal inline-block px-6 sm:px-8 py-3 sm:py-4 text-lg sm:text-xl bg-gradient-to-r from-red-900 via-red-700 to-red-500 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
       >
         Go back home
-      </motion.a>
+      </a>
     </div>
   </main>
 </Layout>

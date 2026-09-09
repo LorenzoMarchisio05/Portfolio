@@ -15,66 +15,67 @@
 </div>
 
 <script>
-    import { animate, frame } from "motion";
+    // A trailing cursor is a lerp towards the pointer, so this needs no
+    // animation library: the dot tracks tightly, the shadow lags behind it.
+    const shadow = document.getElementById("cursor-shadow")!;
+    const dot = document.getElementById("cursor")!;
 
-    const cursorShadow = document.getElementById("cursor-shadow")!;
-    const cursor = document.getElementById("cursor")!;
+    // The elements park offscreen until the first move, so nothing to show
+    // on a device that never sends one.
+    if (matchMedia("(pointer: fine)").matches) {
+        const centre = (el: HTMLElement) => {
+            const rect = el.getBoundingClientRect();
+            return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+        };
 
-    const shadowRect = cursorShadow.getBoundingClientRect();
-    const shadowInitialX = shadowRect.left + shadowRect.width / 2;
-    const shadowInitialY = shadowRect.top + shadowRect.height / 2;
+        const shadowOrigin = centre(shadow);
+        const dotOrigin = centre(dot);
 
-    const cursorRect = cursor.getBoundingClientRect();
-    const cursorInitialX = cursorRect.left + cursorRect.width / 2;
-    const cursorInitialY = cursorRect.top + cursorRect.height / 2;
+        const SHADOW_EASE = 0.15;
+        const DOT_EASE = 0.55;
 
-    
-    // Save cursor position before navigation or page unload
-    window.addEventListener("beforeunload", () => {
-        localStorage.setItem("cursorTranslate", cursor.style.transform);
-        localStorage.setItem("cursorShadowTranslate", cursorShadow.style.transform);
-    });
+        let pointerX = 0;
+        let pointerY = 0;
+        let shadowX = 0;
+        let shadowY = 0;
+        let dotX = 0;
+        let dotY = 0;
+        let running = false;
 
-    // On page load, restore cursor position
-    window.addEventListener("load", () => {
-        if (localStorage.getItem("cursorTranslate") !== null && localStorage.getItem("cursorShadowTranslate") !== null) {
-            const transform = localStorage.getItem("cursorTranslate")!;
-            const shadowTransform = localStorage.getItem("cursorShadowTranslate")!;
+        const tick = () => {
+            const shadowDX = pointerX - shadowOrigin.x - shadowX;
+            const shadowDY = pointerY - shadowOrigin.y - shadowY;
+            const dotDX = pointerX - dotOrigin.x - dotX;
+            const dotDY = pointerY - dotOrigin.y - dotY;
 
-            cursor.style.transform = transform;
-            cursorShadow.style.transform = shadowTransform;
-        }
-    });
+            shadowX += shadowDX * SHADOW_EASE;
+            shadowY += shadowDY * SHADOW_EASE;
+            dotX += dotDX * DOT_EASE;
+            dotY += dotDY * DOT_EASE;
 
+            shadow.style.transform = `translate(${shadowX}px, ${shadowY}px)`;
+            dot.style.transform = `translate(${dotX}px, ${dotY}px)`;
 
-    document.addEventListener("mousemove", (e) => {
-        const pointerX = e.clientX;
-        const pointerY = e.clientY;
+            // Park the loop once it has caught up, rather than burning a frame
+            // every 16ms while the pointer sits still.
+            const settled =
+                Math.abs(shadowDX) < 0.1 &&
+                Math.abs(shadowDY) < 0.1 &&
+                Math.abs(dotDX) < 0.1 &&
+                Math.abs(dotDY) < 0.1;
 
-        frame.postRender(() => {
-            animate(
-                cursorShadow,
-                {
-                    x: pointerX - shadowInitialX,
-                    y: pointerY - shadowInitialY,
-                },
-                {
-                    type: "spring",
-                    stiffness: 100,
-                    damping: 20,
-                }
-            );
+            running = !settled;
+            if (running) requestAnimationFrame(tick);
+        };
 
-            animate(
-                cursor,
-                {
-                    x: pointerX - cursorInitialX,
-                    y: pointerY - cursorInitialY,
-                },
-                {
-                    duration: 0.1,
-                }
-            );
+        document.addEventListener("mousemove", (event) => {
+            pointerX = event.clientX;
+            pointerY = event.clientY;
+
+            if (!running) {
+                running = true;
+                requestAnimationFrame(tick);
+            }
         });
-    });
+    }
 </script>
