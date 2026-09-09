@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://lorenzomarchisio.dev/sitemap-index.xml
+Sitemap: https://lorenzomarchisio.me/sitemap-index.xml

@@ -6,7 +6,7 @@ import cloudflare from "@astrojs/cloudflare";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  site: "https://lorenzomarchisio.dev",
+  site: "https://lorenzomarchisio.me",
   output: "server",
   env: {
     schema: {

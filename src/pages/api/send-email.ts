@@ -3,9 +3,9 @@ import { getSecret } from "astro:env/server";
 
 export const prerender = false;
 
-const TO = "me@lorenzomarchisio.dev";
+const TO = "me@lorenzomarchisio.me";
 // Must be an address on a domain verified in Resend.
-const FROM = "Portfolio <noreply@lorenzomarchisio.dev>";
+const FROM = "Portfolio <noreply@lorenzomarchisio.me>";
 
 const LIMITS = { name: 100, email: 200, message: 5000 };
 
