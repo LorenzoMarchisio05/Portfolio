@@ -8,7 +8,14 @@ import Scrollbar from "../components/components/Scrollbar.astro";
 ---
 
 <Layout>
-  <Scrollbar sections={4} />
+  <Scrollbar
+    sections={[
+      { id: "hero", label: "Home" },
+      { id: "about", label: "Journey" },
+      { id: "skills", label: "Skills" },
+      { id: "contact", label: "Contact" },
+    ]}
+  />
   <Hero />
   <About />
   <Skills />

@@ -66,15 +66,14 @@ dotsPerCircle[circleCount - 1] +=
   id="skills"
   class="min-h-screen w-full relative perspective-midrange overflow-hidden flex flex-col lg:flex-row px-6 sm:px-12 lg:px-20"
 >
-
-<div
-    class="hidden lg:block w-2/3 h-full right-0 -z-10 absolute bg-dotted -rotate-y-[24deg] -translate-x-2 -translate-z-20 origin-right"
+  <div
+    class="hidden lg:block absolute left-0 top-0 w-2/3 h-full -z-10 bg-dotted rotate-y-[16deg] -translate-z-96 origin-right"
   >
   </div>
 
-  <div class="space-y-6 lg:space-y-8 pt-24 pb-10 lg:py-24 lg:px-2">
+  <div class="relative space-y-6 lg:space-y-8 pt-24 pb-10 lg:py-24 lg:px-2">
     <h2
-      class="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tighter bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 bg-clip-text text-transparent"
+      class="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tighter text-gray-900"
     >
       Technical Skills
     </h2>
@@ -94,14 +93,17 @@ dotsPerCircle[circleCount - 1] +=
       </p>
     </div>
     <div class="flex flex-wrap gap-4 sm:gap-6 mt-10 lg:mt-16">
-      <button
-        class="px-6 sm:px-8 py-3 bg-gradient-to-r from-red-900 to-red-700 text-white rounded-lg shadow-lg font-medium tracking-wide"
+      <a
+        href="/cv.pdf"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="px-6 sm:px-8 py-3 rounded-lg font-medium tracking-wide text-red-800 border border-red-800/25 bg-white/70 shadow-sm hover:bg-white hover:border-red-800/50 transition"
       >
         Take a look at my CV
-      </button>
+      </a>
       <a
         href="#contact"
-        class="px-6 sm:px-8 py-3 bg-gradient-to-r from-red-900 to-red-700 text-white rounded-lg shadow-lg font-medium tracking-wide"
+        class="px-6 sm:px-8 py-3 rounded-lg font-medium tracking-wide text-white bg-gradient-to-r from-red-900 to-red-700 shadow-lg hover:from-red-800 hover:to-red-600 transition"
       >
         Get in touch
       </a>
@@ -180,3 +182,18 @@ dotsPerCircle[circleCount - 1] +=
     }
   </div>
 </section>
+
+<script>
+  // Motion drives the orbits through the Web Animations API, so CSS cannot stop
+  // them — cancel the animations directly once the islands have hydrated.
+  // ponytail: two passes instead of observing hydration; revisit if it ever misses.
+  const stopOrbits = () => {
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    document
+      .querySelectorAll("#skills *")
+      .forEach((el) => el.getAnimations().forEach((a) => a.cancel()));
+  };
+
+  window.addEventListener("load", stopOrbits);
+  setTimeout(stopOrbits, 1500);
+</script>

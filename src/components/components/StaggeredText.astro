@@ -3,60 +3,26 @@ interface Props {
   text: string;
   duration: number;
   delay?: number;
-  splitWords?: boolean;
 }
 
-import { motion } from "framer-motion";
+const { text, duration, delay = 0 } = Astro.props;
 
-const { text, duration, delay, splitWords } = Astro.props;
+// Plain inline spans on purpose: the headings that use this are painted with
+// `bg-clip-text`, and an ancestor's text clip does not reach glyphs inside
+// inline-block descendants. That also rules out transforms here, so the
+// animation is a fade (which is all the previous version ever rendered).
+const charDuration = duration / text.length;
 
-const letter = {
-  from: {
-    opacity: 0,
-    y: 50,
-  },
-  to: {
-    opacity: 1,
-    y: 0,
-  },
-};
+const chars = text.split("").map((char, index) => ({
+  char,
+  style: `animation-duration:${charDuration}s;animation-delay:${index * 0.05 + delay}s`,
+}));
 ---
 
 {
-  splitWords
-    ? text.split(" ").map((word, _) => (
-        <span class="inline-block mr-2">
-          {word.split("").map((char, i) => (
-            <motion.span
-              client:load
-              key={`${word}-${i}`}
-              className="inline-block"
-              variants={letter}
-              initial="from"
-              animate="to"
-              transition={{
-                duration: duration / word.length,
-                delay: i * 0.05 + (delay ?? 0),
-              }}
-            >
-              {char}
-            </motion.span>
-          ))}
-        </span>
-      ))
-    : text.split("").map((char, i) => (
-        <motion.span
-          client:load
-          key={`${text}-${i}`}
-          variants={letter}
-          initial="from"
-          animate="to"
-          transition={{
-            duration: duration / text.length,
-            delay: i * 0.05 + (delay ?? 0),
-          }}
-        >
-          {char}
-        </motion.span>
-      ))
+  chars.map(({ char, style }) => (
+    <span class="stagger-char" style={style}>
+      {char}
+    </span>
+  ))
 }

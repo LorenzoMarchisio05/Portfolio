@@ -1,12 +1,15 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 ---
 
-<Layout>
+<Layout
+  title="Page not found — Lorenzo Marchisio"
+  description="That page doesn't exist."
+>
   <main class="min-h-screen relative perspective-midrange overflow-hidden">
     <div
-      class="w-2/3 h-full -z-10 absolute bg-dotted rotate-y-[24deg] -translate-x-2 -translate-z-96 origin-right opacity-70"
+      class="hidden lg:block absolute right-0 top-0 w-2/3 h-full -z-10 bg-dotted -rotate-y-[16deg] -translate-z-96 origin-left"
     >
     </div>
     <div
@@ -17,7 +20,7 @@ import { motion } from "framer-motion";
         initial={{ scale: 0.5, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
-        className="text-[12rem] font-bold bg-gradient-to-r from-red-900 via-red-700 to-red-500 bg-clip-text text-transparent mb-8 leading-none select-none"
+        className="text-[6rem] sm:text-[9rem] lg:text-[12rem] font-bold bg-gradient-to-r from-red-900 via-red-700 to-red-500 bg-clip-text text-transparent mb-8 leading-none select-none"
       >
         404
       </motion.h1>
@@ -26,7 +29,7 @@ import { motion } from "framer-motion";
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.3, delay: 0.3 }}
-        className="text-4xl text-gray-600 mb-4 font-light"
+        className="text-2xl sm:text-3xl lg:text-4xl text-gray-600 mb-4 font-light"
       >
         Seems you got lost in space
       </motion.p>
@@ -35,7 +38,7 @@ import { motion } from "framer-motion";
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.3, delay: 0.45 }}
-        className="text-2xl text-gray-500 mb-12 font-light"
+        className="text-base sm:text-xl lg:text-2xl text-gray-500 mb-12 font-light"
       >
         The page you're looking for doesn't exist or has been moved
       </motion.p>
@@ -45,7 +48,7 @@ import { motion } from "framer-motion";
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.3, delay: 0.6 }}
         href="/"
-        className="inline-block px-8 py-4 text-xl bg-gradient-to-r from-red-900 via-red-700 to-red-500 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+        className="inline-block px-6 sm:px-8 py-3 sm:py-4 text-lg sm:text-xl bg-gradient-to-r from-red-900 via-red-700 to-red-500 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
       >
         Go back home
       </motion.a>

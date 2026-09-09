@@ -24,12 +24,51 @@ html {
   scrollbar-width: none;
 }
 
+/* Backdrop plane: sits behind the section's one 3D object, never behind body copy.
+   Masked so it reads as depth rather than as a hard-edged rectangle of dots. */
 @utility bg-dotted {
   background-image: radial-gradient(
     circle at center,
-    color-mix(in srgb, currentColor 40%, transparent) 1px,
+    color-mix(in srgb, currentColor 42%, transparent) 1px,
     transparent 1px
   );
   background-size: 50px 50px;
   background-position: center;
+  -webkit-mask-image: radial-gradient(
+    ellipse at center,
+    black 50%,
+    transparent 92%
+  );
+  mask-image: radial-gradient(ellipse at center, black 50%, transparent 92%);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-red-700);
+  outline-offset: 3px;
+}
+
+/* Per-character intro used by StaggeredText. Pure CSS, so the headings are
+   readable whether or not any JavaScript runs. `both` holds the from-state
+   through the delay; if animations never run the character just stays visible.
+   Opacity only: these headings are painted with `bg-clip-text`, and a transform
+   on the characters would break that clip. */
+@keyframes stagger-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.stagger-char {
+  animation-name: stagger-in;
+  animation-fill-mode: both;
+  animation-timing-function: ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stagger-char {
+    animation: none;
+  }
 }

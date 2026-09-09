@@ -1,55 +1,72 @@
 ---
 interface Props {
-  sections: number;
+  sections: { id: string; label: string }[];
 }
 
 const { sections } = Astro.props;
 ---
 
-<div class="fixed right-3 sm:right-6 lg:right-10 top-1/2 flex flex-col gap-2 justify-center z-10">
+<nav
+  aria-label="Sections"
+  class="fixed right-3 sm:right-6 lg:right-10 top-1/2 -translate-y-1/2 flex flex-col gap-3 justify-center z-10"
+>
   {
-    Array.from({
-      length: sections,
-    }).map((_, i) => (
-      <div
-        id={`progress-${i}`}
-        class="w-2 h-2 overflow-hidden bg-gray-900/50 rounded-full transition-all duration-300 ease-in-out"
+    sections.map(({ id, label }) => (
+      <a
+        href={`#${id}`}
+        data-progress={id}
+        class="group relative w-2 h-2 rounded-full bg-gray-900/40 hover:bg-red-700 transition-all duration-300 ease-in-out before:absolute before:-inset-x-4 before:-inset-y-1.5 before:content-['']"
       >
-      </div>
+        <span class="sr-only">{label}</span>
+        <span
+          aria-hidden="true"
+          class="pointer-events-none absolute right-full top-1/2 -translate-y-1/2 mr-3 rounded bg-gray-900 px-2 py-1 text-xs whitespace-nowrap text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100"
+        >
+          {label}
+        </span>
+      </a>
     ))
   }
-</div>
+</nav>
 <script>
   function updateProgressDots() {
-    const sections = document.querySelectorAll('section');
-    sections.forEach((section, i) => {
-      const dot = document.getElementById(`progress-${i}`) as HTMLDivElement;
-      const innerDot = document.getElementById(`inner-progress-${i}`) as HTMLDivElement;
+    const dots =
+      document.querySelectorAll<HTMLElement>("[data-progress]");
+
+    dots.forEach((dot) => {
+      const section = document.getElementById(dot.dataset.progress!);
+      if (!section) return;
+
       const rect = section.getBoundingClientRect();
-      
+
       // Calculate how much of the section is in the center viewport area
       const centerTop = window.innerHeight * 0.3;
       const centerBottom = window.innerHeight * 0.7;
       const sectionCenterTop = Math.max(rect.top, centerTop);
       const sectionCenterBottom = Math.min(rect.bottom, centerBottom);
-      const centerVisibleHeight = Math.max(sectionCenterBottom - sectionCenterTop, 0);
+      const centerVisibleHeight = Math.max(
+        sectionCenterBottom - sectionCenterTop,
+        0
+      );
       const centerArea = centerBottom - centerTop;
       const centerProgress = Math.min(centerVisibleHeight / centerArea, 1);
-      
+
       // Base height for dots
       const baseHeight = 8; // 2rem = 8px
       // Maximum height when section is in center
-      const maxHeight = Math.min(rect.height / window.innerHeight * 160, 50);
-      
+      const maxHeight = Math.min((rect.height / window.innerHeight) * 160, 50);
+
       // Interpolate between base and max height based on center progress
       const targetHeight = baseHeight + (maxHeight - baseHeight) * centerProgress;
-      
-      // Set the outer container height with smooth transition
+
       dot.style.height = `${targetHeight}px`;
-      
+
       // Adjust border radius based on height for smooth transition
       const borderRadius = Math.max(2, Math.min(targetHeight / 2, 8));
       dot.style.borderRadius = `${borderRadius}px`;
+
+      // Expose the active section to assistive tech
+      dot.setAttribute("aria-current", centerProgress > 0.5 ? "true" : "false");
     });
   }
 
@@ -65,8 +82,7 @@ const { sections } = Astro.props;
     }
   }
 
-  window.addEventListener('scroll', requestUpdate);
-  window.addEventListener('resize', requestUpdate);
-  window.addEventListener('DOMContentLoaded', updateProgressDots);
+  window.addEventListener("scroll", requestUpdate);
+  window.addEventListener("resize", requestUpdate);
+  window.addEventListener("DOMContentLoaded", updateProgressDots);
 </script>
-

@@ -2,6 +2,18 @@
 import "../styles/global.css";
 
 import Cursor from "../components/components/Cursor.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Lorenzo Marchisio — Full Stack Engineer",
+  description = "Full stack engineer in Italy. C#/.NET on the backend, Flutter for cross-platform mobile, and modern web frontends.",
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
 ---
 
 <!doctype html>
@@ -10,7 +22,21 @@ import Cursor from "../components/components/Cursor.astro";
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Lorenzo Marchisio</title>
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#b91c1c" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content="Lorenzo Marchisio" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
   </head>
   <body
     class="bg-gray-50 selection:bg-red-700/15 overflow-x-hidden overflow-y-auto"

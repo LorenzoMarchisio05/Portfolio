@@ -8,14 +8,14 @@ import StaggeredText from "../components/StaggeredText.astro";
   class="min-h-screen w-full grid grid-cols-1 lg:grid-cols-2 content-center relative perspective-midrange px-6 sm:px-12 lg:px-20 overflow-hidden"
 >
   <div
-    class="hidden lg:block w-2/3 h-full -z-10 absolute bg-dotted rotate-y-[24deg] -translate-x-2 -translate-z-96 origin-right"
+    class="hidden lg:block absolute right-0 top-0 w-2/3 h-full -z-10 bg-dotted -rotate-y-[16deg] -translate-z-96 origin-left"
   >
   </div>
 
   <div class="col flex flex-col justify-center space-y-8 pt-24 pb-10 lg:py-24 lg:px-10">
     <div>
       <h1
-        class="text-5xl sm:text-7xl lg:text-8xl xl:text-9xl font-bold tracking-tighter bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 bg-clip-text text-transparent"
+        class="text-5xl sm:text-7xl lg:text-8xl 2xl:text-9xl font-bold tracking-tighter text-gray-900"
       >
         <StaggeredText text="Lorenzo Marchisio" duration={0.5} />
       </h1>
@@ -68,13 +68,13 @@ import StaggeredText from "../components/StaggeredText.astro";
     <div class="flex flex-wrap justify-center gap-4 sm:gap-6 mt-10">
       <a
         href="#contact"
-        class="px-6 sm:px-8 py-3 bg-gradient-to-r from-red-900 to-red-700 text-white rounded-lg shadow-lg font-medium tracking-wide"
+        class="px-6 sm:px-8 py-3 rounded-lg font-medium tracking-wide text-white bg-gradient-to-r from-red-900 to-red-700 shadow-lg hover:from-red-800 hover:to-red-600 transition"
       >
         Contact Me
       </a>
       <a
         href="#skills"
-        class="px-6 sm:px-8 py-3 bg-gradient-to-r from-red-900 to-red-700 text-white rounded-lg shadow-lg font-medium tracking-wide"
+        class="px-6 sm:px-8 py-3 rounded-lg font-medium tracking-wide text-red-800 border border-red-800/25 bg-white/70 shadow-sm hover:bg-white hover:border-red-800/50 transition"
       >
         My Skills
       </a>
