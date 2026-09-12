@@ -1,0 +1,459 @@
+---
+import Silhouette from "../components/Silhouette.astro";
+
+// Six frames that assemble as you scroll: each one holds centre stage, then
+// docks into its slot. One ratio per photograph at every width — nothing is
+// re-cropped to suit a breakpoint.
+//
+// The phone grid is two columns, and a row is only tidy when both cells share
+// a ratio. `mOrder` reshuffles the cells with CSS `order` so equal ratios pair
+// up and the two wide frames span the full width; the effect is that the grid
+// reads 01,02,04 / 03,06 / 05 rather than straight down. Source order — and so
+// the order a screen reader and the scroll takeover use — stays 01→06.
+//
+// Drop the photographs in /public/photos/ under the names below. A frame with
+// no file keeps the striped placeholder, so they can land one at a time; a
+// frame WITH a file needs `alt` filled in — these are portfolio work, not
+// decoration.
+const frames = [
+  { src: "/photos/01-motorcycle.webp", alt: "", flex: 150, ar: "3 / 2", mOrder: 1, mSpan: 2, cap: "3:2 · 01" },
+  { src: "/photos/02-alpine.webp", alt: "", flex: 67, ar: "2 / 3", mOrder: 2, mSpan: 1, cap: "2:3 · 02" },
+  { src: "/photos/03-sport.webp", alt: "", flex: 150, ar: "3 / 2", mOrder: 4, mSpan: 1, cap: "3:2 · 03" },
+  { src: "/photos/04-sport.webp", alt: "", flex: 67, ar: "2 / 3", mOrder: 3, mSpan: 1, cap: "2:3 · 04" },
+  { src: "/photos/05-alpine.webp", alt: "", flex: 300, ar: "3 / 1", mOrder: 6, mSpan: 2, cap: "3:1 · 05" },
+  { src: "/photos/06-motorcycle.webp", alt: "", flex: 150, ar: "3 / 2", mOrder: 5, mSpan: 1, cap: "3:2 · 06" },
+];
+
+// Until the files exist there is nothing to point an <img> at.
+import { existsSync } from "node:fs";
+const shipped = (src: string) => existsSync(`public${src}`);
+
+const rows = [frames.slice(0, 3), frames.slice(3)];
+---
+
+<section id="photography" class="section">
+  <div class="backdrop" aria-hidden="true">
+    <div class="backdrop-box" data-par="-.12" data-par-m="-.1">
+      <div class="tilt">
+        <Silhouette kind="aperture" color="rgba(238,235,228,.26)" />
+      </div>
+    </div>
+  </div>
+  <div class="glow shot-glow"></div>
+
+  <div id="shotVeil"></div>
+  <div id="shotHero">
+    <img id="shotHeroImg" alt="" aria-hidden="true" />
+    <div id="shotHeroCap"></div>
+    <div class="pip"></div>
+  </div>
+
+  <div id="shotTrack">
+    <div id="shotStage" data-rise>
+      <div class="side">
+        <p class="eyebrow">240° · PHOTOGRAPHER</p>
+        <h2 class="six">SIX FRAMES</h2>
+        <div class="counter" aria-hidden="true">
+          <div class="nums">
+            {
+              ["01", "02", "03", "04", "05", "06"].map((n, i) => (
+                <span data-shotn={i + 1}>{n}</span>
+              ))
+            }
+          </div>
+          <div class="rule">
+            <div id="shotTrail"></div>
+            <div id="shotHead"></div>
+          </div>
+        </div>
+        <p class="lead blurb">
+          Nothing here poses. You commit to an angle and find out.
+        </p>
+        <p class="hint" id="shotHint">SCROLL TO DEVELOP ↓</p>
+      </div>
+
+      <div class="frames">
+        {
+          rows.map((row) => (
+            <div class="frow">
+              {row.map((f) => (
+                <div
+                  class="frame"
+                  data-frame
+                  data-cursor="frame"
+                  data-cap={f.cap}
+                  style={`--flex:${f.flex};--ar:${f.ar};--m-order:${f.mOrder};--m-span:${f.mSpan}`}
+                >
+                  {shipped(f.src) && (
+                    <img src={f.src} alt={f.alt} loading="lazy" decoding="async" />
+                  )}
+                  <span class="cap" aria-hidden="true">
+                    {f.cap}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #photography {
+    overflow: clip;
+  }
+
+  .backdrop {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+  }
+
+  .backdrop-box {
+    position: sticky;
+    top: var(--sticky);
+    width: min(820px, 72vw);
+    aspect-ratio: 1;
+    flex: 0 0 auto;
+    align-self: flex-start;
+  }
+
+  .tilt {
+    position: absolute;
+    inset: 6%;
+    transform: perspective(1100px) rotateY(-6deg) rotateX(3deg);
+  }
+
+  .shot-glow {
+    background: radial-gradient(
+      56% 30% at 10% 62%,
+      rgba(255, 47, 29, 0.07),
+      transparent 64%
+    );
+  }
+
+  #shotVeil {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    background: var(--ink);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  #shotHero {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 0;
+    z-index: 25;
+    opacity: 0;
+    pointer-events: none;
+    background: var(--frame-fill);
+    box-shadow:
+      0 50px 140px rgba(0, 0, 0, 0.8),
+      inset 0 0 0 1px rgba(242, 239, 233, 0.4);
+  }
+
+  #shotHeroCap {
+    position: absolute;
+    left: 14px;
+    bottom: 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--bone);
+  }
+
+  .pip {
+    position: absolute;
+    right: 14px;
+    top: 12px;
+    width: 9px;
+    height: 9px;
+    background: var(--signal);
+  }
+
+  #shotTrack {
+    position: relative;
+    height: clamp(1500px, 250vh, 2600px);
+  }
+
+  #shotStage {
+    position: sticky;
+    top: var(--sticky);
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(28px, 4vw, 56px);
+    flex-wrap: wrap;
+  }
+
+  .side {
+    flex: 0 1 300px;
+    min-width: 260px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .side p {
+    margin: 0;
+  }
+
+  .six {
+    margin: 0;
+    font-size: clamp(40px, 5vw, 68px);
+    font-weight: 600;
+    font-stretch: 82%;
+    letter-spacing: -0.025em;
+    line-height: 1;
+  }
+
+  .counter {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    width: min(300px, 80vw);
+    padding-top: 4px;
+  }
+
+  .nums {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--dim);
+  }
+
+  .counter .rule {
+    position: relative;
+    height: 18px;
+    border-top: 1px solid rgba(242, 239, 233, 0.16);
+  }
+
+  #shotTrail {
+    position: absolute;
+    left: 0;
+    top: -1px;
+    width: 0;
+    height: 1px;
+    background: rgba(255, 47, 29, 0.45);
+  }
+
+  #shotHead {
+    position: absolute;
+    left: 0;
+    top: -4px;
+    width: 2px;
+    height: 15px;
+    background: var(--signal);
+    will-change: left;
+  }
+
+  /* Until the first frame lands the right-hand side is empty, so say why.
+     The scroll engine fades it out as soon as one arrives. */
+  .hint {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--warm);
+    transition: opacity 320ms var(--ease);
+  }
+
+  .blurb {
+    font-size: 16px;
+    padding-top: 4px;
+  }
+
+  .frames {
+    flex: 1 1 420px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .frow {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  /* The stripes stay behind the photograph, so a frame whose file has not
+     landed yet still reads as a frame. */
+  .frame img,
+  #shotHeroImg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Slots 03–05 crop to a different ratio on the phone; centre is the safe
+       default, override per frame if a crop cuts something important. */
+    object-position: center;
+  }
+
+  #shotHeroImg:not([src]) {
+    display: none;
+  }
+
+  .frame {
+    position: relative;
+    flex: var(--flex) 1 0;
+    min-width: 0;
+    aspect-ratio: var(--ar);
+    opacity: 0;
+    will-change: opacity;
+    background: var(--frame-fill);
+    box-shadow: inset 0 0 0 1px rgba(242, 239, 233, 0);
+    transition:
+      opacity 240ms var(--ease),
+      box-shadow 140ms var(--ease);
+  }
+
+  .frame:hover {
+    box-shadow: inset 0 0 0 1px rgba(242, 239, 233, 0.55);
+  }
+
+  .cap {
+    position: absolute;
+    left: 12px;
+    bottom: 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--caption);
+  }
+
+  @media (max-width: 768px) {
+    .backdrop-box {
+      top: 96px;
+      width: min(560px, 118vw);
+      opacity: 0.7;
+    }
+
+    .tilt {
+      transform: perspective(900px) rotateY(-6deg) rotateX(3deg);
+    }
+
+    .shot-glow {
+      background: radial-gradient(
+        72% 26% at 14% 64%,
+        rgba(255, 47, 29, 0.07),
+        transparent 66%
+      );
+    }
+
+    #shotHero {
+      box-shadow:
+        0 30px 90px rgba(0, 0, 0, 0.8),
+        inset 0 0 0 1px rgba(242, 239, 233, 0.4);
+    }
+
+    #shotHeroCap {
+      left: 12px;
+      bottom: 10px;
+      font-size: 10px;
+    }
+
+    .pip {
+      right: 12px;
+      top: 10px;
+      width: 8px;
+      height: 8px;
+    }
+
+    #shotTrack {
+      height: 340vh;
+    }
+
+    #shotStage {
+      top: 92px;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .side {
+      flex: 1 1 auto;
+      min-width: 0;
+      gap: 12px;
+    }
+
+    .six {
+      font-size: clamp(34px, 9vw, 46px);
+    }
+
+    .counter {
+      width: 100%;
+      gap: 8px;
+      padding-top: 2px;
+    }
+
+    .counter .rule {
+      height: 16px;
+    }
+
+    #shotHead {
+      height: 14px;
+    }
+
+    .blurb {
+      font-size: 15px;
+    }
+
+    /* Two columns, reordered so each row holds a matching pair of ratios and
+       the two wide frames take the full width. */
+    .frames {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .frow {
+      display: contents;
+    }
+
+    .frame {
+      order: var(--m-order);
+      grid-column: span var(--m-span);
+      align-self: start;
+    }
+
+    .cap {
+      left: 10px;
+      bottom: 8px;
+      font-size: 9px;
+    }
+  }
+
+  /* No takeover: every frame sits at rest in the grid and the full-screen
+     hero and its veil never appear. */
+  @media (prefers-reduced-motion: reduce) {
+    html.js #shotTrack {
+      height: auto;
+    }
+
+    /* Nothing to wait for — every frame is already there. */
+    .hint {
+      display: none;
+    }
+
+    [data-frame] {
+      opacity: 1 !important;
+    }
+
+    #shotHero,
+    #shotVeil {
+      display: none;
+    }
+  }
+</style>

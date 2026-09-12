@@ -1,0 +1,408 @@
+---
+import stops from "../../content/journey.json";
+
+// The CV as a corridor you travel east. Page scroll is the only driver — see
+// src/scripts/orbit.ts for the translate math.
+---
+
+<section id="journey">
+  <div
+    class="glow"
+    style="background:radial-gradient(62% 32% at 86% 30%, rgba(255,47,29,.08), transparent 64%)"
+  >
+  </div>
+
+  <header class="head" data-rise>
+    <div class="title">
+      <p class="eyebrow">CUNEO → LEUVEN</p>
+      <h2 class="headline">THE GROUND<br />FLATTENS</h2>
+    </div>
+    <p class="lead note">
+      Keep scrolling. The corridor runs east while the ridge behind it — the
+      Cuneo skyline — loses relief the further right you go.
+    </p>
+  </header>
+
+  <div id="jTrack">
+    <div class="sticky">
+      <div id="corridor" data-par=".04" data-par-m="0">
+        <!-- Lives inside #corridor so it shares the corridor's frame; as an
+             outside sibling it drifts against the cards. Its baseline sits
+             exactly on the axis rule. -->
+        <div class="ridge" aria-hidden="true"></div>
+
+        <div id="corridorTrack">
+          <ol class="cards">
+            {
+              stops.map((s) => (
+                <li
+                  data-card
+                  style={`--w:${s.w}px;--size:${s.size}px;--msize:${s.mSize}px`}
+                >
+                  <span class="year" style={s.yearRed ? "color:var(--signal)" : ""}>
+                    {s.year}
+                  </span>
+                  <span class="name">{s.name}</span>
+                  <span class="detail">
+                    {s.detail.map((d) => (
+                      <span>{d}</span>
+                    ))}
+                  </span>
+                </li>
+              ))
+            }
+            <li class="next" data-card style="--w:430px;--size:52px;--msize:38px">
+              <span class="year">2026 — NEXT</span>
+              <span class="name">Leuven,<br />Belgium</span>
+              <span class="pitch">
+                Moving for the pace: fast engineering culture, people who think
+                at that speed, and room to start something of my own.
+              </span>
+              <span class="detail">
+                <span>50.88°N 4.70°E · +560KM</span>
+                <span>THE RIDGE FLATTENS INTO PLAIN</span>
+              </span>
+            </li>
+          </ol>
+
+          <div class="axis" aria-hidden="true">
+            {
+              stops.map((s) => (
+                <div
+                  style={`--w:${s.w}px${s.tickRed ? ";color:var(--signal)" : ""}`}
+                >
+                  {s.tick}
+                </div>
+              ))
+            }
+            <div class="next" style="--w:430px">2026 →</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phone only: one stop per screen, so a counter replaces the widening
+           card widths as the sense of travel. -->
+      <div class="counter" aria-hidden="true">
+        <div class="counter-rule"><div id="corrFill"></div></div>
+        <span id="corrLabel">01 / 07</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #journey {
+    position: relative;
+    z-index: 1;
+    padding: var(--pad-y) 0;
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+    border-top: 1px solid var(--hair);
+    overflow-x: clip;
+  }
+
+  .head {
+    padding: 0 var(--pad-x);
+    display: flex;
+    align-items: flex-end;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  .head p {
+    margin: 0;
+  }
+
+  .title {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .note {
+    max-width: 420px;
+  }
+
+  #jTrack {
+    position: relative;
+    height: clamp(1100px, 190vh, 2100px);
+  }
+
+  .sticky {
+    position: sticky;
+    top: clamp(86px, 13vh, 140px);
+  }
+
+  #corridor {
+    position: relative;
+    overflow: hidden;
+    padding: 0 var(--pad-x);
+    scrollbar-width: none;
+  }
+
+  #corridor::-webkit-scrollbar {
+    display: none;
+    height: 0;
+  }
+
+  .ridge {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 23px;
+    height: clamp(56px, 7vw, 84px);
+    z-index: 0;
+    pointer-events: none;
+    /* Loses opacity left to right: the relief flattening as the ground opens. */
+    background: linear-gradient(
+      90deg,
+      rgba(238, 235, 228, 0.15),
+      rgba(238, 235, 228, 0.09) 62%,
+      rgba(238, 235, 228, 0.04)
+    );
+    clip-path: polygon(
+      0 100%,
+      0 34%,
+      5% 6%,
+      10% 40%,
+      15% 14%,
+      21% 46%,
+      27% 24%,
+      33% 54%,
+      39% 36%,
+      45% 62%,
+      51% 48%,
+      57% 70%,
+      63% 58%,
+      69% 78%,
+      75% 70%,
+      81% 86%,
+      87% 82%,
+      93% 92%,
+      100% 90%,
+      100% 100%
+    );
+  }
+
+  /* Both rows sit inside the one translated element, or the ticks slide
+     against the cards. */
+  #corridorTrack {
+    position: relative;
+    z-index: 1;
+    width: max-content;
+    will-change: transform;
+  }
+
+  .cards {
+    display: flex;
+    align-items: flex-end;
+    width: max-content;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    user-select: none;
+  }
+
+  .cards li {
+    flex: 0 0 var(--w);
+    border-left: 1px solid var(--hair-3);
+    padding: 0 18px 40px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: flex-end;
+    min-height: 300px;
+    /* Never transition transform here — it lags the scroll. */
+    transition: opacity 180ms linear;
+  }
+
+  .cards li.next {
+    border-left: 1px dashed var(--signal);
+    gap: 14px;
+  }
+
+  .year {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--dim);
+  }
+
+  .next .year {
+    color: var(--signal);
+  }
+
+  .name {
+    font-size: var(--size);
+    font-weight: 700;
+    font-stretch: 84%;
+    letter-spacing: -0.02em;
+    line-height: 1.04;
+  }
+
+  .next .name {
+    font-stretch: 82%;
+    letter-spacing: -0.03em;
+    line-height: 0.98;
+  }
+
+  .pitch {
+    font-size: 17px;
+    line-height: 1.5;
+    max-width: 340px;
+    text-wrap: pretty;
+  }
+
+  .detail {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.75;
+    letter-spacing: 0.04em;
+    color: var(--warm);
+    padding-top: 4px;
+  }
+
+  .axis {
+    display: flex;
+    width: max-content;
+    border-top: 1px solid var(--hair-3);
+    margin-top: 26px;
+    user-select: none;
+  }
+
+  .axis > div {
+    flex: 0 0 var(--w);
+    border-left: 1px solid var(--hair-3);
+    padding: 9px 0 0 16px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--dim);
+  }
+
+  .axis > div.next {
+    border-left: 1px dashed var(--signal);
+    color: var(--signal);
+  }
+
+  .counter {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    #journey {
+      padding: 64px 0 72px;
+      gap: 28px;
+    }
+
+    .head {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 16px;
+    }
+
+    #jTrack {
+      height: 230vh;
+    }
+
+    .sticky {
+      top: 96px;
+    }
+
+    .ridge {
+      bottom: 22px;
+      height: 56px;
+    }
+
+    /* One stop per screen. */
+    .cards li,
+    .axis > div {
+      flex-basis: 300px;
+    }
+
+    .cards li {
+      padding: 0 20px 34px 14px;
+    }
+
+    .name {
+      font-size: var(--msize);
+      line-height: 1.06;
+    }
+
+    .next .name {
+      line-height: 1;
+    }
+
+    .pitch {
+      font-size: 16px;
+      max-width: none;
+    }
+
+    .detail {
+      line-height: 1.8;
+    }
+
+    .next .detail {
+      font-size: 10px;
+      padding-top: 0;
+    }
+
+    .axis {
+      margin-top: 22px;
+    }
+
+    .axis > div {
+      padding: 8px 0 0 14px;
+      font-size: 10px;
+    }
+
+    .counter {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 20px 0;
+    }
+
+    .counter-rule {
+      flex: 1;
+      height: 1px;
+      background: var(--hair-3);
+      position: relative;
+    }
+
+    #corrFill {
+      position: absolute;
+      left: 0;
+      top: -1px;
+      height: 3px;
+      width: 0;
+      background: var(--signal);
+    }
+
+    .counter span {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--dim);
+    }
+  }
+
+  /* No scroll engine: the corridor becomes an ordinary scrollable region and
+     the track collapses to the height of its sticky content. */
+  @media (prefers-reduced-motion: reduce) {
+    html.js #jTrack {
+      height: auto;
+    }
+
+    #corridor {
+      overflow-x: auto;
+    }
+
+    #corridorTrack {
+      transform: none !important;
+    }
+  }
+</style>

@@ -1,0 +1,200 @@
+---
+import Silhouette from "../components/Silhouette.astro";
+---
+
+<section id="founder" class="section">
+  <div class="backdrop" aria-hidden="true">
+    <div class="backdrop-box" data-par="-.12" data-par-m="-.1">
+      <div class="tilt">
+        <Silhouette
+          kind="nodes"
+          color="rgba(238,235,228,.3)"
+          line="rgba(160,196,220,.14)"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="glow founder-glow"></div>
+
+  <div data-par=".03" data-par-m="0">
+    <div class="head" data-rise>
+      <div class="title">
+        <p class="eyebrow">120° · FOUNDER</p>
+        <p class="statement">
+          The angle exists in the geometry first — turned this far, the same
+          points read as a network.
+        </p>
+      </div>
+      <h2 class="big">TOO EARLY<br />TO NAME</h2>
+    </div>
+  </div>
+
+  <div data-par=".04" data-par-m="0">
+    <div class="cols" data-rise>
+      <p class="first" data-par="-.1" data-par-m="0">
+        I am building something. It is early enough that describing it would be
+        a claim rather than a fact, so this section holds its shape and waits.
+      </p>
+      <p class="second" data-par=".04" data-par-m="0">
+        What I can say: it starts from work I do every day inside industrial
+        software, and from how much of it is still done by hand. I am not
+        recruiting anyone and I am not pitching. And it does not have to be this
+        — any idea, any field. If what you are building needs what I can do, I
+        am listening.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  #founder {
+    overflow: clip;
+  }
+
+  .backdrop {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+  }
+
+  .backdrop-box {
+    position: sticky;
+    top: var(--sticky);
+    width: min(780px, 70vw);
+    aspect-ratio: 1;
+    flex: 0 0 auto;
+    align-self: flex-start;
+  }
+
+  .tilt {
+    position: absolute;
+    inset: 8% 6%;
+    transform: perspective(1100px) rotateY(12deg) rotateX(-5deg);
+  }
+
+  .founder-glow {
+    background: radial-gradient(
+      58% 34% at 14% 22%,
+      rgba(255, 47, 29, 0.09),
+      transparent 64%
+    );
+  }
+
+  .head {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(26px, 4vh, 44px);
+  }
+
+  .title {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .title p {
+    margin: 0;
+  }
+
+  .statement {
+    font-size: clamp(26px, 3.4vw, 42px);
+    font-weight: 500;
+    font-stretch: 86%;
+    letter-spacing: -0.02em;
+    line-height: 1.12;
+    max-width: 620px;
+    text-wrap: pretty;
+  }
+
+  .big {
+    margin: 0;
+    font-size: clamp(44px, 8vw, 104px);
+    font-weight: 700;
+    font-stretch: 79%;
+    letter-spacing: -0.035em;
+    line-height: 0.9;
+  }
+
+  .cols {
+    display: flex;
+    gap: 48px;
+    flex-wrap: wrap;
+    max-width: 1100px;
+  }
+
+  .cols p {
+    flex: 1;
+    min-width: 280px;
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  .first {
+    font-size: 19px;
+    line-height: 1.55;
+  }
+
+  .second {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--warm);
+  }
+
+  @media (max-width: 768px) {
+    .backdrop-box {
+      top: 96px;
+      width: min(520px, 112vw);
+      opacity: 0.6;
+    }
+
+    .tilt {
+      transform: perspective(900px) rotateY(12deg) rotateX(-4deg);
+    }
+
+    .founder-glow {
+      background: radial-gradient(
+        74% 28% at 12% 20%,
+        rgba(255, 47, 29, 0.09),
+        transparent 66%
+      );
+    }
+
+    .head {
+      gap: 22px;
+    }
+
+    .title {
+      gap: 22px;
+    }
+
+    .statement {
+      font-size: 22px;
+      line-height: 1.16;
+    }
+
+    .big {
+      font-size: clamp(40px, 12vw, 60px);
+    }
+
+    .cols {
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .cols p {
+      min-width: 0;
+    }
+
+    .first {
+      font-size: 17px;
+    }
+
+    .second {
+      font-size: 16px;
+    }
+  }
+</style>

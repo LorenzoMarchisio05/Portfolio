@@ -1,0 +1,127 @@
+---
+// Fixed chrome: the bar with the live angle readout, and the scroll progress
+// rule pinned to the bottom of the viewport.
+const links = [
+  { href: "#engineer", label: "ENGINEER" },
+  { href: "#founder", label: "FOUNDER" },
+  { href: "#photography", label: "PHOTOGRAPHER" },
+];
+---
+
+<div class="bar">
+  <a class="wordmark" href="#top">LM<span>.</span></a>
+  <nav class="links">
+    {
+      links.map(({ href, label }) => (
+        <a href={href} data-nav={href.slice(1)}>
+          {label}
+        </a>
+      ))
+    }
+  </nav>
+  <span class="angle" data-angle>068°</span>
+</div>
+
+<div class="progress">
+  <div id="progFill"></div>
+</div>
+
+<style>
+  .bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding: 26px var(--pad-x);
+    background: linear-gradient(var(--ink) 62%, rgba(12, 11, 10, 0));
+    /* The bar itself must not eat clicks on the page behind it. */
+    pointer-events: none;
+  }
+
+  .wordmark {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    pointer-events: auto;
+  }
+
+  .wordmark span {
+    color: var(--signal);
+  }
+
+  .links {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: clamp(14px, 2.4vw, 34px);
+    pointer-events: auto;
+  }
+
+  .links a {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--warm);
+  }
+
+  .links a[data-active] {
+    color: var(--signal);
+  }
+
+  .angle {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--signal);
+    min-width: 44px;
+    text-align: right;
+  }
+
+  .progress {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    z-index: 41;
+    background: rgba(242, 239, 233, 0.08);
+    pointer-events: none;
+  }
+
+  .progress > div {
+    height: 2px;
+    width: 0;
+    background: var(--signal);
+  }
+
+  @media (max-width: 768px) {
+    .bar {
+      gap: 16px;
+      padding: 16px 20px 20px;
+      background: linear-gradient(var(--ink) 58%, rgba(12, 11, 10, 0));
+    }
+
+    .wordmark {
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding-right: 10px;
+    }
+
+    /* The phone design drops the section links: only the wordmark and the
+       angle readout survive. */
+    .links {
+      display: none;
+    }
+
+    .angle {
+      margin-left: auto;
+      letter-spacing: 0.12em;
+    }
+  }
+</style>

@@ -1,0 +1,344 @@
+---
+import Silhouette from "../components/Silhouette.astro";
+
+const method = [
+  {
+    n: "01",
+    t: "Find the binding constraint",
+    d: "Most problems are one limit wearing a costume. I go looking for the one that actually moves before touching anything else.",
+  },
+  {
+    n: "02",
+    t: "Measure before arguing",
+    d: "A number I trust beats a story I like. If it can't be measured, it doesn't get claimed.",
+  },
+  {
+    n: "03",
+    t: "Tolerances, not perfection",
+    d: "Decide what's allowed to be wrong, and by how much, while it's still cheap to decide.",
+  },
+  {
+    n: "04",
+    t: "The failure is at the interface",
+    d: "Parts rarely break alone. I read the handoffs — between systems, teams, and the people who will use the thing.",
+  },
+  {
+    n: "05",
+    t: "Crudest version that survives",
+    d: "Build what holds under real contact first, then make every addition earn its place.",
+  },
+  {
+    n: "06",
+    t: "Leave it legible",
+    d: "Someone has to change this without me in the room. That's part of the spec, not a courtesy.",
+  },
+];
+---
+
+<section id="engineer" class="section">
+  <!-- Phone layout only: the brace pair drops behind the copy instead of
+       sitting in its own column. -->
+  <div class="backdrop" aria-hidden="true">
+    <div class="backdrop-box" data-par="-.1">
+      <div class="tilt">
+        <Silhouette kind="braces" scale={300} color="rgba(238,235,228,.3)" />
+      </div>
+    </div>
+  </div>
+
+  <header class="head" data-rise>
+    <div class="title">
+      <p class="eyebrow">000° · ENGINEER</p>
+      <h2 class="headline">WHAT I<br class="narrow-only" /> REACH FOR<br />FIRST</h2>
+    </div>
+    <p class="lead intro">
+      Not a language. A method. Engineering school taught me an order of
+      operations long before it taught me a stack — and the order is the part
+      that transfers.
+    </p>
+  </header>
+
+  <div class="body">
+    <ol class="method" data-rise>
+      {
+        method.map((m) => (
+          <li>
+            <span class="index" aria-hidden="true">
+              {m.n}
+            </span>
+            <div class="principle">
+              <h3>{m.t}</h3>
+              <p class="lead">{m.d}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+
+    <div class="side">
+      <div class="side-sticky">
+        <div class="glyph" data-par="-.06" aria-hidden="true">
+          <div class="tilt">
+            <Silhouette kind="braces" scale={300} color="rgba(238,235,228,.5)" />
+          </div>
+        </div>
+        <div class="note" data-rise>
+          <p class="cap">FROM HERE THE OBJECT<br />READS AS A BRACE PAIR</p>
+          <p class="lead sentence">
+            The shape of something that has to hold — which is what engineering
+            is, before it is any particular tool.
+          </p>
+          <a class="cv" href="/cv.pdf">READ THE CV ↓</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .head {
+    display: flex;
+    align-items: flex-end;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  .head p {
+    margin: 0;
+  }
+
+  .title {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .intro {
+    max-width: 440px;
+  }
+
+  .narrow-only {
+    display: none;
+  }
+
+  .body {
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(32px, 5vw, 80px);
+    flex-wrap: wrap;
+  }
+
+  .method {
+    flex: 1 1 520px;
+    min-width: 300px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .method li {
+    display: flex;
+    gap: clamp(18px, 3vw, 40px);
+    align-items: baseline;
+    padding: 26px 0 24px;
+    border-top: 1px solid var(--hair-2);
+  }
+
+  .index {
+    flex: 0 0 auto;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--signal);
+    padding-top: 6px;
+  }
+
+  .principle {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    min-width: 0;
+  }
+
+  .principle h3 {
+    margin: 0;
+    font-size: clamp(22px, 2.6vw, 31px);
+    font-weight: 600;
+    font-stretch: 86%;
+    letter-spacing: -0.02em;
+    line-height: 1.06;
+  }
+
+  .principle p {
+    font-size: 16px;
+    max-width: 460px;
+  }
+
+  .side {
+    flex: 0 1 360px;
+    min-width: 260px;
+    align-self: stretch;
+    position: relative;
+  }
+
+  .side-sticky {
+    position: sticky;
+    top: clamp(96px, 16vh, 180px);
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+  }
+
+  .glyph {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    pointer-events: none;
+  }
+
+  .glyph .tilt {
+    position: absolute;
+    inset: 0;
+    transform: perspective(1100px) rotateY(-11deg) rotateX(5deg);
+  }
+
+  .note {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .note p {
+    margin: 0;
+  }
+
+  .cap {
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.6;
+    letter-spacing: 0.08em;
+    color: var(--warm);
+  }
+
+  .sentence {
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  .cv {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    border-bottom: 1px solid var(--signal);
+    padding-bottom: 6px;
+    width: fit-content;
+  }
+
+  .backdrop {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    #engineer {
+      overflow: clip;
+      gap: 36px;
+    }
+
+    .backdrop {
+      display: flex;
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      justify-content: flex-end;
+      align-items: flex-start;
+    }
+
+    .backdrop-box {
+      position: sticky;
+      top: 96px;
+      width: min(520px, 112vw);
+      aspect-ratio: 1;
+      flex: 0 0 auto;
+      align-self: flex-start;
+      opacity: 0.55;
+    }
+
+    .backdrop .tilt {
+      position: absolute;
+      inset: 6%;
+      transform: perspective(900px) rotateY(-10deg) rotateX(4deg);
+    }
+
+    .head {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 18px;
+    }
+
+    .narrow-only {
+      display: inline;
+    }
+
+    .body {
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .method {
+      flex: 1 1 auto;
+      min-width: 0;
+      width: 100%;
+    }
+
+    .method li {
+      flex-direction: column;
+      gap: 8px;
+      padding: 22px 0 20px;
+    }
+
+    .index {
+      font-size: 10px;
+      padding-top: 0;
+    }
+
+    .principle h3 {
+      font-size: 23px;
+      line-height: 1.08;
+    }
+
+    .principle p {
+      font-size: 15px;
+      max-width: none;
+    }
+
+    .side {
+      flex: 1 1 auto;
+      min-width: 0;
+      width: 100%;
+      align-self: auto;
+    }
+
+    .side-sticky {
+      position: static;
+      gap: 14px;
+    }
+
+    /* The glyph moved to the backdrop; the sentence is desktop-only copy. */
+    .glyph,
+    .sentence {
+      display: none;
+    }
+
+    .cap {
+      font-size: 10px;
+      line-height: 1.7;
+    }
+
+    .cv {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+  }
+</style>

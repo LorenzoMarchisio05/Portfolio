@@ -1,0 +1,225 @@
+---
+// The one parametric object the whole page hangs off: a dotted shape that reads
+// as a brace pair, a network, an aperture or a ridge depending on the angle you
+// look at it from. No image assets — the dots are a repeating radial-gradient,
+// and for the braces that gradient is clipped through the glyphs themselves.
+interface Props {
+  kind?: "braces" | "nodes" | "aperture" | "ridge";
+  color?: string;
+  line?: string;
+  noise?: boolean;
+  density?: number;
+  scale?: number;
+  class?: string;
+}
+
+const {
+  kind = "braces",
+  color = "rgba(238,235,228,.94)",
+  line = "rgba(255,47,29,.55)",
+  noise = false,
+  density = 6,
+  scale = 200,
+  class: className,
+} = Astro.props;
+
+const coreDensity = Math.max(4, density - 2);
+const dots = `radial-gradient(circle at center, ${color} .9px, transparent 1.2px) 0 0 / ${density}px ${density}px repeat`;
+const core = `radial-gradient(circle at center, ${color} 1.1px, transparent 1.4px) 0 0 / ${coreDensity}px ${coreDensity}px repeat`;
+
+const outer = scale;
+const inner = Math.round(scale * 0.44);
+
+const blades = [0, 60, 120, 180, 240, 300];
+// [degrees, length %] — the six edges leaving the core node.
+const spokes = [
+  [-46, 41],
+  [9, 36],
+  [64, 40],
+  [126, 34],
+  [182, 35],
+  [244, 39],
+];
+// [left %, top %, size %] — the satellites they reach.
+const satellites = [
+  [74, 16, 9],
+  [82, 52, 7],
+  [62, 80, 11],
+  [26, 74, 8],
+  [10, 44, 10],
+  [30, 12, 6],
+];
+
+const ridgeFront =
+  "polygon(0 100%,0 62%,7% 48%,13% 58%,21% 26%,27% 40%,33% 20%,41% 47%,48% 8%,56% 38%,63% 24%,70% 52%,78% 30%,85% 57%,92% 44%,100% 66%,100% 100%)";
+const ridgeBack =
+  "polygon(0 100%,0 74%,11% 52%,19% 70%,29% 40%,38% 66%,47% 44%,58% 72%,68% 50%,79% 76%,90% 58%,100% 80%,100% 100%)";
+const blade = "polygon(12% 0,100% 0,70% 100%,30% 100%)";
+---
+
+<div class:list={["sil", className]} aria-hidden="true">
+  {noise && <div class="noise"></div>}
+
+  {
+    kind === "braces" && (
+      <div
+        class="braces"
+        style={`background:${dots};-webkit-background-clip:text;background-clip:text`}
+      >
+        <span style={`font-size:${outer}px`}>&#123;</span>
+        <span style={`font-size:${inner}px`}>&#123;</span>
+        <span style={`font-size:${inner}px`}>&#125;</span>
+        <span style={`font-size:${outer}px`}>&#125;</span>
+      </div>
+    )
+  }
+
+  {
+    kind === "aperture" && (
+      <div class="square-wrap">
+        <div class="square">
+          {blades.map((deg) => (
+            <div class="blade-frame" style={`transform:rotate(${deg}deg)`}>
+              <div
+                class="blade"
+                style={`clip-path:${blade};background:${dots}`}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  {
+    kind === "nodes" && (
+      <div class="square-wrap">
+        <div class="square">
+          {spokes.map(([deg, len]) => (
+            <div
+              class="spoke"
+              style={`width:${len}%;transform:rotate(${deg}deg);background:linear-gradient(90deg,${line},transparent)`}
+            />
+          ))}
+          <div class="node" style={`left:43%;top:43%;width:14%;background:${core}`} />
+          {satellites.map(([l, t, w]) => (
+            <div
+              class="node"
+              style={`left:${l}%;top:${t}%;width:${w}%;background:${dots}`}
+            />
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  {
+    kind === "ridge" && (
+      <>
+        <div
+          class="ridge"
+          style={`height:56%;clip-path:${ridgeFront};background:${dots}`}
+        />
+        <div
+          class="ridge"
+          style={`height:32%;opacity:.5;clip-path:${ridgeBack};background:${dots}`}
+        />
+      </>
+    )
+  }
+</div>
+
+<style>
+  .sil {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .noise {
+    position: absolute;
+    inset: -20%;
+    background: radial-gradient(
+        circle at center,
+        rgba(232, 228, 220, 0.45) 0.7px,
+        transparent 1.1px
+      )
+      0 0 / 12px 12px repeat;
+    opacity: 0.55;
+    -webkit-mask-image: radial-gradient(
+      circle at 50% 50%,
+      #000 8%,
+      transparent 70%
+    );
+    mask-image: radial-gradient(circle at 50% 50%, #000 8%, transparent 70%);
+  }
+
+  .braces {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--sans);
+    font-weight: 200;
+    line-height: 0.78;
+    white-space: nowrap;
+    color: transparent;
+    /* The braces are drawn by clipping a gradient to this text — it is a
+       shape, not something anyone should be able to select. */
+    user-select: none;
+  }
+
+  .braces span:nth-child(2),
+  .braces span:nth-child(3) {
+    padding: 0 0.06em;
+  }
+
+  .square-wrap {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .square {
+    position: relative;
+    height: 100%;
+    aspect-ratio: 1;
+  }
+
+  .blade-frame {
+    position: absolute;
+    inset: 0;
+  }
+
+  .blade {
+    position: absolute;
+    left: 33%;
+    top: 5%;
+    width: 34%;
+    height: 37%;
+  }
+
+  .spoke {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    height: 1.5px;
+    transform-origin: 0 50%;
+  }
+
+  .node {
+    position: absolute;
+    aspect-ratio: 1;
+    border-radius: 50%;
+  }
+
+  .ridge {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 12%;
+  }
+</style>

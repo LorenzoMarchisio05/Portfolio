@@ -3,8 +3,6 @@ import { defineConfig, envField } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import cloudflare from "@astrojs/cloudflare";
 
-import tailwindcss from "@tailwindcss/vite";
-
 export default defineConfig({
   site: "https://lorenzomarchisio.me",
   output: "server",
@@ -20,9 +18,5 @@ export default defineConfig({
       enabled: true,
     },
   }),
-  vite: {
-    plugins: [tailwindcss()],
-  },
-
   integrations: [sitemap()],
 });

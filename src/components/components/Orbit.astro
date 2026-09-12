@@ -1,0 +1,118 @@
+---
+import Silhouette from "./Silhouette.astro";
+
+// Hero and Engineer share one clipping container so the object cluster and the
+// radial field cross the section seam uncut.
+---
+
+<div id="orbit">
+  <div class="field"></div>
+
+  <div class="cluster">
+    <div class="frame" data-par=".18" data-par-m="-.1">
+      <div class="layer nodes">
+        <Silhouette
+          kind="nodes"
+          noise
+          color="rgba(226,232,238,.55)"
+          line="rgba(160,196,220,.18)"
+        />
+      </div>
+      <div class="layer aperture">
+        <Silhouette kind="aperture" color="rgba(232,228,220,.5)" />
+      </div>
+      <div class="layer braces">
+        <Silhouette kind="braces" scale={300} color="rgba(238,235,228,.6)" />
+      </div>
+    </div>
+  </div>
+
+  <slot />
+</div>
+
+<style>
+  #orbit {
+    position: relative;
+    overflow: clip;
+  }
+
+  .field {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(70% 38% at 78% 20%, rgba(96, 124, 152, 0.1), transparent 62%),
+      radial-gradient(52% 26% at 18% 42%, rgba(255, 47, 29, 0.07), transparent 64%),
+      radial-gradient(64% 30% at 88% 74%, rgba(96, 124, 152, 0.06), transparent 64%);
+  }
+
+  .cluster {
+    position: absolute;
+    right: -8%;
+    top: -4vh;
+    width: min(1080px, 92vw);
+    aspect-ratio: 1;
+    filter: blur(1.1px);
+    opacity: 0.72;
+    pointer-events: none;
+    perspective: 1500px;
+    z-index: 0;
+  }
+
+  .frame {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+  }
+
+  .layer {
+    position: absolute;
+    inset: 0;
+  }
+
+  .nodes {
+    opacity: 0.34;
+    transform: translateZ(90px) rotateY(34deg) rotateX(9deg) skewY(-3deg)
+      scale(1.02);
+  }
+
+  .aperture {
+    opacity: 0.3;
+    transform: translateZ(-40px) rotate(-14deg) scale(0.7);
+  }
+
+  .braces {
+    opacity: 0.28;
+    transform: translateZ(-170px) rotateY(-38deg) rotateX(7deg) scale(0.86);
+  }
+
+  @media (max-width: 768px) {
+    .field {
+      background:
+        radial-gradient(84% 34% at 76% 16%, rgba(96, 124, 152, 0.11), transparent 64%),
+        radial-gradient(72% 26% at 12% 44%, rgba(255, 47, 29, 0.08), transparent 66%),
+        radial-gradient(80% 28% at 88% 76%, rgba(96, 124, 152, 0.06), transparent 66%);
+    }
+
+    .cluster {
+      right: -22%;
+      top: 2vh;
+      width: min(560px, 116vw);
+      filter: blur(1px);
+      opacity: 0.5;
+      perspective: 1200px;
+    }
+
+    .nodes {
+      transform: translateZ(60px) rotateY(30deg) rotateX(8deg) scale(1.02);
+    }
+
+    .aperture {
+      transform: translateZ(-30px) rotate(-14deg) scale(0.7);
+    }
+
+    .braces {
+      transform: translateZ(-120px) rotateY(-34deg) rotateX(6deg) scale(0.86);
+    }
+  }
+</style>

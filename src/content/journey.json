@@ -1,59 +1,72 @@
-{
-  "slug": "journey",
-  "data": [
-    {
-      "id": 0,
-      "date": "2019 - 2024",
-      "company": "I.I.S. G. Vallauri",
-      "location": "Fossano • Italy",
-      "title": "High School Diploma",
-      "description": "During my five years at I.I.S. G. Vallauri, I gained a solid foundation in computer science and developed a true passion for the subject. I actively participated in group projects and school competitions, which helped me improve my technical skills, teamwork abilities, and problem-solving in dynamic environments.",
-      "linkedContent": null
-    },
-    {
-      "id": 1,
-      "date": "2023",
-      "company": "I.I.S. G. Vallauri",
-      "location": "Castelfranco Veneto • Italy",
-      "title": "National Computer Science Competitions",
-      "description": "I took part in the national computer science competitions, engaging in friendly challenges with 23 other candidates. This experience allowed me to test my technical skills, meet amazing and highly skilled people, and grow in a competitive and stimulating environment.",
-      "linkedContent": null
-    },
-    {
-      "id": 2,
-      "date": "2022",
-      "company": "Maggioli S.p.A.",
-      "location": "Savigliano • Italy",
-      "title": "Internship",
-      "description": "During my internship at Maggioli S.p.A., I worked as a fullstack web developer using Java Bean and XHTML with UI frameworks. I also assisted in testing previously developed platforms and creating internal scripts to enhance company processes.",
-      "linkedContent": null
-    },
-    {
-      "id": 3,
-      "date": "2023",
-      "company": "Maggioli S.p.A.",
-      "location": "Savigliano • Italy",
-      "title": "Internship",
-      "description": "In the second year of my internship at Maggioli S.p.A., building on the skills gained the previous year, I improved my collaboration with colleagues and gained greater autonomy. I contributed to the development of various projects and internal scripts for database management.",
-      "linkedContent": null
-    },
-    {
-      "id": 4,
-      "date": "2024 - ongoing",
-      "company": "Politecnico di Torino",
-      "location": "Torino • Italy",
-      "title": "Computer Engineering Bachelor's Degree",
-      "description": "I am currently pursuing a Bachelor's degree in Computer Engineering at Politecnico di Torino, focusing on programming, information systems, algorithms, software development, and database management. This program is providing me with a strong foundation to face challenges in the IT field.",
-      "linkedContent": null
-    },
-    {
-      "id": 5,
-      "date": "2024 - ongoing",
-      "company": "Leonardo Web S.r.l.",
-      "location": "Manta • Italy",
-      "title": "Apprenticeship",
-      "description": "I am currently doing an apprenticeship at Leonardo Web S.r.l., where I apply my fullstack development skills with C#, working on complex projects and collaborating with the team. I am also expanding my skills in mobile development with Flutter, building modern cross-platform applications.",
-      "linkedContent": null
-    }
-  ]
-}
+[
+  {
+    "year": "2019 — 2024",
+    "name": "IIS Vallauri",
+    "w": 168,
+    "size": 21,
+    "mSize": 26,
+    "yearRed": false,
+    "detail": ["IT DIPLOMA", "FOSSANO"],
+    "tick": "2019",
+    "tickRed": false
+  },
+  {
+    "year": "2022",
+    "name": "Maggioli S.p.A.",
+    "w": 186,
+    "size": 24,
+    "mSize": 28,
+    "yearRed": false,
+    "detail": ["FIRST INTERNSHIP", "PUBLIC-SECTOR SOFTWARE"],
+    "tick": "2022",
+    "tickRed": false
+  },
+  {
+    "year": "2023",
+    "name": "Maggioli S.p.A.",
+    "w": 210,
+    "size": 27,
+    "mSize": 30,
+    "yearRed": false,
+    "detail": ["SECOND INTERNSHIP", "BACK ON REQUEST"],
+    "tick": "2023",
+    "tickRed": false
+  },
+  {
+    "year": "2023",
+    "name": "National CS competitions",
+    "w": 252,
+    "size": 30,
+    "mSize": 30,
+    "yearRed": false,
+    "detail": ["GARE NAZIONALI DI INFORMATICA", "NATIONAL ROUND"],
+    "tick": "2023",
+    "tickRed": false
+  },
+  {
+    "year": "2024 — ONGOING",
+    "name": "Politecnico di Torino",
+    "w": 288,
+    "size": 36,
+    "mSize": 32,
+    "yearRed": true,
+    "detail": ["COMPUTER ENGINEERING", "BSc, IN PROGRESS"],
+    "tick": "2024",
+    "tickRed": false
+  },
+  {
+    "year": "2024 — 2026",
+    "name": "Leonardo Web S.r.l.",
+    "w": 326,
+    "size": 42,
+    "mSize": 34,
+    "yearRed": true,
+    "detail": [
+      "FULL-STACK APPRENTICE",
+      "C# / .NET · FLUTTER · POSTGRES",
+      "PIEMONTE, IT"
+    ],
+    "tick": "NOW",
+    "tickRed": true
+  }
+]
