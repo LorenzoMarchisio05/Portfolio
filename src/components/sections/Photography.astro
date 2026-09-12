@@ -24,9 +24,10 @@ const frames = [
   { src: "/photos/06-motorcycle.webp", alt: "", flex: 150, ar: "3 / 2", mOrder: 5, mSpan: 1, cap: "3:2 · 06" },
 ];
 
-// Until the files exist there is nothing to point an <img> at.
-import { existsSync } from "node:fs";
-const shipped = (src: string) => existsSync(`public${src}`);
+// Until the files exist there is nothing to point an <img> at. Resolved at
+// build time — this renders in a Cloudflare worker, which has no node:fs.
+const onDisk = new Set(Object.keys(import.meta.glob("/public/photos/*")));
+const shipped = (src: string) => onDisk.has(`/public${src}`);
 
 const rows = [frames.slice(0, 3), frames.slice(3)];
 ---
