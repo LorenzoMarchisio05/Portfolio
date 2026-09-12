@@ -317,10 +317,18 @@ import stops from "../../content/journey.json";
       height: 56px;
     }
 
-    /* One stop per screen. */
+    /* One stop per screen. `flex`, not `flex-basis` alone: this has to beat
+       the shorthand above outright rather than reach into it, because that one
+       carries `var(--w)` — 430px on the Leuven card, wider than the phone it
+       has to cross. `min-width` drops flexbox's automatic minimum so content
+       can never push a card back out past its basis, and the cap keeps a card
+       from outgrowing the corridor on a narrow phone. Cards and ticks share
+       the rule: if the two ever disagree the axis desyncs from the stops. */
     .cards li,
     .axis > div {
-      flex-basis: 300px;
+      flex: 0 0 300px;
+      min-width: 0;
+      max-width: calc(100vw - 2 * var(--pad-x));
     }
 
     .cards li {

@@ -146,28 +146,66 @@ const cards = corridor
   ? Array.from(corridor.querySelectorAll<HTMLElement>("[data-card]"))
   : [];
 
+// How far the track travels for its east edge to finish on the corridor's.
+// Measured on viewport changes only, never inside the loop: derived per frame,
+// any wobble in the underlying layout read — a font swap, a mobile URL-bar
+// resize — moves the whole corridor for that frame, which reads as a jump.
+const jSticky = jTrack?.querySelector<HTMLElement>(".sticky") ?? null;
+let corridorMax = 0;
+let stickyH = 0;
+let stickyTop = 0;
+
+function measureCorridor() {
+  if (!corridor || !corridorTrack) return;
+  if (jSticky) {
+    stickyH = jSticky.getBoundingClientRect().height;
+    stickyTop = parseFloat(getComputedStyle(jSticky).top) || 0;
+  }
+  const pad = getComputedStyle(corridor);
+  // Against `clientWidth` this lands one padding short: that counts the
+  // corridor's own padding, but the track starts inside it, so the last card
+  // stops with `--pad-x` of itself still clipped off the east edge and never
+  // fully arrives.
+  const inner =
+    corridor.clientWidth -
+    parseFloat(pad.paddingLeft) -
+    parseFloat(pad.paddingRight);
+  corridorMax = Math.max(0, corridorTrack.scrollWidth - inner);
+}
+
 function journey(vh: number) {
   if (!jTrack || !corridor || !corridorTrack) return;
 
   const rect = jTrack.getBoundingClientRect();
-  const p = clamp01(-rect.top / Math.max(1, rect.height - vh));
-  const max = Math.max(0, corridorTrack.scrollWidth - corridor.clientWidth);
+  // Progress across exactly the stretch where the block is parked, so the
+  // corridor starts the moment it pins and finishes the moment it releases.
+  // Measured against the viewport instead, it ran out roughly a screen-height
+  // of scroll early and left a dead stretch at the end — still pinned, still
+  // 07/07, nothing moving until the section finally let go.
+  const span = stickyH ? rect.height - stickyH : rect.height - vh;
+  const p = clamp01((stickyTop - rect.top) / Math.max(1, span));
   // A transform, never scrollLeft: page scroll is the only driver.
-  corridorTrack.style.transform = `translate3d(${(-(p * max)).toFixed(1)}px,0,0)`;
+  corridorTrack.style.transform = `translate3d(${(-(p * corridorMax)).toFixed(1)}px,0,0)`;
 
   const mobile = innerWidth <= MOBILE;
   const width = corridor.clientWidth || 1;
   const left = corridor.getBoundingClientRect().left;
   const ramp = width * (mobile ? 0.34 : 0.3);
-  const floor = mobile ? 0.82 : 0.78;
   const base = mobile ? 0.2 : 0.24;
 
+  // How much of the card is still east of the corridor's west edge: 1 while it
+  // is fully in, ramping to `base` as it slides out. Both halves of this are
+  // load-bearing. The ramp is capped at the card's own width because the cards
+  // are narrower than it at every width the design uses — measured against a
+  // ramp wider than itself a card can never reach 1, so it snapped down the
+  // instant it touched the edge. And nothing may clamp the result from below:
+  // a floor here held an exiting card at 0.86 across the whole ramp and then
+  // dropped it the moment it cleared, one hard pop per card. On a phone, where
+  // a card is the screen, that pop is the whole view.
   cards.forEach((card) => {
     const r = card.getBoundingClientRect();
-    const t = r.left >= left - 1 ? 1 : clamp01((r.right - left) / ramp);
-    const visible = r.right > left + 2 && r.left < left + width - 2;
-    const k = visible ? Math.max(floor, t) : t;
-    card.style.opacity = (base + (1 - base) * k).toFixed(3);
+    const t = clamp01((r.right - left) / Math.min(ramp, r.width || 1));
+    card.style.opacity = (base + (1 - base) * t).toFixed(3);
   });
 
   if (corrFill) corrFill.style.width = (p * 100).toFixed(1) + "%";
@@ -295,11 +333,23 @@ function tick() {
   requestAnimationFrame(tick);
 }
 
-addEventListener("resize", update);
-addEventListener("orientationchange", update);
-reduce.addEventListener("change", update);
-// Fonts land after first paint and change every measurement below them.
-document.fonts?.ready.then(update);
+// Geometry only the viewport can change is measured here rather than in the
+// loop, so the loop reads a value that cannot move under it.
+function remeasure() {
+  measureCorridor();
+  update();
+}
 
-update();
+addEventListener("resize", remeasure);
+addEventListener("orientationchange", remeasure);
+reduce.addEventListener("change", remeasure);
+// Fonts land after first paint and change every measurement below them.
+document.fonts?.ready.then(remeasure);
+
+// Any reflow that changes the track's own width — a font swapping in after
+// first paint, a text metric settling — changes how far it has to travel.
+// Catch it at the source instead of re-deriving the travel every frame.
+if (corridorTrack) new ResizeObserver(measureCorridor).observe(corridorTrack);
+
+remeasure();
 requestAnimationFrame(tick);
