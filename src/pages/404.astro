@@ -6,38 +6,38 @@ import Layout from "../layouts/Layout.astro";
   title="Page not found — Lorenzo Marchisio"
   description="That page doesn't exist."
 >
-  <main class="min-h-screen relative perspective-midrange overflow-hidden">
-    <div
-      class="hidden lg:block absolute right-0 top-0 w-2/3 h-full -z-10 bg-dotted -rotate-y-[16deg] -translate-z-96 origin-left"
-    >
-    </div>
-    <div
-      class="text-center space-y-6 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl px-4"
-    >
-      <h1
-        class="reveal text-[6rem] sm:text-[9rem] lg:text-[12rem] font-bold bg-gradient-to-r from-red-900 via-red-700 to-red-500 bg-clip-text text-transparent mb-8 leading-none select-none"
-      >
-        404
-      </h1>
-      <p
-        style="--reveal-delay:0.3s"
-        class="reveal text-2xl sm:text-3xl lg:text-4xl text-gray-600 mb-4 font-light"
-      >
-        Seems you got lost in space
-      </p>
-      <p
-        style="--reveal-delay:0.45s"
-        class="reveal text-base sm:text-xl lg:text-2xl text-gray-500 mb-12 font-light"
-      >
-        The page you're looking for doesn't exist or has been moved
-      </p>
-      <a
-        href="/"
-        style="--reveal-delay:0.6s"
-        class="reveal inline-block px-6 sm:px-8 py-3 sm:py-4 text-lg sm:text-xl bg-gradient-to-r from-red-900 via-red-700 to-red-500 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-      >
-        Go back home
-      </a>
-    </div>
+  <main>
+    <p class="eyebrow">404 · NO SUCH ANGLE</p>
+    <h1 class="headline">NOTHING<br />RESOLVES HERE</h1>
+    <p class="lead">
+      The page you asked for does not exist, or has moved somewhere the object
+      no longer reads from.
+    </p>
+    <a href="/">BACK TO 000° ↓</a>
   </main>
 </Layout>
+
+<style>
+  main {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 24px;
+    padding: 120px var(--pad-x) 56px;
+    max-width: 720px;
+  }
+
+  main p {
+    margin: 0;
+  }
+
+  a {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    border-bottom: 1px solid var(--signal);
+    padding-bottom: 6px;
+    width: fit-content;
+  }
+</style>

@@ -1,23 +1,68 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Chrome from "../components/components/Chrome.astro";
+import Orbit from "../components/components/Orbit.astro";
 import Hero from "../components/sections/Hero.astro";
-import About from "../components/sections/About.astro";
-import Skills from "../components/sections/Skills.astro";
+import Engineer from "../components/sections/Engineer.astro";
+import Journey from "../components/sections/Journey.astro";
+import Founder from "../components/sections/Founder.astro";
+import Photography from "../components/sections/Photography.astro";
 import Contact from "../components/sections/Contact.astro";
-import Scrollbar from "../components/components/Scrollbar.astro";
 ---
 
 <Layout>
-  <Scrollbar
-    sections={[
-      { id: "hero", label: "Home" },
-      { id: "about", label: "Journey" },
-      { id: "skills", label: "Skills" },
-      { id: "contact", label: "Contact" },
-    ]}
-  />
-  <Hero />
-  <About />
-  <Skills />
+  <Chrome />
+
+  <!-- Hero and Engineer share one clip container: the object cluster crosses
+       the section seam uncut. -->
+  <Orbit>
+    <Hero />
+    <Engineer />
+  </Orbit>
+
+  <Journey />
+  <Founder />
+  <Photography />
   <Contact />
+
+  <footer>
+    <span class="wordmark">LM<span>.</span></span>
+    <span>© 2026 LORENZO MARCHISIO</span>
+  </footer>
 </Layout>
+
+<script>
+  import "../scripts/orbit.ts";
+</script>
+
+<style>
+  footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 30px var(--pad-x) 44px;
+    border-top: 1px solid var(--hair);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--dim);
+  }
+
+  .wordmark {
+    color: var(--bone);
+  }
+
+  .wordmark span {
+    color: var(--signal);
+  }
+
+  @media (max-width: 768px) {
+    footer {
+      flex-direction: column;
+      gap: 8px;
+      padding: 26px 20px 40px;
+      font-size: 10px;
+    }
+  }
+</style>

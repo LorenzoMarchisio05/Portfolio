@@ -1,226 +1,656 @@
 ---
-import StaggeredText from "../components/StaggeredText.astro";
+import Silhouette from "../components/Silhouette.astro";
+
+const links = [
+  { href: "https://github.com/lorenzomarchisio05", label: "GITHUB ↗" },
+  { href: "https://linkedin.com/in/lorenzomarchisio", label: "LINKEDIN ↗" },
+  { href: "/cv.pdf", label: "CV ↓" },
+];
+
+// [angle, delay, label translate, label, degrees]
+const spokes = [
+  { a: -90, d: 700, tx: "-50%", label: "ENGINEER", deg: "000°" },
+  { a: 30, d: 860, tx: "-100%", label: "FOUNDER", deg: "120°" },
+  { a: 150, d: 1020, tx: "0%", label: "PHOTOGRAPHER", deg: "240°" },
+];
 ---
 
-<section
-  id="contact"
-  class="w-full grid grid-cols-1 lg:grid-cols-2 relative perspective-midrange px-6 sm:px-12 lg:px-20 py-16"
->
-  <div
-    class="hidden lg:block absolute right-0 top-0 w-2/3 h-full -z-10 bg-dotted -rotate-y-[16deg] -translate-z-96 origin-left"
-  >
+<section id="contact" data-state="idle">
+  <div class="glow contact-glow"></div>
+
+  <div class="ask" data-par="-.04" data-par-m="0">
+    <h2 class="headline">SAY THE<br />ACTUAL THING</h2>
+    <div class="links">
+      <a class="mail" href="mailto:me@lorenzomarchisio.me"
+        >me@lorenzomarchisio.me</a
+      >
+      {
+        links.map(({ href, label }) => (
+          <a href={href} rel="noopener">
+            {label}
+          </a>
+        ))
+      }
+    </div>
   </div>
 
-  <div class="col flex flex-col justify-center space-y-8 py-10 lg:py-24 lg:px-10">
-    <div>
-      <h2
-        class="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tighter text-gray-900"
-      >
-        <StaggeredText text="Get in Touch" duration={0.5} />
-      </h2>
-      <h3
-        class="text-xl sm:text-2xl lg:text-3xl font-semibold bg-gradient-to-l from-5% from-gray-900 to-red-700 bg-clip-text text-transparent mt-6 lg:mt-8"
-      >
-        <StaggeredText
-          text="Let's Create Something Amazing Together"
-          duration={0.2}
-          delay={0.1}
-        />
-      </h3>
+  <form class="form" data-par=".05" data-par-m="0">
+    <div class="form-head">
+      <span>DIRECT MESSAGE</span><span>NO TRACKING</span>
     </div>
-    <div class="space-y-8">
-      <p class="text-base sm:text-lg lg:text-xl text-gray-700 max-w-2xl leading-relaxed">
-        Have a project in mind or want to discuss potential collaborations? I'm
-        always excited to connect with fellow creators and innovators.
-      </p>
-      <div class="flex space-x-4">
-        <a
-          href="mailto:me@lorenzomarchisio.me?subject=Portfolio%20Contact%20Request"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="p-3 rounded-lg bg-white shadow-md"
-        >
-          <svg
-            class="w-6 h-6 text-gray-700"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M20 4H4c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm0 2v.511l-8 6.223-8-6.222V6h16zM4 18V9.044l7.386 5.745a.994.994 0 0 0 1.228 0L20 9.044 20.002 18H4z"
-            ></path>
-          </svg>
-        </a>
-        <a
-          href="https://linkedin.com/in/lorenzomarchisio"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="p-3 rounded-lg bg-white shadow-md"
-        >
-          <svg
-            class="w-6 h-6 text-gray-700"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
-            ></path>
-          </svg>
-        </a>
-        <a
-          href="https://github.com/lorenzomarchisio05"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="p-3 rounded-lg bg-white shadow-md"
-        >
-          <svg
-            class="w-6 h-6 text-gray-700"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
-            ></path>
-          </svg>
-        </a>
+
+    <label class="field">
+      <span class="label">NAME</span>
+      <input type="text" name="name" placeholder="Your name" required maxlength="100" autocomplete="name" />
+    </label>
+    <label class="field">
+      <span class="label">EMAIL</span>
+      <input type="email" name="email" inputmode="email" placeholder="you@company.com" required maxlength="200" autocomplete="email" />
+    </label>
+    <label class="field message">
+      <span class="label">MESSAGE</span>
+      <textarea name="message" rows="4" placeholder="Say the actual thing." required maxlength="5000"></textarea>
+    </label>
+
+    <!-- Honeypot: never shown, never focusable. Anything in it is a bot. -->
+    <input class="trap" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+    <div class="actions">
+      <button class="send" type="submit">SEND →</button>
+      <div class="sending">SENDING<div class="sliver"></div></div>
+    </div>
+    <p class="error" role="alert"></p>
+  </form>
+
+  <div class="resolved">
+    <div class="ring">
+      <div class="geo" style="--a:0deg;--o:.9;--inset:14%;--d:120ms">
+        <Silhouette kind="braces" scale={300} color="rgba(238,235,228,.8)" />
+      </div>
+      <div class="geo" style="--a:120deg;--o:.62;--inset:10%;--d:300ms">
+        <Silhouette
+          kind="nodes"
+          color="rgba(226,232,238,.6)"
+          line="rgba(160,196,220,.24)"
+        />
+      </div>
+      <div class="geo" style="--a:240deg;--o:.5;--inset:16%;--d:480ms">
+        <Silhouette kind="aperture" color="rgba(232,228,220,.55)" />
+      </div>
+
+      {
+        spokes.map((s) => (
+          <>
+            <div class="spoke-rule" style={`--a:${s.a}deg;--d:${s.d}ms`} />
+            <div
+              class="spoke-label"
+              style={`--a:${s.a}deg;--d:${s.d}ms;--tx:${s.tx}`}
+            >
+              {s.label}
+              <span> · {s.deg}</span>
+            </div>
+          </>
+        ))
+      }
+
+      <div class="core">
+        <p class="core-title">RESOLVED</p>
+        <p class="core-sub">360° · MESSAGE RECEIVED</p>
       </div>
     </div>
-  </div>
-  <div class="col pb-10 lg:py-20 flex items-center justify-center">
-    <div
-      data-reveal
-      style="--reveal-delay:0.2s"
-      class="w-full sm:w-4/5 p-6 sm:p-8 rounded-xl bg-white shadow-2xl border border-gray-200"
-    >
-      <form class="space-y-6 relative" id="contact-form">
-        <div class="space-y-2">
-          <label for="contact-name" class="block text-sm font-medium text-gray-700"
-            >Name</label
-          >
-          <input
-            id="contact-name"
-            type="text"
-            name="name"
-            required
-            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-transparent transition outline-0"
-            placeholder="Your name"
-          />
-        </div>
-        <div class="space-y-2">
-          <label for="contact-email" class="block text-sm font-medium text-gray-700"
-            >Email</label
-          >
-          <input
-            id="contact-email"
-            type="email"
-            name="email"
-            required
-            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-transparent transition outline-0"
-            placeholder="your.email@example.com"
-          />
-        </div>
-        <div class="space-y-2">
-          <label for="contact-message" class="block text-sm font-medium text-gray-700"
-            >Message</label
-          >
-          <textarea
-            id="contact-message"
-            name="message"
-            required
-            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-transparent transition h-32 outline-0"
-            placeholder="Your message"></textarea>
-        </div>
-        {/* Bots fill every field they find; people never see this one. */}
-        <div class="absolute -left-[9999px]" aria-hidden="true">
-          <label for="contact-company">Company</label>
-          <input
-            id="contact-company"
-            type="text"
-            name="company"
-            tabindex="-1"
-            autocomplete="off"
-          />
-        </div>
-        <button
-          type="submit"
-          class="w-full py-3 px-6 text-white font-medium rounded-lg bg-gradient-to-r from-red-900 to-red-700 hover:from-red-800 hover:to-red-600 transition shadow-md"
-        >
-          Send Message
-        </button>
-        <p
-          id="contact-status"
-          role="status"
-          aria-live="polite"
-          class="text-sm text-center empty:hidden"
-        >
-        </p>
-      </form>
-    </div>
+    <button class="again" type="button">WRITE ANOTHER</button>
   </div>
 </section>
 
-<script>
-  interface FormData {
-    name: string;
-    email: string;
-    message: string;
-    company: string;
+<style>
+  #contact {
+    position: relative;
+    z-index: 1;
+    box-sizing: content-box;
+    min-height: min(470px, 62vh);
+    padding: clamp(44px, 5.5vh, 72px) var(--pad-x) 40px;
+    display: flex;
+    gap: 56px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--hair);
+    overflow: clip;
   }
 
-  const handleSubmit = async (formData: FormData) => {
+  .contact-glow {
+    z-index: 0;
+    background: radial-gradient(
+      64% 40% at 76% 88%,
+      rgba(255, 47, 29, 0.1),
+      transparent 64%
+    );
+  }
+
+  .ask {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    min-width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .links {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    font-family: var(--mono);
+    font-size: 14px;
+  }
+
+  .links a {
+    width: fit-content;
+    padding-bottom: 6px;
+    color: var(--warm);
+    border-bottom: 1px solid var(--hair-4);
+  }
+
+  .links a:hover {
+    color: var(--signal);
+  }
+
+  .mail {
+    color: var(--bone) !important;
+    border-bottom: 1px solid var(--signal) !important;
+  }
+
+  .mail:hover {
+    color: var(--signal) !important;
+  }
+
+  /* ---- form ---- */
+
+  .form {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-head {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--warm);
+    border-bottom: 1px solid var(--signal);
+    padding-bottom: 12px;
+  }
+
+  .form-head span:first-child {
+    color: var(--bone);
+  }
+
+  .field {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .message {
+    padding-top: 4px;
+  }
+
+  .label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--warm);
+    flex: 0 0 92px;
+    width: 92px;
+    padding-top: 16px;
+  }
+
+  .field input,
+  .field textarea {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--field);
+    /* The focus underline grows from 0 to full width. */
+    background-image: linear-gradient(var(--signal), var(--signal));
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 1px;
+    color: var(--bone);
+    font-family: var(--mono);
+    font-size: 14px;
+    padding: 12px 0;
+    outline: none;
+    transition: background-size 120ms var(--ease);
+  }
+
+  .field textarea {
+    resize: none;
+    line-height: 1.6;
+  }
+
+  .field input:focus,
+  .field textarea:focus {
+    background-size: 100% 1px;
+  }
+
+  .trap {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .actions {
+    padding-top: 22px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    min-height: 52px;
+  }
+
+  .send {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    color: var(--ink);
+    background: var(--signal);
+    border: none;
+    padding: 17px 30px;
+    transition: background 120ms linear;
+  }
+
+  .send:hover {
+    background: var(--bone);
+  }
+
+  .send:active {
+    background: var(--ink);
+    color: var(--signal);
+    box-shadow: inset 0 0 0 1px var(--signal);
+  }
+
+  .sending {
+    position: relative;
+    display: none;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    color: var(--warm);
+    background: var(--panel);
+    padding: 17px 30px;
+  }
+
+  .sliver {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    width: 60%;
+    background: var(--signal);
+  }
+
+  .error {
+    margin: 12px 0 0;
+    min-height: 1em;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--signal);
+  }
+
+  #contact[data-state="busy"] .send {
+    display: none;
+  }
+
+  #contact[data-state="busy"] .sending {
+    display: block;
+  }
+
+  /* ---- resolved ---- */
+
+  .resolved {
+    display: none;
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    background: var(--ink);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    animation: lm-veil 420ms var(--ease) both;
+  }
+
+  #contact[data-state="done"] .resolved {
+    display: flex;
+  }
+
+  .ring {
+    --ring: min(680px, 80vw, 64vh);
+    position: relative;
+    width: var(--ring);
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .geo {
+    position: absolute;
+    inset: var(--inset);
+    opacity: var(--o);
+    transform: rotate(var(--a));
+    animation: lm-geo 1400ms var(--ease-in) var(--d) both;
+  }
+
+  .spoke-rule {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    transform-origin: 0 50%;
+    transform: rotate(var(--a));
+    background: linear-gradient(
+      90deg,
+      rgba(255, 47, 29, 0.85),
+      rgba(242, 239, 233, 0.06)
+    );
+    animation: lm-rule 900ms var(--ease) var(--d) both;
+  }
+
+  .spoke-label {
+    --r: calc(var(--ring) * 0.46);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    font-family: var(--mono);
+    font-size: clamp(9px, 1.3vw, 11px);
+    letter-spacing: 0.15em;
+    white-space: nowrap;
+    transform: rotate(var(--a)) translateX(var(--r))
+      rotate(calc(var(--a) * -1)) translate(var(--tx), -50%);
+    animation: lm-spoke 1100ms var(--ease-in) var(--d) both;
+  }
+
+  .spoke-label span {
+    color: var(--signal);
+  }
+
+  .core {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+    max-width: min(300px, 52%);
+    background: radial-gradient(
+      closest-side,
+      rgba(12, 11, 10, 0.96),
+      rgba(12, 11, 10, 0)
+    );
+    padding: 22px 26px;
+  }
+
+  .core p {
+    margin: 0;
+    letter-spacing: 0.02em;
+  }
+
+  .core-title {
+    font-size: clamp(28px, 4.2vw, 48px);
+    font-weight: 700;
+    font-stretch: 80%;
+    line-height: 0.92;
+    animation: lm-core 1000ms var(--ease) 900ms both;
+  }
+
+  .core-sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em !important;
+    white-space: nowrap;
+    color: var(--warm);
+    animation: lm-core 900ms var(--ease) 1200ms both;
+  }
+
+  .again {
+    position: absolute;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: var(--warm);
+    background: transparent;
+    border: 1px solid var(--hair-4);
+    padding: 12px 22px;
+    animation: lm-core 800ms linear 1600ms both;
+  }
+
+  .again:hover {
+    color: var(--signal);
+    border-color: var(--signal);
+  }
+
+  @keyframes lm-geo {
+    from {
+      opacity: 0;
+      transform: rotate(calc(var(--a) + 66deg)) scale(1.55);
+    }
+    to {
+      opacity: var(--o);
+      transform: rotate(var(--a)) scale(1);
+    }
+  }
+
+  @keyframes lm-spoke {
+    from {
+      opacity: 0;
+      transform: rotate(var(--a)) translateX(calc(var(--r) * 1.7))
+        rotate(calc(var(--a) * -1)) translate(var(--tx), -50%);
+    }
+    to {
+      opacity: 1;
+      transform: rotate(var(--a)) translateX(var(--r))
+        rotate(calc(var(--a) * -1)) translate(var(--tx), -50%);
+    }
+  }
+
+  @keyframes lm-rule {
+    from {
+      opacity: 0;
+      transform: rotate(var(--a)) scaleX(0);
+    }
+    to {
+      opacity: 1;
+      transform: rotate(var(--a)) scaleX(1);
+    }
+  }
+
+  @keyframes lm-core {
+    from {
+      opacity: 0;
+      letter-spacing: 0.5em;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes lm-veil {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .resolved,
+    .geo,
+    .spoke-rule,
+    .spoke-label,
+    .core-title,
+    .core-sub,
+    .again {
+      animation: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    #contact {
+      min-height: 0;
+      padding: 60px 20px 44px;
+      flex-direction: column;
+      gap: 34px;
+    }
+
+    .ask {
+      min-width: 0;
+      gap: 24px;
+    }
+
+    .links {
+      gap: 4px;
+      font-size: 13px;
+    }
+
+    .links a {
+      padding: 14px 0;
+    }
+
+    .form {
+      min-width: 0;
+    }
+
+    .form-head {
+      font-size: 10px;
+    }
+
+    /* Labels stack above the field; 16px inputs so iOS does not zoom in. */
+    .field {
+      flex-direction: column;
+      gap: 6px;
+      padding-top: 14px;
+    }
+
+    .field:first-of-type {
+      padding-top: 18px;
+    }
+
+    .label {
+      flex: 0 0 auto;
+      width: auto;
+      padding-top: 0;
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      font-size: 16px;
+    }
+
+    .actions {
+      padding-top: 24px;
+    }
+
+    .send,
+    .sending {
+      width: 100%;
+      text-align: center;
+      font-size: 13px;
+      padding: 19px 26px;
+    }
+
+    /* The section is short on a phone, so the panel takes the whole viewport. */
+    .resolved {
+      position: fixed;
+      z-index: 60;
+    }
+
+    .ring {
+      --ring: min(420px, 88vw);
+    }
+
+    .spoke-rule,
+    .spoke-label {
+      display: none;
+    }
+
+    .core {
+      max-width: 70%;
+      padding: 20px 22px;
+    }
+
+    .core-title {
+      font-size: 38px;
+    }
+
+    .core-sub {
+      letter-spacing: 0.18em !important;
+    }
+
+    .again {
+      position: static;
+      transform: none;
+      margin-top: 18px;
+    }
+  }
+</style>
+
+<script>
+  // idle → busy → done, with a real endpoint behind it. The server validates
+  // too; this only keeps the button honest and surfaces failures inline.
+  const section = document.getElementById("contact")!;
+  const form = section.querySelector("form")!;
+  const error = section.querySelector<HTMLParagraphElement>(".error")!;
+
+  const setState = (state: "idle" | "busy" | "done") =>
+    section.setAttribute("data-state", state);
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (section.dataset.state === "busy") return;
+
+    error.textContent = "";
+    setState("busy");
+
+    const payload = Object.fromEntries(new FormData(form).entries());
+
     try {
       const response = await fetch("/api/send-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
-      const data = await response.json();
-      return { success: response.ok, message: data.message };
-    } catch (error) {
-      return {
-        success: false,
-        message: "Failed to send message. Please try again.",
+      const body = (await response.json().catch(() => ({}))) as {
+        message?: string;
       };
+
+      if (!response.ok) throw new Error(body.message ?? "Something went wrong");
+
+      form.reset();
+      setState("done");
+    } catch (cause) {
+      setState("idle");
+      error.textContent =
+        cause instanceof Error ? cause.message : "Something went wrong";
     }
-  };
+  });
 
-  const onSubmit = async (e: Event) => {
-    e.preventDefault();
-    const form = e.target as HTMLFormElement;
-    const formData = new FormData(form);
-    const data = {
-      name: formData.get("name") as string,
-      email: formData.get("email") as string,
-      message: formData.get("message") as string,
-      company: formData.get("company") as string,
-    };
-
-    const submitButton = form.querySelector(
-      'button[type="submit"]'
-    ) as HTMLButtonElement;
-    const status = document.getElementById("contact-status")!;
-    const originalText = submitButton.innerHTML;
-
-    submitButton.disabled = true;
-    submitButton.innerHTML = "Sending...";
-    status.textContent = "";
-
-    const result = await handleSubmit(data);
-
-    submitButton.innerHTML = result.success ? "Sent!" : "Failed!";
-    status.textContent = result.success
-      ? "Message sent. I'll get back to you soon."
-      : result.message;
-    status.className = `text-sm text-center empty:hidden ${
-      result.success ? "text-green-700" : "text-red-700"
-    }`;
-
-    if (result.success) form.reset();
-
-    setTimeout(() => {
-      submitButton.disabled = false;
-      submitButton.innerHTML = originalText;
-    }, 2000);
-  };
-
-  document.getElementById("contact-form")!.addEventListener("submit", onSubmit);
+  section.querySelector(".again")!.addEventListener("click", () => {
+    setState("idle");
+  });
 </script>

@@ -1,19 +1,19 @@
 ---
 import "../styles/global.css";
 
-import Cursor from "../components/components/Cursor.astro";
-
 interface Props {
   title?: string;
   description?: string;
 }
 
 const {
-  title = "Lorenzo Marchisio — Full Stack Engineer",
-  description = "Full stack engineer in Italy. C#/.NET on the backend, Flutter for cross-platform mobile, and modern web frontends.",
+  title = "Lorenzo Marchisio — Engineer, Founder, Photographer",
+  description =
+    "Nothing here resolves until you stand somewhere specific. There are three such places, and the shape is different from each one.",
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
+const og = new URL("/og.png", Astro.site ?? Astro.url);
 ---
 
 <!doctype html>
@@ -24,7 +24,25 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="canonical" href={canonical} />
-    <meta name="theme-color" content="#b91c1c" />
+    <meta name="theme-color" content="#0C0B0A" />
+
+    <!-- Self-hosted, same origin: no third-party request on page load, which is
+         what the contact form's NO TRACKING line promises. Only the latin
+         subsets are preloaded — latin-ext loads on demand. -->
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/archivo-latin.woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/jetbrains-mono-latin.woff2"
+      crossorigin
+    />
 
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -34,48 +52,22 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:site_name" content="Lorenzo Marchisio" />
-    <meta property="og:image" content={new URL("/og.png", Astro.site ?? Astro.url)} />
+    <meta property="og:image" content={og} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content={new URL("/og.png", Astro.site ?? Astro.url)} />
+    <meta name="twitter:image" content={og} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
 
     <script is:inline>
-      // Gates the reveal from-state on JS being alive. Without this the
-      // observer below would never run and every revealed element would sit at
-      // opacity 0 forever.
-      document.documentElement.classList.add("js-reveal");
+      // Gates the reveal from-state on JS being alive: without this every
+      // [data-rise] block would sit at opacity 0 forever when scripting is off.
+      document.documentElement.classList.add("js");
     </script>
   </head>
-  <body
-    class="bg-gray-50 selection:bg-red-700/15 overflow-x-hidden overflow-y-auto"
-  >
-    <Cursor />
+  <body>
     <slot />
-    <script>
-      const reveal = (el: Element) => el.classList.add("is-revealed");
-
-      if ("IntersectionObserver" in window) {
-        const observer = new IntersectionObserver(
-          (entries) => {
-            for (const entry of entries) {
-              if (!entry.isIntersecting) continue;
-              reveal(entry.target);
-              observer.unobserve(entry.target);
-            }
-          },
-          { rootMargin: "0px 0px -10% 0px" }
-        );
-
-        document
-          .querySelectorAll("[data-reveal]")
-          .forEach((el) => observer.observe(el));
-      } else {
-        document.querySelectorAll("[data-reveal]").forEach(reveal);
-      }
-    </script>
   </body>
 </html>
