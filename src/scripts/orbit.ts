@@ -14,6 +14,16 @@ const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const $ = <T extends HTMLElement>(id: string) =>
   document.getElementById(id) as T | null;
 
+// Every track below is sized in CSS `vh`, so the maths that divides by a
+// viewport height has to use the number `vh` itself resolves against. On a
+// phone that is NOT `innerHeight`: the URL bar collapses as you scroll and
+// moves `innerHeight` ~75px mid-gesture while `vh` — and so the track heights —
+// stay put. Dividing a fixed track by a moving viewport makes the progress
+// jump, which is the corridor and the photo hero snapping sideways every time
+// the bar slides. `documentElement.clientHeight` is the initial containing
+// block, which is exactly what `vh` measures and does not follow the bar.
+const viewportH = () => document.documentElement.clientHeight || innerHeight;
+
 const angleOuts = document.querySelectorAll<HTMLElement>("[data-angle]");
 const navLinks = document.querySelectorAll<HTMLElement>("[data-nav]");
 const parallaxed = document.querySelectorAll<HTMLElement>("[data-par]");
@@ -47,11 +57,11 @@ function scrollPos() {
     document.body.scrollHeight,
     box.height,
   );
-  return { y: -box.top, max: Math.max(1, extent - innerHeight) };
+  return { y: -box.top, max: Math.max(1, extent - viewportH()) };
 }
 
 function angleAt(y: number) {
-  const mid = y + innerHeight / 2;
+  const mid = y + viewportH() / 2;
   const points = STOPS.map(([id, deg]) => {
     const el = document.getElementById(id);
     if (!el) return null;
@@ -262,7 +272,7 @@ function shots(vh: number) {
 // ---- Loop --------------------------------------------------------------
 
 function update() {
-  const vh = innerHeight;
+  const vh = viewportH();
   const { y, max } = scrollPos();
   chrome(angleAt(y), clamp01(y / max) * 100);
   rise(vh);
