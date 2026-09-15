@@ -1,5 +1,9 @@
 #!/bin/sh
-# Rebuilds public/photos/ from the clean originals in photos-src/ (gitignored).
+# Adds the clean originals in photos-src/ (gitignored) to public/photos/. It
+# never deletes: a same-named output is overwritten, everything else is left
+# alone, so photos-src/ can be emptied once a batch is in. Removing a photo from
+# the site means deleting its .webp from public/photos/ and public/photos/thumbs/.
+#
 # Every photo gets the © mark burned into its corner (mark.swift), is encoded to
 # WebP keeping its colour profile but dropping EXIF — camera serial numbers and
 # GPS coordinates do not ship — and is tagged with copyright XMP.
@@ -36,10 +40,9 @@ EOF
 # The gallery grid loads thumbs/ (800px, the largest a cell gets on a retina
 # screen); the full 2000px file only loads when a photo is opened.
 mkdir -p "$tmp/thumbs" public/photos/thumbs
-# A renamed or removed original must not leave its old output in the gallery.
-rm -f public/photos/*.webp public/photos/thumbs/*.webp
 
 for png in "$tmp"/*.png; do
+  [ -e "$png" ] || { echo "photos-src/ has no photos to add" >&2; exit 1; }
   n=$(basename "$png" .png)
   cwebp -quiet -q 78 -m 6 -sharp_yuv -metadata icc "$png" -o "$tmp/$n.webp"
   webpmux -set xmp "$tmp/copyright.xmp" "$tmp/$n.webp" -o "public/photos/$n.webp" >/dev/null
