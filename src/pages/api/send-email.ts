@@ -9,6 +9,25 @@ const FROM = "Portfolio <noreply@lorenzomarchisio.me>";
 
 const LIMITS = { name: 100, email: 200, message: 5000 };
 
+// Five tries per visitor per ten minutes: more than a person needs, too few for
+// a script that gets past the honeypot to bury the inbox or use up the Resend
+// quota. The count lives in this worker instance's memory, so it stops one
+// client hammering the form, not traffic spread over many instances or
+// addresses. For that, add a rate-limiting rule on /api/send-email in the
+// Cloudflare dashboard.
+const RATE = { tries: 5, windowMs: 10 * 60 * 1000 };
+const recent = new Map<string, number[]>();
+
+const allow = (client: string) => {
+  const now = Date.now();
+  const tries = (recent.get(client) ?? []).filter((t) => now - t < RATE.windowMs);
+  if (tries.length >= RATE.tries) return false;
+  // Caps the memory a flood of distinct addresses can take.
+  if (recent.size > 1000) recent.clear();
+  recent.set(client, [...tries, now]);
+  return true;
+};
+
 const json = (message: string, status: number) =>
   new Response(JSON.stringify({ message }), {
     status,
@@ -27,6 +46,12 @@ export const POST: APIRoute = async ({ request }) => {
   // has no signal to retry against.
   if (String(body.company ?? "").trim()) {
     return json("Email sent successfully", 200);
+  }
+
+  // Cloudflare sets this header at its edge, so a client cannot forge it. It is
+  // absent in local dev, where every request shares one count.
+  if (!allow(request.headers.get("CF-Connecting-IP") ?? "")) {
+    return json("Too many messages. Please try again later.", 429);
   }
 
   const name = String(body.name ?? "").trim();

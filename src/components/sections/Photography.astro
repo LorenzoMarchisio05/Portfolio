@@ -16,20 +16,42 @@ import Silhouette from "../components/Silhouette.astro";
 // frame WITH a file needs `alt` filled in — these are portfolio work, not
 // decoration.
 const frames = [
-  { src: "/photos/01-motorcycle.webp", alt: "", flex: 150, ar: "3 / 2", mOrder: 1, mSpan: 2, cap: "3:2 · 01" },
-  { src: "/photos/02-croatia.webp", alt: "", flex: 67, ar: "2 / 3", mOrder: 2, mSpan: 1, cap: "2:3 · 02" },
-  { src: "/photos/03-sport.webp", alt: "", flex: 150, ar: "3 / 2", mOrder: 4, mSpan: 1, cap: "3:2 · 03" },
-  { src: "/photos/04-sport.webp", alt: "", flex: 67, ar: "2 / 3", mOrder: 3, mSpan: 1, cap: "2:3 · 04" },
-  { src: "/photos/05-croatia.webp", alt: "", flex: 300, ar: "3 / 1", mOrder: 6, mSpan: 2, cap: "3:1 · 05" },
-  { src: "/photos/06-motorcycle.webp", alt: "", flex: 150, ar: "3 / 2", mOrder: 5, mSpan: 1, cap: "3:2 · 06" },
+  { src: "/photos/01-motorcycle.webp", alt: "Rider in a red helmet sitting on an orange enduro bike under hanging leaves, lit against the dark", flex: 150, ar: "3 / 2", mOrder: 1, mSpan: 2, cap: "3:2 · 01" },
+  { src: "/photos/02-croatia.webp", alt: "Trakošćan Castle on its wooded hill, mirrored in the still lake below", flex: 67, ar: "2 / 3", mOrder: 2, mSpan: 1, cap: "2:3 · 02" },
+  { src: "/photos/03-sport.webp", alt: "Football training seen through the goal net, a player in black in the foreground", flex: 150, ar: "3 / 2", mOrder: 4, mSpan: 1, cap: "3:2 · 03" },
+  { src: "/photos/04-sport.webp", alt: "Footballer in a black shirt walking away across the pitch in evening light", flex: 67, ar: "2 / 3", mOrder: 3, mSpan: 1, cap: "2:3 · 04" },
+  { src: "/photos/05-croatia.webp", alt: "Plitvice waterfalls falling into a turquoise pool between green cliffs", flex: 300, ar: "3 / 1", mOrder: 6, mSpan: 2, cap: "3:1 · 05" },
+  { src: "/photos/06-motorcycle.webp", alt: "Rider in a red helmet astride an orange enduro bike in the dark", flex: 150, ar: "3 / 2", mOrder: 5, mSpan: 1, cap: "3:2 · 06" },
 ];
 
 // Until the files exist there is nothing to point an <img> at. Resolved at
 // build time — this renders in a Cloudflare worker, which has no node:fs.
-const onDisk = new Set(Object.keys(import.meta.glob("/public/photos/*")));
+const onDisk = new Set(Object.keys(import.meta.glob("/public/photos/**/*")));
 const shipped = (src: string) => onDisk.has(`/public${src}`);
 
 const rows = [frames.slice(0, 3), frames.slice(3)];
+
+type Frame = (typeof frames)[number];
+
+// A frame loads the 800px copy from thumbs/ and only switches to the full file
+// where it is drawn wider than that: a retina desktop, the panorama. The
+// takeover copies the `src` attribute, so the full-screen hero still gets the
+// full file. Widths are the long side for a wide slot, scaled down for a tall
+// one.
+const srcset = (f: Frame) => {
+  const thumb = f.src.replace("/photos/", "/photos/thumbs/");
+  if (!shipped(thumb)) return undefined;
+  const [w, h] = f.ar.split("/").map(Number);
+  const scale = Math.min(1, w / h);
+  return `${thumb} ${Math.round(800 * scale)}w, ${f.src} ${Math.round(2000 * scale)}w`;
+};
+
+// Desktop: the frame's flex share of its row, in a frames column about
+// two-thirds of the viewport wide. Phone: half the width, or all of it.
+const sizes = (f: Frame, row: Frame[]) => {
+  const share = f.flex / row.reduce((sum, g) => sum + g.flex, 0);
+  return `(max-width: 768px) ${f.mSpan * 50}vw, ${Math.round(67 * share)}vw`;
+};
 ---
 
 <section id="photography" class="section">
@@ -86,7 +108,14 @@ const rows = [frames.slice(0, 3), frames.slice(3)];
                   style={`--flex:${f.flex};--ar:${f.ar};--m-order:${f.mOrder};--m-span:${f.mSpan}`}
                 >
                   {shipped(f.src) && (
-                    <img src={f.src} alt={f.alt} loading="lazy" decoding="async" />
+                    <img
+                      src={f.src}
+                      srcset={srcset(f)}
+                      sizes={sizes(f, row)}
+                      alt={f.alt}
+                      loading="lazy"
+                      decoding="async"
+                    />
                   )}
                   <span class="cap" aria-hidden="true">
                     {f.cap}
