@@ -132,6 +132,12 @@ button {
   font: inherit;
 }
 
+/* No long-press save sheet on iOS. The right-click and drag halves live in
+   Layout.astro. */
+img {
+  -webkit-touch-callout: none;
+}
+
 ::selection {
   background: var(--signal);
   color: var(--ink);

@@ -17,10 +17,10 @@ import Silhouette from "../components/Silhouette.astro";
 // decoration.
 const frames = [
   { src: "/photos/01-motorcycle.webp", alt: "", flex: 150, ar: "3 / 2", mOrder: 1, mSpan: 2, cap: "3:2 · 01" },
-  { src: "/photos/02-alpine.webp", alt: "", flex: 67, ar: "2 / 3", mOrder: 2, mSpan: 1, cap: "2:3 · 02" },
+  { src: "/photos/02-croatia.webp", alt: "", flex: 67, ar: "2 / 3", mOrder: 2, mSpan: 1, cap: "2:3 · 02" },
   { src: "/photos/03-sport.webp", alt: "", flex: 150, ar: "3 / 2", mOrder: 4, mSpan: 1, cap: "3:2 · 03" },
   { src: "/photos/04-sport.webp", alt: "", flex: 67, ar: "2 / 3", mOrder: 3, mSpan: 1, cap: "2:3 · 04" },
-  { src: "/photos/05-alpine.webp", alt: "", flex: 300, ar: "3 / 1", mOrder: 6, mSpan: 2, cap: "3:1 · 05" },
+  { src: "/photos/05-croatia.webp", alt: "", flex: 300, ar: "3 / 1", mOrder: 6, mSpan: 2, cap: "3:1 · 05" },
   { src: "/photos/06-motorcycle.webp", alt: "", flex: 150, ar: "3 / 2", mOrder: 5, mSpan: 1, cap: "3:2 · 06" },
 ];
 
@@ -99,6 +99,8 @@ const rows = [frames.slice(0, 3), frames.slice(3)];
       </div>
     </div>
   </div>
+
+  <a class="all" href="/gallery">FULL GALLERY →</a>
 </section>
 
 <style>
@@ -272,6 +274,16 @@ const rows = [frames.slice(0, 3), frames.slice(3)];
   .blurb {
     font-size: 16px;
     padding-top: 4px;
+  }
+
+  /* Outside the track, so the takeover's geometry never sees it. */
+  .all {
+    width: fit-content;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    border-bottom: 1px solid var(--signal);
+    padding-bottom: 6px;
   }
 
   .frames {

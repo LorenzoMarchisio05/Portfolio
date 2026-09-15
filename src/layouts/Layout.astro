@@ -65,6 +65,14 @@ const og = new URL("/og.png", Astro.site ?? Astro.url);
       // Gates the reveal from-state on JS being alive: without this every
       // [data-rise] block would sit at opacity 0 forever when scripting is off.
       document.documentElement.classList.add("js");
+
+      // No "Save image" menu and no drag-out on photographs. A deterrent for
+      // casual saving only; the © mark burned into each file is what sticks.
+      for (const type of ["contextmenu", "dragstart"]) {
+        document.addEventListener(type, (event) => {
+          if (event.target instanceof HTMLImageElement) event.preventDefault();
+        });
+      }
     </script>
   </head>
   <body>
