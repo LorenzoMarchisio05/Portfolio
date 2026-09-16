@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lorenzo Marchisio · CV</title>
+<meta name="author" content="Lorenzo Marchisio">
+<meta name="description" content="Full-Stack Software Engineer · Backend-focused, .NET">
+<!-- One source, three outputs (scripts/cv.sh): cv.html is the full CV,
+     cv.html?short the one-page CV, cv.html?short&docx the one-page CV
+     restyled for Word. -->
+<style id="print">
+  /* Static instances of the site's variable fonts (fontTools instancer):
+     Chrome embeds variable fonts in a PDF as Type 3, which some CV parsers
+     cannot read. Using another weight or width means cutting its instance. */
+  @font-face { font-family: Archivo; font-weight: 400; src: url("fonts/Archivo-Regular.ttf"); }
+  @font-face { font-family: Archivo; font-weight: 600; src: url("fonts/Archivo-SemiBold.ttf"); }
+  @font-face { font-family: Archivo; font-weight: 700; src: url("fonts/Archivo-Bold.ttf"); }
+  @font-face { font-family: Archivo; font-weight: 700; font-stretch: 80%;
+    src: url("fonts/Archivo-BoldCondensed.ttf"); }
+  @font-face { font-family: "JetBrains Mono"; font-weight: 400; src: url("fonts/JetBrainsMono-Regular.ttf"); }
+  @font-face { font-family: "JetBrains Mono"; font-weight: 500; src: url("fonts/JetBrainsMono-Medium.ttf"); }
+
+  :root { --ink: #0c0b0a; --soft: #3b3834; --mute: #6b655e; --hair: #d9d4cc; --signal: #ff2f1d;
+    --mono: "JetBrains Mono", ui-monospace, monospace; }
+  @page { size: A4; margin: 13mm 15mm 12mm; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; background: #fff; color: var(--ink);
+    font: 400 12px/1.34 Archivo, Arial, sans-serif; }
+  a { color: inherit; text-decoration: none; }
+  p, ul, h1, h2, h3 { margin: 0; }
+  .sep { display: none; }
+
+  header { margin-bottom: 12px; }
+  h1 { font-size: 36px; font-weight: 700; font-stretch: 80%; line-height: .9;
+    letter-spacing: -.01em; text-transform: uppercase; }
+  h1::after { content: ""; display: inline-block; width: 7px; height: 7px; margin-left: 5px;
+    background: var(--signal); }
+  .headline { margin-top: 7px; font-size: 15px; font-weight: 600; }
+  .meta { margin-top: 4px; font: 400 10.2px/1.45 var(--mono); color: var(--soft); }
+
+  h2 { display: flex; align-items: center; gap: 8px; margin: 11px 0 5px; break-after: avoid;
+    font: 500 10.2px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+  h2::before { content: ""; width: 6px; height: 6px; background: var(--signal); }
+  h2::after { content: ""; flex: 1; height: 1px; background: var(--hair); }
+
+  .entry { break-inside: avoid; }
+  .entry + .entry { margin-top: 6px; }
+  .row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+  h3 { font-size: 13.4px; font-weight: 700; }
+  .role { font-weight: 600; }
+  .when, .where { font: 400 10.2px var(--mono); color: var(--soft); white-space: nowrap; }
+  .note { color: var(--mute); }
+  ul { padding-left: 13px; margin-top: 3px; }
+  li { padding-left: 2px; }
+  li + li { margin-top: 1px; }
+  li::marker { color: var(--signal); font-size: .8em; }
+
+  .skills p + p, .list p + p { margin-top: 2px; }
+  b { font-weight: 600; }
+  .ethos { margin-top: 5px; color: var(--soft); }
+  .list, .skills { break-inside: avoid; }
+
+  /* The full CV has a second page to spend on air. */
+  .roomy body { font-size: 12.4px; line-height: 1.45; }
+  .roomy header { margin-bottom: 16px; }
+  .roomy h2 { margin: 18px 0 8px; }
+  .roomy .entry + .entry { margin-top: 12px; }
+  .roomy li + li { margin-top: 3px; }
+  .roomy .skills p + p, .roomy .list p + p { margin-top: 4px; }
+</style>
+<style id="docx">
+  /* For textutil, which reads px as pt and ignores top margins. */
+  body { font-family: Arial, sans-serif; font-size: 10px; color: #000; }
+  a { color: #000; text-decoration: none; }
+  h1 { font-size: 20px; margin: 0; }
+  .headline { font-size: 12px; font-weight: bold; margin: 0 0 2px; }
+  .meta { font-size: 9.5px; margin: 0; }
+  section { margin-bottom: 8px; }
+  header { margin-bottom: 8px; }
+  h2 { font-size: 11px; text-transform: uppercase; margin: 0 0 3px; }
+  h3 { font-size: 10.5px; margin: 0; }
+  .row h3, .row p { display: inline; }
+  .role { font-weight: bold; }
+  p { margin: 0; }
+  ul { margin: 0 0 4px; }
+  .when, .where { color: #333; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Lorenzo Marchisio</h1>
+  <p class="headline">Full-Stack Software Engineer · Backend-focused, .NET</p>
+  <p class="meta">Leuven, Belgium · EU citizen · Open to hybrid or remote</p>
+  <p class="meta">+39 327 096 5168 · <a href="mailto:me@lorenzomarchisio.me">me@lorenzomarchisio.me</a> · <a href="https://lorenzomarchisio.me">lorenzomarchisio.me</a> · <a href="https://www.linkedin.com/in/lorenzo-marchisio-9b75432b0/">linkedin.com/in/lorenzo-marchisio-9b75432b0</a></p>
+</header>
+
+<section>
+  <h2>Summary</h2>
+  <p>Full-stack software engineer, backend-focused on C# and .NET, with over two years building a
+  multi-tenant ERP and e-invoicing platform used by ~200 Italian companies. Designed and led the
+  modular .NET 8 API replacing its legacy core: clean architecture, CQRS, GraphQL and REST over
+  PostgreSQL, with Roslyn source generators that cut new-entity code from 10+ files to ~4. <span
+  class="full">Oracle Cloud certified. Working alongside a Computer Engineering degree at Politecnico
+  di Torino. Based in Leuven, EU citizen, open to hybrid or remote roles.</span></p>
+  <p class="ethos full">How I work: leave it legible. The API ships with architecture docs and code
+  generators, so the next developer can extend it without me in the room.</p>
+</section>
+
+<section>
+  <h2>Experience</h2>
+
+  <div class="entry">
+    <div class="row"><h3>Leonardo Web S.r.l.</h3><span class="sep"> · </span><span class="where">Piedmont, Italy · Remote</span></div>
+    <div class="row"><p class="role">Full-Stack Software Engineer</p><span class="sep"> · </span><span class="when">Feb 2025 – Sep 2026</span></div>
+    <div class="row"><p class="role">Software Engineering Intern</p><span class="sep"> · </span><span class="when">Jul 2024 – Jan 2025</span></div>
+    <p class="note">Part-time during term (20 h/week), full-time in summers, alongside the degree.</p>
+    <ul>
+      <li>Designed ~90% of the architecture and led development of the modular .NET 8 API replacing
+        the legacy ASP.NET backend of a multi-tenant ERP and e-invoicing platform used by ~200 Italian
+        companies. Live in production, serving authentication and the full accounting module; all
+        entities move over by end of 2026.</li>
+      <li>Built database-per-customer multi-tenancy behind a YARP gateway that routes each request by
+        JWT claim to per-customer hosts, so customer-specific features (7 customization modules) ship
+        without redeploying the shared API.</li>
+      <li>Wrote 12 Roslyn source generators (command handlers, validators, GraphQL queries,
+        HotChocolate filter and sort types) plus analyzers and code fixes that enforce the
+        architecture, cutting a new entity from 10+ hand-written files to ~4.</li>
+      <li>Hardened the PostgreSQL schema (missing primary keys, foreign keys and indexes) across ~200
+        customer databases, with middleware that migrates each customer's database on its first
+        request.</li>
+      <li class="full">Built Blazor templates for export prints and an observability dashboard for the
+        API.</li>
+      <li>Onboarded and mentored new developers as the team grew from 2 to 5: assigned tasks, paired on
+        the codebase, and wrote the architecture documentation new hires start from.</li>
+      <li class="full">Handled production support (tickets, bug fixes, customer calls) under ISO 9001 and
+        ISO 27001 procedures.</li>
+    </ul>
+  </div>
+
+  <div class="entry short">
+    <div class="row"><h3>Maggioli S.p.A.</h3><span class="sep"> · </span><span class="where">Italy</span></div>
+    <div class="row"><p class="role">Software Development Intern</p><span class="sep"> · </span><span class="when">2022, 2023</span></div>
+    <ul>
+      <li>Two one-month school work placements (PCTO): built a log aggregator for all company projects
+        and a metrics system (2022), then shipped fixes and features across frontend and backend (2023).</li>
+    </ul>
+  </div>
+
+  <div class="entry full">
+    <div class="row"><h3>Maggioli S.p.A.</h3><span class="sep"> · </span><span class="where">Italy</span></div>
+    <div class="row"><p class="role">Software Development Intern</p><span class="sep"> · </span><span class="when">2023</span></div>
+    <ul>
+      <li>One-month school work placement (PCTO): shipped fixes and features across frontend and
+        backend.</li>
+    </ul>
+    <div class="row"><p class="role">Software Development Intern</p><span class="sep"> · </span><span class="when">2022</span></div>
+    <ul>
+      <li>One-month school work placement (PCTO): built a log aggregator for all company projects and
+        a metrics system, mostly backend with some frontend.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>Projects</h2>
+  <div class="entry">
+    <div class="row"><h3>lorenzomarchisio.me <span class="role">· Personal website</span></h3><span class="sep"> · </span><span class="when">Mar 2025 – Present</span></div>
+    <ul>
+      <li>Astro site on Cloudflare Pages with a server-side contact API (Resend, per-IP rate limiting,
+        honeypot) and an automated photo pipeline: Swift watermarking, WebP encoding, EXIF and GPS
+        stripping, thumbnails.</li>
+    </ul>
+  </div>
+  <div class="entry">
+    <div class="row"><h3>Multi-account email client <span class="role">· Diploma project</span></h3><span class="sep"> · </span><span class="when">2024</span></div>
+    <ul>
+      <li>Flutter mobile app and Angular + Tauri desktop app, with all mail logic (IMAP/SMTP send and
+        receive) written in Rust. OAuth sign-in; Gmail, iCloud and custom IMAP/SMTP accounts.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="skills">
+  <h2>Skills</h2>
+  <p><b>Backend:</b> C#, .NET 8, ASP.NET Core, EF Core, SQL, PostgreSQL, clean architecture, CQRS
+    (MediatR), multi-tenancy, YARP, Roslyn source generators, GraphQL (HotChocolate), REST/OpenAPI</p>
+  <p><b>Web and mobile:</b> TypeScript, JavaScript, Angular, React, Astro, Blazor, Tailwind CSS, Bootstrap,
+    shadcn/ui, Flutter</p>
+  <p><b>Cloud and DevOps:</b> Docker, Cloudflare, Linux, Git, Oracle Cloud Infrastructure (certified)
+    · <b>Testing:</b> xUnit, Playwright</p>
+  <p><b>AI-assisted development:</b> Claude Code, OpenAI Codex for research, documentation and
+    automating repetitive work</p>
+</section>
+
+<section>
+  <h2>Education</h2>
+  <div class="entry">
+    <div class="row"><h3>BSc Computer Engineering <span class="role">· Politecnico di Torino</span></h3><span class="sep"> · </span><span class="when">2024 – 2028 (expected)</span></div>
+  </div>
+  <div class="entry">
+    <div class="row"><h3>IT Diploma <span class="role">· IIS G. Vallauri, Fossano · 86/100</span></h3><span class="sep"> · </span><span class="when">2019 – 2024</span></div>
+  </div>
+</section>
+
+<section class="list">
+  <h2>Certifications</h2>
+  <p><a href="https://catalog-education.oracle.com/ords/certview/sharebadge?id=FC0A3E60D13F5F09649672D8B59B9A3DE91D28E686794AFCE857703A8A325118"><b>Oracle Cloud Infrastructure 2025 Certified Architect Associate</b></a> · Oracle · Sep 2025</p>
+  <p><a href="https://catalog-education.oracle.com/ords/certview/sharebadge?id=69FBA008BD361C5CBA24753077C5F5434EDE52A990EE1C8B90FEC518F63EB136"><b>Oracle Cloud Infrastructure 2025 Certified Foundations Associate</b></a> · Oracle · Sep 2025</p>
+  <p class="full"><b>Cambridge B2 First</b> · Cambridge English · 2024</p>
+</section>
+
+<section class="list">
+  <h2>Languages</h2>
+  <p><b>Italian:</b> native · <b>English:</b> fluent, full professional proficiency (Cambridge B2 First)</p>
+</section>
+
+<section class="list">
+  <h2>Achievements and Volunteering</h2>
+  <p><b>Gara Nazionale di Informatica, national finalist</b> · 2023. <span class="full">Selected through
+    my school's qualifying round for the national computer science competition: 25 students from
+    technical schools across Italy solving system design and coding problems.</span><span
+    class="short">National computer science competition for technical schools.</span></p>
+  <p><b>TEDxKULeuven, volunteer crew</b> · 2026. Venue setup, event video recording, guest handling.</p>
+</section>
+
+<section class="list full">
+  <h2>Photography</h2>
+  <p>Motorsport, football and travel photographer. 130+ photos published at
+    <a href="https://lorenzomarchisio.me/gallery">lorenzomarchisio.me/gallery</a> through my own
+    publishing pipeline.</p>
+</section>
+
+<script>
+  const q = new URLSearchParams(location.search);
+  document.querySelectorAll(q.has("short") ? ".full" : ".short").forEach((e) => e.remove());
+  document.documentElement.classList.toggle("roomy", !q.has("short"));
+  document.getElementById(q.has("docx") ? "print" : "docx").remove();
+  document.currentScript.remove();
+</script>
+</body>
+</html>

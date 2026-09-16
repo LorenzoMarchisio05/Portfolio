@@ -28,18 +28,18 @@
     "size": 27,
     "mSize": 30,
     "yearRed": false,
-    "detail": ["SECOND INTERNSHIP", "BACK ON REQUEST"],
+    "detail": ["SECOND INTERNSHIP", "FEATURES AND FIXES"],
     "tick": "2023",
     "tickRed": false
   },
   {
     "year": "2023",
-    "name": "National CS competitions",
+    "name": "National CS competition",
     "w": 252,
     "size": 30,
     "mSize": 30,
     "yearRed": false,
-    "detail": ["GARE NAZIONALI DI INFORMATICA", "NATIONAL ROUND"],
+    "detail": ["GARA NAZIONALE DI INFORMATICA", "NATIONAL FINALIST"],
     "tick": "2023",
     "tickRed": false
   },
@@ -62,7 +62,7 @@
     "mSize": 34,
     "yearRed": true,
     "detail": [
-      "FULL-STACK APPRENTICE",
+      "FULL-STACK SOFTWARE ENGINEER",
       "C# / .NET · FLUTTER · POSTGRES",
       "PIEMONTE, IT"
     ],
