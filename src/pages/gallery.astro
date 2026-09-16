@@ -97,12 +97,15 @@ const count = String(photos.length).padStart(2, "0");
       <span class="pip"></span>
     </figure>
     <p class="keys" aria-hidden="true">← → BROWSE · ESC CLOSE</p>
+    <a class="remove" href="mailto:me@lorenzomarchisio.me">REQUEST REMOVAL</a>
   </dialog>
 </Layout>
 
 <script>
   const viewer = document.getElementById("viewer") as HTMLDialogElement;
   const big = viewer.querySelector("img")!;
+  const remove = viewer.querySelector<HTMLAnchorElement>(".remove")!;
+  const inbox = remove.href;
   const shots = Array.from(document.querySelectorAll<HTMLButtonElement>(".shot"));
   const filters = document.querySelectorAll<HTMLButtonElement>("[data-filter]");
   let current = shots[0];
@@ -124,6 +127,12 @@ const count = String(photos.length).padStart(2, "0");
     current = shot;
     big.src = shot.dataset.full!;
     big.alt = shot.querySelector("img")!.alt;
+    // No server and no email quota: the request leaves from the visitor's own
+    // mail app, already naming the photo, with an address to reply to.
+    const name = shot.dataset.full!.slice("/photos/".length, -".webp".length);
+    const subject = `Photo removal request: ${name}`;
+    const body = `Photo: ${name}\n\nReason:\n`;
+    remove.href = `${inbox}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
   // Browses only what the filter shows, in filename order rather than the
@@ -146,9 +155,12 @@ const count = String(photos.length).padStart(2, "0");
     if (event.key === "ArrowLeft") step(-1);
   });
 
-  // A viewer, not an editor: there is nothing inside to click, so any click —
-  // the close button included — puts it away. Escape is native to <dialog>.
-  viewer.addEventListener("click", () => viewer.close());
+  // A viewer, not an editor: the removal link is the only thing inside to
+  // click, so any other click — the close button included — puts it away.
+  // Escape is native to <dialog>.
+  viewer.addEventListener("click", (event) => {
+    if (!(event.target as Element).closest(".remove")) viewer.close();
+  });
 
   // Land on the frame last viewed, not the one that opened the viewer.
   viewer.addEventListener("close", () => current.focus());
@@ -399,10 +411,9 @@ const count = String(photos.length).padStart(2, "0");
     }
   }
 
-  .close {
+  .close,
+  .remove {
     position: absolute;
-    top: 22px;
-    right: var(--pad-x);
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.16em;
@@ -412,7 +423,18 @@ const count = String(photos.length).padStart(2, "0");
     padding: 12px 22px;
   }
 
-  .close:hover {
+  .close {
+    top: 22px;
+    right: var(--pad-x);
+  }
+
+  .remove {
+    bottom: 22px;
+    left: var(--pad-x);
+  }
+
+  .close:hover,
+  .remove:hover {
     color: var(--signal);
     border-color: var(--signal);
   }
@@ -484,6 +506,10 @@ const count = String(photos.length).padStart(2, "0");
 
     .close {
       top: 14px;
+    }
+
+    .remove {
+      bottom: 14px;
     }
   }
 
