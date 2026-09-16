@@ -118,8 +118,8 @@
     <ul>
       <li>Designed ~90% of the architecture and led development of the modular .NET 8 API replacing
         the legacy ASP.NET backend of a multi-tenant ERP and e-invoicing platform used by ~200 Italian
-        companies. Live in production, serving authentication and the full accounting module;
-        Argon2id password hashing ships in the next release, and all entities move over by end of 2026.</li>
+        companies. Live in production, serving authentication (Argon2id password hashing) and the full
+        accounting module; all entities move over by end of 2026.</li>
       <li>Built database-per-customer multi-tenancy behind a YARP gateway that routes each request by
         JWT claim to per-customer hosts, so customer-specific features (7 customization modules) ship
         without redeploying the shared API.</li>
@@ -132,8 +132,8 @@
       <li class="full">Built Blazor templates for export prints and an observability dashboard for the
         API.</li>
       <li>Onboarded and mentored new developers as the team grew from 2 to 5: assigned tasks, paired on
-        the codebase, and wrote the architecture documentation new hires start from; now building
-        the API's xUnit test suite for handover.</li>
+        the codebase, and wrote the architecture documentation new hires start from; built the API's
+        xUnit test suite for handover.</li>
       <li class="full">Handled production support (tickets, bug fixes, customer calls) under ISO 9001 and
         ISO 27001 procedures.</li>
     </ul>
@@ -170,7 +170,7 @@
     <ul>
       <li>Astro site on Cloudflare Pages with a server-side contact API (Resend, per-IP rate limiting,
         honeypot) and an automated photo pipeline: Swift watermarking, WebP encoding, EXIF and GPS
-        stripping, thumbnails. GitHub Actions CI/CD in progress.</li>
+        stripping, thumbnails. CI/CD with GitHub Actions.</li>
     </ul>
   </div>
   <div class="entry">
