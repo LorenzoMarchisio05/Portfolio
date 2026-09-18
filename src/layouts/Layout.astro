@@ -84,6 +84,11 @@ const og = new URL(image, Astro.site ?? Astro.url);
     <slot name="head" />
   </head>
   <body>
+    <!-- Cloudflare's email obfuscation hides nothing here: the address is in
+         the JSON-LD in plain text. It only adds a render-blocking decoder
+         script. These markers turn it off for everything between them. -->
+    <!--email_off-->
     <slot />
+    <!--email_on-->
   </body>
 </html>

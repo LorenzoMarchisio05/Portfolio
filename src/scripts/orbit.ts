@@ -284,8 +284,11 @@ function catchUp(now: number) {
   // a floor here held an exiting card at 0.86 across the whole ramp and then
   // dropped it the moment it cleared, one hard pop per card. On a phone, where
   // a card is the screen, that pop is the whole view.
-  cards.forEach((card) => {
-    const r = card.getBoundingClientRect();
+  // Every rect before any opacity: reading after a write makes the browser
+  // restyle once per card.
+  const rects = cards.map((card) => card.getBoundingClientRect());
+  cards.forEach((card, i) => {
+    const r = rects[i];
     const t = clamp01((r.right - left) / Math.min(ramp, r.width || 1));
     card.style.opacity = (base + (1 - base) * t).toFixed(3);
   });
@@ -429,18 +432,20 @@ function remeasure() {
 addEventListener("resize", remeasure);
 addEventListener("orientationchange", remeasure);
 reduce.addEventListener("change", remeasure);
-// Fonts land after first paint and change every measurement below them.
-document.fonts?.ready.then(remeasure);
 
 // Any reflow that changes the track's width or the pin's height — a font
 // swapping in after first paint, a text metric settling — changes how far it
-// travels. Catch it at the source instead of re-deriving it every frame.
+// travels. Catch it at the source instead of re-deriving it every frame; the
+// body covers everything else the loop reads.
+// Its first call, right after the browser's own first layout, is also where
+// everything starts. Measuring any earlier, as the script runs, forced that
+// layout early, on the script's clock.
+let running = false;
 const resized = new ResizeObserver(() => {
   measureCorridor();
-  journey();
+  lastTop = null; // redraw on the next frame, moved or not
+  if (running) return;
+  running = true;
+  requestAnimationFrame(tick);
 });
-if (corridorTrack) resized.observe(corridorTrack);
-if (jPin) resized.observe(jPin);
-
-remeasure();
-requestAnimationFrame(tick);
+for (const el of [corridorTrack, jPin, document.body]) if (el) resized.observe(el);
