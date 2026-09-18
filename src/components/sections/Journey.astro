@@ -1,81 +1,75 @@
 ---
 import stops from "../../content/journey.json";
 
-// The CV as a corridor you travel east. Page scroll is the only driver — see
-// src/scripts/orbit.ts for the translate math.
+// The CV as a corridor you travel east. Page scroll drives it while the
+// section is pinned; see src/scripts/orbit.ts.
 ---
 
 <section id="journey">
-  <div
-    class="glow"
-    style="background:radial-gradient(62% 32% at 86% 30%, rgba(255,47,29,.08), transparent 64%)"
-  >
-  </div>
-
-  <header class="head" data-rise>
-    <div class="title">
-      <p class="eyebrow">CUNEO → LEUVEN</p>
-      <h2 class="headline">THE GROUND<br />FLATTENS</h2>
+  <!-- Pinned while the corridor travels, plus a rest at each end, then
+       released: the page's scroll turns sideways while it is on it. orbit.ts
+       sets the section's height. -->
+  <div class="pin">
+    <div
+      class="glow"
+      style="background:radial-gradient(62% 32% at 86% 30%, rgba(255,47,29,.08), transparent 64%)"
+    >
     </div>
-    <p class="lead note">
-      Keep scrolling. The corridor runs east while the ridge behind it, the
-      Cuneo skyline, loses relief the further right you go.
-    </p>
-  </header>
 
-  <div id="jTrack">
-    <div class="sticky">
-      <div id="corridor" data-par=".04" data-par-m="0">
-        <!-- Lives inside #corridor so it shares the corridor's frame; as an
-             outside sibling it drifts against the cards. Its baseline sits
-             exactly on the axis rule. -->
+    <header class="head" data-rise>
+      <div class="title">
+        <p class="eyebrow">CUNEO → LEUVEN</p>
+        <h2 class="headline">THE GROUND<br />FLATTENS</h2>
+      </div>
+      <p class="lead note">
+        Keep scrolling. The corridor runs east while the ridge behind it, the
+        Cuneo skyline, loses relief the further right you go.
+      </p>
+    </header>
+
+    <div id="jStage">
+      <div class="frame">
+        <!-- Outside the scroller so it stays put while the cards move. Its
+             baseline sits exactly on the axis rule. -->
         <div class="ridge" aria-hidden="true"></div>
 
-        <div id="corridorTrack">
-          <ol class="cards">
-            {
-              stops.map((s) => (
-                <li
-                  data-card
-                  style={`--w:${s.w}px;--size:${s.size}px;--msize:${s.mSize}px`}
-                >
-                  <span class="year" style={s.yearRed ? "color:var(--signal)" : ""}>
-                    {s.year}
-                  </span>
-                  <span class="name">{s.name}</span>
-                  <span class="detail">
-                    {s.detail.map((d) => (
-                      <span>{d}</span>
-                    ))}
-                  </span>
-                </li>
-              ))
-            }
-            <li class="next" data-card style="--w:430px;--size:52px;--msize:38px">
-              <span class="year">2026 → NEXT</span>
-              <span class="name">Leuven,<br />Belgium</span>
-              <span class="pitch">
-                Moving for the pace: fast engineering culture, people who think
-                at that speed, and room to start something of my own.
-              </span>
-              <span class="detail">
-                <span>50.88°N 4.70°E · +560KM</span>
-                <span>THE RIDGE FLATTENS INTO PLAIN</span>
-              </span>
-            </li>
-          </ol>
+        <div id="corridor">
+          <div id="corridorTrack">
+            <ol class="cards">
+              {
+                stops.map((s) => (
+                  <li
+                    class:list={[{ next: s.next }]}
+                    data-card
+                    style={`--w:${s.w}px;--size:${s.size}px;--msize:${s.mSize}px`}
+                  >
+                    <span class="year" style={s.yearRed ? "color:var(--signal)" : ""}>
+                      {s.year}
+                    </span>
+                    <span class="name">{s.name}</span>
+                    {s.pitch && <span class="pitch">{s.pitch}</span>}
+                    <span class="detail">
+                      {s.detail.map((d) => (
+                        <span>{d}</span>
+                      ))}
+                    </span>
+                  </li>
+                ))
+              }
+            </ol>
 
-          <div class="axis" aria-hidden="true">
-            {
-              stops.map((s) => (
-                <div
-                  style={`--w:${s.w}px${s.tickRed ? ";color:var(--signal)" : ""}`}
-                >
-                  {s.tick}
-                </div>
-              ))
-            }
-            <div class="next" style="--w:430px">2026 →</div>
+            <div class="axis" aria-hidden="true">
+              {
+                stops.map((s) => (
+                  <div
+                    class:list={[{ next: s.next }]}
+                    style={`--w:${s.w}px${s.tickRed ? ";color:var(--signal)" : ""}`}
+                  >
+                    {s.tick}
+                  </div>
+                ))
+              }
+            </div>
           </div>
         </div>
       </div>
@@ -91,15 +85,25 @@ import stops from "../../content/journey.json";
 </section>
 
 <style>
+  /* No overflow clipping here, or anywhere between the pin and the page:
+     WebKit clips a pinned element through a layer of its own, placed where
+     the main thread last saw the scroll, and the pinned section shook up and
+     down with it. The corridor clips its own cards. */
   #journey {
     position: relative;
     z-index: 1;
+    border-top: 1px solid var(--hair);
+  }
+
+  .pin {
+    position: sticky;
+    top: 0;
+    min-height: 100vh;
     padding: var(--pad-y) 0;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 44px;
-    border-top: 1px solid var(--hair);
-    overflow-x: clip;
   }
 
   .head {
@@ -124,21 +128,28 @@ import stops from "../../content/journey.json";
     max-width: 420px;
   }
 
-  #jTrack {
+  .frame {
     position: relative;
-    height: clamp(1100px, 190vh, 2100px);
   }
 
-  .sticky {
-    position: sticky;
-    top: clamp(86px, 13vh, 140px);
-  }
-
+  /* Moved by the page's scroll, not the user's, once the script runs; until
+     then it swipes like any overflow. The end padding lives on the track, not
+     here: browsers disagree on whether a scroller's own end padding can be
+     scrolled to. */
   #corridor {
     position: relative;
-    overflow: hidden;
-    padding: 0 var(--pad-x);
+    z-index: 1;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-left: var(--pad-x);
     scrollbar-width: none;
+  }
+
+  /* `clip` over `hidden`: the cards are moved, never scrolled, so this needs
+     no scroll container. `hidden` first for browsers without `clip`. */
+  :global(.js) #corridor {
+    overflow: hidden;
+    overflow: clip;
   }
 
   #corridor::-webkit-scrollbar {
@@ -185,13 +196,35 @@ import stops from "../../content/journey.json";
     );
   }
 
-  /* Both rows sit inside the one translated element, or the ticks slide
-     against the cards. */
+  /* Both rows sit inside the one moved element, or the ticks slide against
+     the cards. */
   #corridorTrack {
-    position: relative;
-    z-index: 1;
     width: max-content;
-    will-change: transform;
+    padding-right: var(--pad-x);
+  }
+
+  /* The page's scroll moves the cards itself, in the same frame, with no
+     script in between. orbit.ts sizes the section and sets the variables and
+     the easing, and moves the track where this is not supported. The guard
+     matters: a browser that ignores the timeline would otherwise play this as
+     a zero-length animation and park the cards at the end. */
+  @supports (animation-timeline: view()) {
+    #journey {
+      view-timeline: --journey block;
+    }
+
+    :global(.js) #corridorTrack {
+      animation: journey-travel linear both;
+      animation-timeline: --journey;
+      animation-range: contain var(--j-start, 0px) contain
+        calc(100% - var(--j-end, 0px));
+    }
+  }
+
+  @keyframes journey-travel {
+    to {
+      transform: translate3d(calc(-1 * var(--j-travel, 0px)), 0, 0);
+    }
   }
 
   .cards {
@@ -233,12 +266,14 @@ import stops from "../../content/journey.json";
     color: var(--signal);
   }
 
+  /* `pre-line` so a "\n" in a name in journey.json breaks the line. */
   .name {
     font-size: var(--size);
     font-weight: 700;
     font-stretch: 84%;
     letter-spacing: -0.02em;
     line-height: 1.04;
+    white-space: pre-line;
   }
 
   .next .name {
@@ -293,7 +328,7 @@ import stops from "../../content/journey.json";
   }
 
   @media (max-width: 768px) {
-    #journey {
+    .pin {
       padding: 64px 0 72px;
       gap: 28px;
     }
@@ -302,14 +337,6 @@ import stops from "../../content/journey.json";
       flex-direction: column;
       align-items: stretch;
       gap: 16px;
-    }
-
-    #jTrack {
-      height: 230vh;
-    }
-
-    .sticky {
-      top: 96px;
     }
 
     .ridge {
@@ -395,22 +422,6 @@ import stops from "../../content/journey.json";
       font-size: 10px;
       letter-spacing: 0.1em;
       color: var(--dim);
-    }
-  }
-
-  /* No scroll engine: the corridor becomes an ordinary scrollable region and
-     the track collapses to the height of its sticky content. */
-  @media (prefers-reduced-motion: reduce) {
-    html.js #jTrack {
-      height: auto;
-    }
-
-    #corridor {
-      overflow-x: auto;
-    }
-
-    #corridorTrack {
-      transform: none !important;
     }
   }
 </style>

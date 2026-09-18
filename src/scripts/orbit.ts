@@ -139,56 +139,135 @@ function parallax(vh: number) {
 }
 
 // ---- Journey corridor -------------------------------------------------
+//
+// The section is one screen, pinned for the corridor's travel plus a rest at
+// each end, then let go. Inside the rests the corridor eases from still to its
+// cruising speed and back: a straight one-to-one mapping turned the page's
+// motion sideways at full speed in a single frame, and the corridor, moved
+// here a frame behind the browser's own pinning, visibly jerked at both
+// corners. Everything is measured in scroll, not time, so the cards never
+// trail the page — but that means it has to be sized for a trackpad's
+// 30–40px a frame: rests and ramps a few frames long read as no ease at all.
+// Page scroll is the only driver: wheel, trackpad, keys and touch all arrive
+// as scroll, momentum included. Handling the wheel itself cannot work — a
+// trackpad gesture can only be cancelled on its first event, so the page
+// scrolls straight past.
 
-const jTrack = $("jTrack");
+const journeySection = $("journey");
+const jPin = journeySection?.querySelector<HTMLElement>(".pin") ?? null;
 const corridor = $("corridor");
-const corridorTrack = $("corridorTrack");
 const corrFill = $("corrFill");
 const corrLabel = $("corrLabel");
+const corridorTrack = $("corridorTrack");
 const cards = corridor
   ? Array.from(corridor.querySelectorAll<HTMLElement>("[data-card]"))
   : [];
 
-// How far the track travels for its east edge to finish on the corridor's.
-// Measured on viewport changes only, never inside the loop: derived per frame,
-// any wobble in the underlying layout read — a font swap, a mobile URL-bar
-// resize — moves the whole corridor for that frame, which reads as a jump.
-const jSticky = jTrack?.querySelector<HTMLElement>(".sticky") ?? null;
+// How far the corridor travels, and where the pin sits. Measured on layout
+// changes only, never inside the loop: derived per frame, a mobile URL-bar
+// resize moves the corridor for that frame, which reads as a jump.
 let corridorMax = 0;
-let stickyH = 0;
-let stickyTop = 0;
+let pinTop = 0;
+let dwell = 0;
+let span = 0;
 
-function measureCorridor() {
-  if (!corridor || !corridorTrack) return;
-  if (jSticky) {
-    stickyH = jSticky.getBoundingClientRect().height;
-    stickyTop = parseFloat(getComputedStyle(jSticky).top) || 0;
-  }
-  const pad = getComputedStyle(corridor);
-  // Against `clientWidth` this lands one padding short: that counts the
-  // corridor's own padding, but the track starts inside it, so the last card
-  // stops with `--pad-x` of itself still clipped off the east edge and never
-  // fully arrives.
-  const inner =
-    corridor.clientWidth -
-    parseFloat(pad.paddingLeft) -
-    parseFloat(pad.paddingRight);
-  corridorMax = Math.max(0, corridorTrack.scrollWidth - inner);
+// Shares of the viewport: the rest at each end, and the scroll added on top
+// of the travel, which slows the cards on a desktop, where the travel is
+// short, more than on a phone, where it is long. RAMP is the share of the
+// travel spent speeding up and slowing down.
+const DWELL = 0.2;
+const SPAN = 0.6;
+const RAMP = 0.3;
+
+// 0..1 in, 0..1 out: quadratic ramps either side of a straight middle, so the
+// speed is continuous and zero at both ends.
+function glide(t: number) {
+  const v = 1 / (1 - RAMP);
+  if (t < RAMP) return (v / (2 * RAMP)) * t * t;
+  if (t > 1 - RAMP) return 1 - (v / (2 * RAMP)) * (1 - t) * (1 - t);
+  return v * (t - RAMP / 2);
 }
 
-function journey(vh: number) {
-  if (!jTrack || !corridor || !corridorTrack) return;
+// Where the browser supports it, the track is a scroll-driven animation (see
+// Journey.astro), built from the same glide() so both paths agree, and this
+// loop only keeps the card opacities and the counter in step with it.
+const scrollDriven = CSS.supports("animation-timeline: view()");
+if (scrollDriven && corridorTrack)
+  corridorTrack.style.animationTimingFunction = `linear(${Array.from(
+    { length: 41 },
+    (_, i) => glide(i / 40).toFixed(4),
+  ).join(", ")})`;
 
-  const rect = jTrack.getBoundingClientRect();
-  // Progress across exactly the stretch where the block is parked, so the
-  // corridor starts the moment it pins and finishes the moment it releases.
-  // Measured against the viewport instead, it ran out roughly a screen-height
-  // of scroll early and left a dead stretch at the end — still pinned, still
-  // 07/07, nothing moving until the section finally let go.
-  const span = stickyH ? rect.height - stickyH : rect.height - vh;
-  const p = clamp01((stickyTop - rect.top) / Math.max(1, span));
-  // A transform, never scrollLeft: page scroll is the only driver.
-  corridorTrack.style.transform = `translate3d(${(-(p * corridorMax)).toFixed(1)}px,0,0)`;
+// Elsewhere this loop moves the track, easing toward the scroll position over
+// this many ms: the page scrolls on a thread of its own and this loop sees it
+// in uneven steps, which set straight onto the cards read as a judder. Short,
+// so the cards have settled before the rest at the end runs out; after a hard
+// flick they may not have, and then they land at once rather than drift
+// sideways under a section already moving up.
+const CATCH_UP = 60;
+
+let target = 0;
+let pinned = false;
+let shown = -1;
+let shownAt = 0;
+let catching = 0;
+
+function measureCorridor() {
+  if (!journeySection || !jPin || !corridor || !corridorTrack) return;
+  // From the track's layout width, not `scrollWidth`: that counts the track's
+  // transformed box, so it shrinks as the track slides.
+  corridorMax = Math.max(
+    0,
+    parseFloat(getComputedStyle(corridor).paddingLeft) +
+      corridorTrack.offsetWidth -
+      corridor.clientWidth,
+  );
+  const vh = viewportH();
+  const pinH = jPin.offsetHeight;
+  // A pin taller than the screen parks with its bottom edge on the screen's.
+  pinTop = Math.min(0, vh - pinH);
+  dwell = corridorMax ? Math.round(vh * DWELL) : 0;
+  span = corridorMax ? corridorMax + Math.round(vh * SPAN) : 0;
+  jPin.style.top = pinTop + "px";
+  journeySection.style.height = pinH + span + 2 * dwell + "px";
+  // The animation's range: the section's `contain` stretch — from filling the
+  // screen to its bottom meeting the screen's — less the part a tall pin
+  // spends parking and the rests at either end.
+  journeySection.style.setProperty("--j-travel", corridorMax + "px");
+  journeySection.style.setProperty("--j-start", -pinTop + dwell + "px");
+  journeySection.style.setProperty("--j-end", dwell + "px");
+  // A new layout is not a movement: land on it rather than glide there.
+  shown = -1;
+}
+
+function journey() {
+  if (!journeySection) return;
+  const travelled = pinTop - journeySection.getBoundingClientRect().top - dwell;
+  target = span ? glide(clamp01(travelled / span)) * corridorMax : 0;
+  pinned = travelled >= -dwell && travelled <= span + dwell;
+  // Nothing to draw while the cards are where they should be — which is most
+  // of the page — and every redraw is a layer update WebKit has to reconcile
+  // with its own scrolling.
+  if (!catching && target !== shown) {
+    shownAt = performance.now();
+    catching = requestAnimationFrame(catchUp);
+  }
+}
+
+function catchUp(now: number) {
+  catching = 0;
+  if (!corridor || !corridorTrack) return;
+  const k =
+    scrollDriven || reduce.matches || shown < 0 || !pinned
+      ? 1
+      : 1 - Math.exp(-Math.max(0, now - shownAt) / CATCH_UP);
+  shownAt = now;
+  shown += (target - shown) * k;
+  if (Math.abs(target - shown) < 0.05) shown = target;
+  else catching = requestAnimationFrame(catchUp);
+  if (!scrollDriven)
+    corridorTrack.style.transform = `translate3d(${(-shown).toFixed(2)}px,0,0)`;
+  const p = corridorMax ? shown / corridorMax : 0;
 
   const mobile = innerWidth <= MOBILE;
   const width = corridor.clientWidth || 1;
@@ -321,9 +400,9 @@ function update() {
   chrome(angleAt(y), clamp01(y / max) * 100);
   nav(vh);
   rise(vh);
+  journey();
   if (reduce.matches) return;
   parallax(vh);
-  journey(vh);
   shots(vh);
 }
 
@@ -353,10 +432,15 @@ reduce.addEventListener("change", remeasure);
 // Fonts land after first paint and change every measurement below them.
 document.fonts?.ready.then(remeasure);
 
-// Any reflow that changes the track's own width — a font swapping in after
-// first paint, a text metric settling — changes how far it has to travel.
-// Catch it at the source instead of re-deriving the travel every frame.
-if (corridorTrack) new ResizeObserver(measureCorridor).observe(corridorTrack);
+// Any reflow that changes the track's width or the pin's height — a font
+// swapping in after first paint, a text metric settling — changes how far it
+// travels. Catch it at the source instead of re-deriving it every frame.
+const resized = new ResizeObserver(() => {
+  measureCorridor();
+  journey();
+});
+if (corridorTrack) resized.observe(corridorTrack);
+if (jPin) resized.observe(jPin);
 
 remeasure();
 requestAnimationFrame(tick);

@@ -51,8 +51,8 @@
     "mSize": 32,
     "yearRed": true,
     "detail": ["COMPUTER ENGINEERING", "BSc, IN PROGRESS"],
-    "tick": "2024",
-    "tickRed": false
+    "tick": "2024 →",
+    "tickRed": true
   },
   {
     "year": "2024 → 2026",
@@ -60,13 +60,26 @@
     "w": 326,
     "size": 42,
     "mSize": 34,
-    "yearRed": true,
+    "yearRed": false,
     "detail": [
       "FULL-STACK SOFTWARE ENGINEER",
       "C# / .NET · FLUTTER · POSTGRES",
       "PIEMONTE, IT"
     ],
-    "tick": "NOW",
+    "tick": "2024",
+    "tickRed": false
+  },
+  {
+    "year": "2026 → NEXT",
+    "name": "Leuven,\nBelgium",
+    "w": 430,
+    "size": 52,
+    "mSize": 38,
+    "yearRed": true,
+    "next": true,
+    "pitch": "Moving for the pace: fast engineering culture, people who think at that speed, and room to start something of my own.",
+    "detail": ["50.88°N 4.70°E · +560KM", "THE RIDGE FLATTENS INTO PLAIN"],
+    "tick": "2026 →",
     "tickRed": true
   }
 ]
