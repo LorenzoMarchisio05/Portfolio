@@ -432,20 +432,21 @@ function remeasure() {
 addEventListener("resize", remeasure);
 addEventListener("orientationchange", remeasure);
 reduce.addEventListener("change", remeasure);
+// Fonts land after first paint and change every measurement below them.
+document.fonts?.ready.then(remeasure);
 
 // Any reflow that changes the track's width or the pin's height — a font
 // swapping in after first paint, a text metric settling — changes how far it
-// travels. Catch it at the source instead of re-deriving it every frame; the
-// body covers everything else the loop reads.
-// Its first call, right after the browser's own first layout, is also where
-// everything starts. Measuring any earlier, as the script runs, forced that
-// layout early, on the script's clock.
-let running = false;
+// travels. Catch it at the source instead of re-deriving it every frame.
 const resized = new ResizeObserver(() => {
   measureCorridor();
-  lastTop = null; // redraw on the next frame, moved or not
-  if (running) return;
-  running = true;
-  requestAnimationFrame(tick);
+  journey();
 });
-for (const el of [corridorTrack, jPin, document.body]) if (el) resized.observe(el);
+if (corridorTrack) resized.observe(corridorTrack);
+if (jPin) resized.observe(jPin);
+
+// Measured before the first frame, which forces the page's first layout from
+// here (Lighthouse's "forced reflow"). Deferring it to the observer's first
+// call broke the corridor in WebKit, so it stays.
+remeasure();
+requestAnimationFrame(tick);
