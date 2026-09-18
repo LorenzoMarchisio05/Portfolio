@@ -24,8 +24,8 @@ def load(path, location=None):
 
 
 # The headings use weight 700 at 82% width; the mono runs are regular.
-headline = load(f"{REPO}/public/fonts/archivo-latin.woff2", {"wght": 700, "wdth": 82})
-mono = load(f"{REPO}/public/fonts/jetbrains-mono-latin.woff2", {"wght": 400})
+headline = load(f"{REPO}/fonts-src/archivo-latin.woff2", {"wght": 700, "wdth": 82})
+mono = load(f"{REPO}/fonts-src/jetbrains-mono-latin.woff2", {"wght": 400})
 
 
 def run_paths(font, text, size, x, y, colour, tracking=0.0):

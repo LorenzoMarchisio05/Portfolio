@@ -6,24 +6,30 @@
    design sets `font-stretch` between 78% and 86% on every piece of display
    type, and without the axis in the file those eight declarations resolve to
    normal width and do nothing — which is how the handoff's own export
-   rendered, since its font URL never requested the axis. */
+   rendered, since its font URL never requested the axis.
+
+   The two latin files are trimmed by scripts/fonts.sh: their unicode-range,
+   and Archivo's weight and width ranges, have to match what it keeps. Both
+   Archivo faces declare the same ranges: a browser picks faces by those first,
+   and only faces that tie are merged by unicode-range. Different ranges, and
+   the latin-ext face won every match and the page fell back to Helvetica. */
 @font-face {
   font-family: Archivo;
   font-style: normal;
-  font-weight: 100 900;
-  font-stretch: 62% 125%;
+  font-weight: 100 700;
+  font-stretch: 62% 100%;
   font-display: swap;
-  src: url("/fonts/archivo-latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
-    U+2212, U+2215, U+FEFF, U+FFFD;
+  src: url("/fonts/archivo-latin.v2.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-00FF, U+0131, U+0152-0153, U+02C6, U+02DA,
+    U+02DC, U+2013-2014, U+2018-201A, U+201C-201E, U+2020-2022, U+2026, U+2030,
+    U+2039-203A, U+20AC, U+2122, U+2191, U+2193, U+2212;
 }
 
 @font-face {
   font-family: Archivo;
   font-style: normal;
-  font-weight: 100 900;
-  font-stretch: 62% 125%;
+  font-weight: 100 700;
+  font-stretch: 62% 100%;
   font-display: swap;
   src: url("/fonts/archivo-latin-ext.woff2") format("woff2");
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
@@ -36,10 +42,10 @@
   font-style: normal;
   font-weight: 100 800;
   font-display: swap;
-  src: url("/fonts/jetbrains-mono-latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
-    U+2212, U+2215, U+FEFF, U+FFFD;
+  src: url("/fonts/jetbrains-mono-latin.v2.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-00FF, U+0131, U+0152-0153, U+02C6, U+02DA,
+    U+02DC, U+2013-2014, U+2018-201A, U+201C-201E, U+2020-2022, U+2026, U+2030,
+    U+2039-203A, U+20AC, U+2122, U+2191, U+2193, U+2212;
 }
 
 @font-face {
