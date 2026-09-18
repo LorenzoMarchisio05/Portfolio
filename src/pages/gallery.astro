@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import { imageMetadata } from "astro/assets/utils";
 import Layout from "../layouts/Layout.astro";
 import PageBar from "../components/components/PageBar.astro";
+import Footer from "../components/components/Footer.astro";
 
 // Built once, not per request: the grid needs every photo's size, and only the
 // build has the files on disk — the worker has no node:fs.
@@ -83,6 +84,8 @@ const count = String(photos.length).padStart(2, "0");
       }
     </ul>
   </main>
+
+  <Footer />
 
   <dialog id="viewer" aria-label="Photograph">
     <button class="close" type="button">CLOSE ✕</button>

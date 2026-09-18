@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Footer from "../components/components/Footer.astro";
 
 // Prerendered so the build has a top-level 404.html: without one, Cloudflare
 // Pages treats the site as a single-page app and answers every unknown URL
@@ -20,6 +21,7 @@ export const prerender = true;
     </p>
     <a href="/">BACK TO 000° ↓</a>
   </main>
+  <Footer />
 </Layout>
 
 <style>

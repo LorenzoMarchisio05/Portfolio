@@ -3,6 +3,7 @@
 // pages share.
 import Layout from "./Layout.astro";
 import PageBar from "../components/components/PageBar.astro";
+import Footer from "../components/components/Footer.astro";
 
 interface Props {
   title: string;
@@ -40,15 +41,7 @@ const { title, description, image, noindex, back, cta, skip, jsonLd } = Astro.pr
       <slot />
     </main>
 
-    <footer class="ws-footer">
-      <span>© 2026 LORENZO MARCHISIO</span>
-      <nav aria-label="Footer">
-        <a href="/websites">Websites</a>
-        <a href="/websites/gallery">Gallery</a>
-        <a href="/privacy">Privacy policy</a>
-        <a href="/">Portfolio</a>
-      </nav>
-    </footer>
+    <Footer />
   </div>
 </Layout>
 
@@ -58,6 +51,7 @@ const { title, description, image, noindex, back, cta, skip, jsonLd } = Astro.pr
     /* Side padding that grows past --ws-max, so every row (bar, sections,
        footer) shares one centered column. The % resolves where it's used. */
     --ws-gutter: max(var(--pad-x), calc((100% - var(--ws-max)) / 2));
+    --footer-x: var(--ws-gutter);
     font-size: clamp(17px, 0.3vw + 13.5px, 19px);
     line-height: 1.6;
   }
@@ -199,32 +193,9 @@ const { title, description, image, noindex, back, cta, skip, jsonLd } = Astro.pr
     color: var(--bone);
   }
 
-  .ws-footer {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap;
-    padding: 30px var(--ws-gutter) 44px;
-    border-top: 1px solid var(--hair);
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    color: var(--dim);
-  }
-
-  .ws-footer nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 24px;
-  }
-
-  .ws-footer a {
-    color: var(--warm);
-    text-transform: uppercase;
-  }
-
   @media (max-width: 768px) {
     .ws {
+      --footer-x: 16px;
       font-size: 16px;
     }
 
@@ -241,11 +212,6 @@ const { title, description, image, noindex, back, cta, skip, jsonLd } = Astro.pr
 
     .ws-section {
       padding: 56px 16px;
-    }
-
-    .ws-footer {
-      flex-direction: column;
-      padding: 26px 16px 40px;
     }
   }
 

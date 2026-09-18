@@ -1,0 +1,66 @@
+---
+// One footer for every page. Its side padding follows the page's column:
+// the websites pages set --footer-x to their centered gutter.
+const links = [
+  ["/", "Portfolio"],
+  ["/gallery", "Photo gallery"],
+  ["/websites", "Websites"],
+  ["/privacy", "Privacy policy"],
+];
+const here = Astro.url.pathname.replace(/\/$/, "") || "/";
+---
+
+<footer>
+  <span>© 2026 LORENZO MARCHISIO</span>
+  <nav aria-label="Footer">
+    {
+      links.map(([href, label]) => (
+        <a href={href} aria-current={href === here ? "page" : undefined}>
+          {label}
+        </a>
+      ))
+    }
+  </nav>
+</footer>
+
+<style>
+  footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 30px var(--footer-x, var(--pad-x)) 44px;
+    border-top: 1px solid var(--hair);
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.6;
+    letter-spacing: 0.1em;
+    color: var(--dim);
+  }
+
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+  }
+
+  a {
+    color: var(--warm);
+    text-transform: uppercase;
+  }
+
+  a:hover {
+    color: var(--signal);
+  }
+
+  [aria-current] {
+    color: var(--bone);
+  }
+
+  @media (max-width: 768px) {
+    footer {
+      flex-direction: column;
+      padding: 26px var(--footer-x, var(--pad-x)) 40px;
+    }
+  }
+</style>
