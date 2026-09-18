@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # original photos, input to scripts/photos.sh
 photos-src/
+
+# wrangler local state (pages dev, deploy)
+.wrangler/
