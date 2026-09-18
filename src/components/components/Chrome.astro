@@ -1,6 +1,6 @@
 ---
 // Fixed chrome: the bar with the live angle readout, and the scroll progress
-// rule pinned to the bottom of the viewport.
+// rule pinned to the bottom of the viewport (the top, on a phone).
 const links = [
   { href: "#engineer", label: "ENGINEER" },
   { href: "#founder", label: "FOUNDER" },
@@ -92,10 +92,22 @@ const links = [
     pointer-events: none;
   }
 
+  /* Scaled, not resized: the fill changes every frame of a scroll, and a
+     transform does not lay the page out again. */
   .progress > div {
     height: 2px;
-    width: 0;
     background: var(--signal);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  /* A rule pinned to the bottom rides a phone browser's toolbar as it slides
+     in and out, and jumps with it. The top edge never moves. */
+  @media (max-width: 768px), (pointer: coarse) {
+    .progress {
+      top: 0;
+      bottom: auto;
+    }
   }
 
   @media (max-width: 768px) {

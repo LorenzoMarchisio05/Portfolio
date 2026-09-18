@@ -25,25 +25,44 @@ import Silhouette from "../components/Silhouette.astro";
           points read as a network.
         </p>
       </div>
-      <h2 class="big">TOO EARLY<br />TO NAME</h2>
+      <h2 class="big">WHAT I AM<br />BUILDING</h2>
     </div>
   </div>
 
-  <div data-par=".04" data-par-m="0">
-    <div class="cols" data-rise>
-      <p class="first" data-par="-.1" data-par-m="0">
-        I am building something. It is early enough that describing it would be
-        a claim rather than a fact, so this section holds its shape and waits.
-      </p>
-      <p class="second" data-par=".04" data-par-m="0">
-        What I can say: it starts from work I do every day inside industrial
-        software, and from how much of it is still done by hand. I am not
-        recruiting anyone and I am not pitching. And it does not have to be this:
-        any idea, any field. If what you are building needs what I can do, I
-        am listening.
-      </p>
-    </div>
-  </div>
+  <ol class="activities">
+    <li data-par=".04" data-par-m="0">
+      <div class="activity" data-rise>
+        <p class="num">01 · WEBSITE STUDIO</p>
+        <h3 class="name">Websites for small businesses</h3>
+        <p class="first">
+          Fast, multilingual websites for restaurants, shops and practices,
+          anywhere in the world. Fixed prices, live in days, built with the same
+          method as the software I write for industry.
+        </p>
+        <a class="go" href="/websites">SEE THE STUDIO →</a>
+      </div>
+    </li>
+
+    <li data-par=".04" data-par-m="0">
+      <div class="activity" data-rise>
+        <p class="num">02 · UNNAMED</p>
+        <h3 class="name">Too early to name</h3>
+        <div class="cols">
+          <p class="first">
+            It is early enough that describing it would be a claim rather than
+            a fact, so this part holds its shape and waits.
+          </p>
+          <p class="second">
+            What I can say: it starts from work I do every day inside industrial
+            software, and from how much of it is still done by hand. I am not
+            recruiting anyone and I am not pitching. And it does not have to be this:
+            any idea, any field. If what you are building needs what I can do, I
+            am listening.
+          </p>
+        </div>
+      </div>
+    </li>
+  </ol>
 </section>
 
 <style>
@@ -119,6 +138,56 @@ import Silhouette from "../components/Silhouette.astro";
     line-height: 0.9;
   }
 
+  .activities {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(40px, 6vh, 64px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    max-width: 1100px;
+  }
+
+  .activity {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding-top: 22px;
+    border-top: 1px solid var(--hair-3);
+  }
+
+  .activity > p {
+    margin: 0;
+    max-width: 640px;
+    text-wrap: pretty;
+  }
+
+  .num {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--signal);
+  }
+
+  .name {
+    margin: 0;
+    font-size: clamp(26px, 3vw, 38px);
+    font-weight: 600;
+    font-stretch: 84%;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+
+  .go {
+    width: fit-content;
+    margin-top: 6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    border-bottom: 1px solid var(--signal);
+    padding-bottom: 6px;
+  }
+
   .cols {
     display: flex;
     gap: 48px;
@@ -183,6 +252,21 @@ import Silhouette from "../components/Silhouette.astro";
     .cols {
       flex-direction: column;
       gap: 20px;
+    }
+
+    .activities {
+      gap: 36px;
+    }
+
+    .name {
+      font-size: 26px;
+    }
+
+    .go {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding-bottom: 0;
     }
 
     .cols p {

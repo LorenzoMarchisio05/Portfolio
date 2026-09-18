@@ -2,6 +2,7 @@
 import { readFile } from "node:fs/promises";
 import { imageMetadata } from "astro/assets/utils";
 import Layout from "../layouts/Layout.astro";
+import PageBar from "../components/components/PageBar.astro";
 
 // Built once, not per request: the grid needs every photo's size, and only the
 // build has the files on disk — the worker has no node:fs.
@@ -43,13 +44,9 @@ const count = String(photos.length).padStart(2, "0");
 <Layout
   title="Gallery · Lorenzo Marchisio"
   description="Motorcycle, football and travel photographs from Slovenia and Croatia, by Lorenzo Marchisio."
-  image="/og-gallery.jpg"
+  image="/social/og-gallery.jpg"
 >
-  <header class="bar">
-    <a class="wordmark" href="/">LM<span>.</span></a>
-    <a class="back" href="/#photography">← BACK</a>
-    <span class="angle">240°</span>
-  </header>
+  <PageBar back="/#photography" angle="240°" />
 
   <main>
     <div class="glow"></div>
@@ -57,9 +54,6 @@ const count = String(photos.length).padStart(2, "0");
     <div class="intro">
       <p class="eyebrow">240° · PHOTOGRAPHER</p>
       <h1 class="headline">EVERY<br />FRAME</h1>
-      <p class="lead">
-        The grid rearranges itself to fit. Open a frame to see it whole.
-      </p>
       <p class="meta">{count} FRAMES</p>
       {
         categories.length > 1 && (
@@ -167,58 +161,13 @@ const count = String(photos.length).padStart(2, "0");
 </script>
 
 <style>
-  /* Same bar as the home page, minus the section links and the live readout
-     that only make sense on the orbit. */
-  .bar {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    z-index: 40;
-    display: flex;
-    align-items: center;
-    gap: 32px;
-    padding: 26px var(--pad-x);
-    background: linear-gradient(var(--ink) 62%, rgba(12, 11, 10, 0));
-    pointer-events: none;
-  }
-
-  .bar a {
-    pointer-events: auto;
-  }
-
-  .wordmark {
-    font-family: var(--mono);
-    font-size: 12px;
-    letter-spacing: 0.18em;
-  }
-
-  .wordmark span {
-    color: var(--signal);
-  }
-
-  .back {
-    margin-left: auto;
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    color: var(--warm);
-  }
-
-  .angle {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    color: var(--signal);
-  }
-
   main {
     position: relative;
     z-index: 1;
     display: flex;
     flex-direction: column;
     gap: var(--gap-y);
-    padding: clamp(130px, 18vh, 200px) var(--pad-x) var(--pad-y);
+    padding: clamp(60px, 18vh - 70px, 130px) var(--pad-x) var(--pad-y);
     /* The grid sizes its rows off this width. */
     container-type: inline-size;
   }
@@ -458,27 +407,6 @@ const count = String(photos.length).padStart(2, "0");
   }
 
   @media (max-width: 768px) {
-    .bar {
-      gap: 16px;
-      padding: 16px 20px 20px;
-      background: linear-gradient(var(--ink) 58%, rgba(12, 11, 10, 0));
-    }
-
-    .wordmark,
-    .back {
-      display: inline-flex;
-      align-items: center;
-      min-height: 44px;
-    }
-
-    .wordmark {
-      font-size: 13px;
-    }
-
-    .back {
-      font-size: 10px;
-    }
-
     .filters {
       gap: 0 22px;
       padding-top: 0;
@@ -490,7 +418,7 @@ const count = String(photos.length).padStart(2, "0");
     }
 
     main {
-      padding: 112px 20px 72px;
+      padding: 32px 20px 72px;
     }
 
     figure img {

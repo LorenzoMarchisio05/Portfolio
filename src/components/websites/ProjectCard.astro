@@ -1,0 +1,192 @@
+---
+// A project as a card. `compact` on the studio page (one screenshot), `full`
+// in the gallery (both screenshots). The facts and the story are on the
+// project page, which both variants link to.
+import { projectHref, type Project } from "../../lib/projects";
+
+interface Props {
+  project: Project;
+  variant: "compact" | "full";
+}
+
+const { project, variant } = Astro.props;
+const { id, data } = project;
+const concept = data.status === "concept";
+// The schema guarantees the URL that matches the status.
+const url = (concept ? data.conceptUrl : data.liveUrl)!;
+const domain = new URL(url).hostname.replace(/^www\./, "");
+const full = variant === "full";
+const shots = full ? (["desktop", "mobile"] as const) : [data.featuredScreenshot];
+const Heading = full ? "h2" : "h3";
+// ponytail: screenshots ship as the WebP files in the project folder, with no
+// AVIF or srcset. Add an image service if Lighthouse flags them.
+---
+
+<article class:list={["card", variant]} id={full ? id : undefined} tabindex={full ? -1 : undefined}>
+  <div class="shots">
+    {
+      shots.map((shot) => {
+        const image = data.screenshots[shot];
+        return (
+          <img
+            class={shot}
+            src={image.src}
+            width={image.width}
+            height={image.height}
+            alt={data.text.alt[shot]}
+            loading="lazy"
+            decoding="async"
+          />
+        );
+      })
+    }
+  </div>
+
+  <div class="body">
+    <Heading class="ws-h3">
+      {data.clientName}
+      {concept && <span class="tag">Concept</span>}
+    </Heading>
+    <p class="place">
+      {data.category} · {data.location.city}, {data.location.country}
+    </p>
+
+    <p class="summary">{data.text.summary}</p>
+
+    <div class="actions">
+      <a class="ws-link story" href={projectHref(project)}>
+        Read the full story <span aria-hidden="true">→</span>
+      </a>
+      <a
+        class="site"
+        href={url}
+        target="_blank"
+        rel="noopener"
+        aria-label={`${concept ? "Concept site" : "Live site"}: ${domain} (opens in a new tab)`}
+      >
+        {domain} <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </div>
+</article>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .full {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: clamp(20px, 4vw, 56px);
+    padding: clamp(32px, 5vw, 56px) 0;
+    border-top: 1px solid var(--hair);
+  }
+
+  .shots {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  img {
+    display: block;
+    height: auto;
+    background: var(--frame-fill);
+    box-shadow: inset 0 0 0 1px var(--hair-3);
+  }
+
+  .compact img {
+    width: 100%;
+  }
+
+  .full .desktop {
+    width: 76%;
+  }
+
+  .full .mobile {
+    width: 24%;
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .full .body {
+    /* A hairline under the heading block, as the sections use. */
+    padding-top: 4px;
+  }
+
+  .summary {
+    max-width: 46ch;
+    margin: 6px 0 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--hair);
+  }
+
+  .full .summary {
+    font-size: 17px;
+  }
+
+  /* Pushed to the bottom of the cell, so the two actions line up with the
+     foot of the screenshots instead of floating under the text. */
+  .actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    margin-top: auto;
+    padding-top: 10px;
+  }
+
+  .story {
+    gap: 8px;
+  }
+
+  .site {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 32px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--warm);
+  }
+
+  .site:hover {
+    color: var(--signal);
+  }
+
+  .tag {
+    margin-left: 10px;
+    padding: 2px 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    vertical-align: middle;
+    color: var(--ink);
+    background: var(--caption);
+  }
+
+  .place {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--warm);
+  }
+
+  @media (max-width: 768px) {
+    .full {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

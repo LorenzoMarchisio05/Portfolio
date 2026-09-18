@@ -172,7 +172,14 @@ const sizes = (f: Frame, row: Frame[]) => {
 
   #shotVeil {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    /* The largest the viewport gets, not inset: 0. A box sized to the visible
+       area follows a phone's toolbar a beat late and leaves a strip of page
+       showing under it while the toolbar slides. */
+    height: 100vh;
+    height: 100lvh;
     z-index: 20;
     background: var(--ink);
     opacity: 0;

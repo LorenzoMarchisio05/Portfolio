@@ -1,0 +1,578 @@
+---
+// One page per project: the screenshots, the facts and the whole story. The
+// gallery is only the index into these.
+import type { GetStaticPaths } from "astro";
+import Websites from "../../../layouts/Websites.astro";
+import { getGalleryProjects, type Project } from "../../../lib/projects";
+import { packages } from "../../../data/pricing";
+
+export const prerender = true;
+
+export const getStaticPaths = (async () =>
+  (await getGalleryProjects()).map((project) => ({
+    params: { slug: project.data.slug },
+    props: { project },
+  }))) satisfies GetStaticPaths;
+
+const { project } = Astro.props as { project: Project };
+const { id, data } = project;
+
+const languageName = new Intl.DisplayNames("en", { type: "language" });
+const languages = new Intl.ListFormat("en").format(data.languages.map((l) => languageName.of(l)!));
+const month = (date: Date) => date.toLocaleDateString("en-GB", { month: "long", year: "numeric" });
+const day = (date: Date) => date.toLocaleDateString("en-GB", { dateStyle: "long" });
+
+const concept = data.status === "concept";
+// The schema guarantees the URL that matches the status.
+const url = (concept ? data.conceptUrl : data.liveUrl)!;
+const domain = new URL(url).hostname.replace(/^www\./, "");
+const name = concept ? `${data.clientName} (Concept)` : data.clientName;
+const similar = `/websites?ref=project-${id}&package=${data.package}#start`;
+
+const facts: [string, string][] = [
+  ["Status", concept ? "Concept" : "Live"],
+  ["Package", packages.find((p) => p.id === data.package)!.name],
+  ["Languages", languages],
+  ...(data.deliveryDays ? ([["Delivered in", `${data.deliveryDays} days`]] as [string, string][]) : []),
+  ...(data.launchedAt ? ([["Launched", month(data.launchedAt)]] as [string, string][]) : []),
+];
+
+const showTestimonial = data.testimonial && data.consent.testimonial;
+
+// ---- structured data ----
+const site = Astro.site ?? Astro.url;
+const abs = (path: string) => new URL(path, site).href;
+const here = abs(`/websites/gallery/${data.slug}`);
+
+const work = {
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  "@id": `${here}#project`,
+  name,
+  url: here,
+  sameAs: url,
+  image: abs(data.screenshots.desktop.src),
+  abstract: data.text.summary,
+  inLanguage: data.languages,
+  creator: { "@id": abs("/#person") },
+  about: {
+    "@type": "LocalBusiness",
+    name: data.clientName,
+    ...(concept && { disambiguatingDescription: "Concept" }),
+  },
+  ...(data.launchedAt && { dateCreated: data.launchedAt.toISOString().slice(0, 10) }),
+};
+
+const breadcrumbs = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Websites", item: abs("/websites") },
+    { "@type": "ListItem", position: 2, name: "Gallery", item: abs("/websites/gallery") },
+    { "@type": "ListItem", position: 3, name: data.clientName, item: here },
+  ],
+};
+---
+
+<Websites
+  title={data.text.seo?.title ?? `${name} · Website by Lorenzo Marchisio`}
+  description={data.text.seo?.description ?? data.text.summary}
+  image={data.screenshots.desktop.src}
+  back="/websites/gallery"
+  cta={similar}
+  skip={{ href: "#content", label: "Skip to content" }}
+  jsonLd={[work, breadcrumbs]}
+>
+  <nav slot="nav" class="ws-crumbs" aria-label="Breadcrumb">
+    <ol>
+      <li><a href="/websites">Websites</a></li>
+      <li><a href="/websites/gallery">Gallery</a></li>
+      <li><span aria-current="page">{data.clientName}</span></li>
+    </ol>
+  </nav>
+
+  <!-- 1 · Who it is, and the facts beside it -->
+  <section class="ws-section hero" aria-labelledby="project-title">
+    <div class="intro">
+      <p class="eyebrow">{data.category} · {data.location.city}, {data.location.country}</p>
+      <h1 id="project-title" class="title">
+        {data.clientName}
+        {concept && <span class="tag">Concept</span>}
+      </h1>
+      <p class="lead sub">{data.text.summary}</p>
+      <div class="row">
+        <a
+          class="ws-btn"
+          href={url}
+          target="_blank"
+          rel="noopener"
+          aria-label={`${concept ? "Concept site" : "Live site"}: ${domain} (opens in a new tab)`}
+        >
+          Visit {domain} <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <dl class="facts">
+      {
+        facts.map(([label, value]) => (
+          <div>
+            <dt>{label}</dt>
+            <dd>{value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <!-- 2 · What it looks like -->
+  <div class="band">
+    <figure class="frame">
+      <img
+        src={data.screenshots.desktop.src}
+        width={data.screenshots.desktop.width}
+        height={data.screenshots.desktop.height}
+        alt={data.text.alt.desktop}
+      />
+      <figcaption>Desktop</figcaption>
+    </figure>
+    <figure class="frame phone">
+      <img
+        src={data.screenshots.mobile.src}
+        width={data.screenshots.mobile.width}
+        height={data.screenshots.mobile.height}
+        alt={data.text.alt.mobile}
+        loading="lazy"
+        decoding="async"
+      />
+      <figcaption>Phone</figcaption>
+    </figure>
+  </div>
+
+  <!-- 3 · The brief -->
+  <section class="ws-section brief" aria-labelledby="brief-title">
+    <h2 id="brief-title" class="ws-h2">The brief</h2>
+    <div class="two">
+      <div>
+        <p class="label">Before</p>
+        <p>{data.text.before}</p>
+      </div>
+      <div>
+        <p class="label">What was built</p>
+        <ul>
+          {data.text.built.map((line) => <li>{line}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · The build, chapter by chapter -->
+  {
+    data.text.sections.length > 0 && (
+      <section class="ws-section chapters" aria-labelledby="chapters-title">
+        <h2 id="chapters-title" class="ws-h2">Inside the site</h2>
+        <ol>
+          {data.text.sections.map((section) => (
+            <li>
+              <h3 class="chapter">{section.title}</h3>
+              {section.body.map((paragraph) => (
+                <p>{paragraph}</p>
+              ))}
+              {section.image && (
+                <img
+                  class="shot"
+                  src={section.image.src}
+                  width={section.image.width}
+                  height={section.image.height}
+                  alt={section.alt}
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+            </li>
+          ))}
+        </ol>
+      </section>
+    )
+  }
+
+  <!-- 5 · What it did, in the client's numbers and words -->
+  {
+    data.results.length > 0 && (
+      <section class="ws-section" aria-labelledby="results-title">
+        <h2 id="results-title" class="ws-h2">Results</h2>
+        <dl class="results">
+          {data.results.map((result) => (
+            <div>
+              <dt>{result.label}</dt>
+              <dd>
+                <strong>{result.value}</strong>
+                <span class="meta">
+                  Measured {day(result.measuredAt)}. Source: {result.source}
+                </span>
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    )
+  }
+
+  {
+    showTestimonial && (
+      <section class="ws-section quote" aria-labelledby="quote-title">
+        <h2 id="quote-title" class="ws-h2">What the client says</h2>
+        <figure>
+          <blockquote>{data.testimonial!.quote}</blockquote>
+          <figcaption>
+            {data.testimonial!.author}, {data.testimonial!.role}
+          </figcaption>
+        </figure>
+      </section>
+    )
+  }
+
+  <!-- 6 · The way out -->
+  <section class="ws-section end" aria-labelledby="end-title">
+    {data.stack.length > 0 && <p class="meta">Built with: {data.stack.join(", ")}</p>}
+    <h2 id="end-title" class="ws-h2">Want something like this?</h2>
+    <p class="lead">Tell me about your business, and I'll reply within one working day.</p>
+    <div class="row">
+      <a class="ws-btn" href={similar}>Request a free 30-minute call</a>
+      <a class="ws-link quiet" href="/websites/gallery">← All projects</a>
+    </div>
+  </section>
+</Websites>
+
+<style>
+  /* ---- 1 · hero ---- */
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(220px, 0.8fr);
+    align-items: start;
+    gap: clamp(24px, 5vw, 72px);
+    /* The screenshots below belong to the hero, so this block closes tight. */
+    padding: clamp(48px, 10vh, 120px) var(--ws-gutter) clamp(28px, 3vw, 44px);
+    border-top: 0;
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .title {
+    margin: 0;
+    font-size: clamp(36px, 5vw, 68px);
+    font-weight: 700;
+    font-stretch: 80%;
+    letter-spacing: -0.03em;
+    line-height: 0.98;
+    text-wrap: balance;
+  }
+
+  .tag {
+    margin-left: 12px;
+    padding: 4px 10px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    vertical-align: middle;
+    color: var(--ink);
+    background: var(--caption);
+  }
+
+  .sub {
+    max-width: 40em;
+    font-size: clamp(17px, 1.4vw, 19px);
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 28px;
+    margin-top: 6px;
+  }
+
+  .facts {
+    display: grid;
+    gap: 0;
+    margin: 6px 0 0;
+    border-top: 1px solid var(--hair);
+  }
+
+  .facts div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--hair);
+  }
+
+  dt {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--warm);
+  }
+
+  dd {
+    margin: 0;
+    text-align: right;
+  }
+
+  /* ---- 2 · screenshots ---- */
+  .band {
+    display: flex;
+    align-items: flex-end;
+    gap: clamp(12px, 2vw, 28px);
+    padding: 0 var(--ws-gutter) clamp(56px, 8vh, 104px);
+  }
+
+  .frame {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+    margin: 0;
+  }
+
+  .frame:first-child {
+    flex: 1 1 auto;
+  }
+
+  .frame img {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: var(--frame-fill);
+    border: 1px solid var(--hair-3);
+  }
+
+  .frame figcaption {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--warm);
+  }
+
+  .phone {
+    flex: 0 0 auto;
+    width: clamp(120px, 16vw, 210px);
+  }
+
+  /* ---- 3 · brief ---- */
+  .two {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(24px, 4vw, 64px);
+  }
+
+  .label {
+    margin-bottom: 10px;
+    padding-top: 14px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--signal);
+    border-top: 1px solid var(--hair-3);
+  }
+
+  .two p,
+  .two li {
+    max-width: 44em;
+  }
+
+  .two ul {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    padding-left: 18px;
+  }
+
+  /* ---- 4 · chapters ---- */
+  .chapters ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: chapter;
+  }
+
+  /* Every chapter opens on a hairline: the number alone in the left rail, the
+     heading across the two prose columns, then a paragraph in each with their
+     tops flush. */
+  .chapters li {
+    counter-increment: chapter;
+    display: grid;
+    grid-template-columns: clamp(52px, 7vw, 108px) minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: clamp(24px, 4vw, 64px);
+    margin-top: clamp(30px, 4vw, 54px);
+    padding-top: clamp(22px, 2vw, 30px);
+    border-top: 1px solid var(--hair-3);
+  }
+
+  .chapters li:first-child {
+    margin-top: 8px;
+  }
+
+  .chapters li::before {
+    content: counter(chapter, decimal-leading-zero);
+    grid-area: 1 / 1;
+    padding-top: 5px;
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--signal);
+  }
+
+  .chapters .chapter {
+    grid-area: 1 / 2 / 2 / -1;
+    margin: 0 0 16px;
+    font-size: clamp(21px, 1.8vw, 28px);
+    font-weight: 600;
+    font-stretch: 88%;
+    line-height: 1.15;
+  }
+
+  .chapters p {
+    grid-row: 2;
+    grid-column: 2;
+    max-width: 52ch;
+    margin: 0 0 10px;
+  }
+
+  .chapters p:nth-of-type(2) {
+    grid-column: 3;
+  }
+
+  /* A third paragraph is rare; it goes back under the first column. */
+  .chapters p:nth-of-type(n + 3) {
+    grid-row: auto;
+  }
+
+  .shot {
+    display: block;
+    grid-column: 2 / -1;
+    width: 100%;
+    height: auto;
+    margin: clamp(20px, 2.5vw, 34px) 0 0;
+    background: var(--frame-fill);
+    border: 1px solid var(--hair-3);
+  }
+
+  /* ---- 5 · results and quote ---- */
+  .results {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px 32px;
+    margin: 0;
+  }
+
+  .results dd {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 4px;
+    text-align: left;
+  }
+
+  .results strong {
+    font-size: 24px;
+  }
+
+  .quote figure {
+    margin: 0;
+  }
+
+  blockquote {
+    max-width: 30em;
+    margin: 0 0 10px;
+    font-size: clamp(20px, 2vw, 26px);
+    line-height: 1.4;
+    text-wrap: pretty;
+  }
+
+  .quote figcaption {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--warm);
+  }
+
+  /* ---- 6 · end ---- */
+  .end {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .end .meta {
+    margin-bottom: 8px;
+  }
+
+  .quiet {
+    color: var(--warm);
+    border-bottom-color: var(--hair-4);
+  }
+
+  @media (max-width: 1024px) {
+    .hero {
+      grid-template-columns: 1fr;
+    }
+
+    .facts {
+      max-width: 520px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .band {
+      padding: 0 16px 48px;
+    }
+
+    /* Outranks `.frame img`, which sets display. */
+    .band .phone {
+      display: none;
+    }
+
+    .two {
+      grid-template-columns: 1fr;
+    }
+
+    .chapters li {
+      grid-template-columns: 1fr;
+    }
+
+    .chapters .chapter,
+    .chapters p,
+    .chapters p:nth-of-type(2),
+    .chapters .shot {
+      grid-area: auto;
+      grid-column: 1;
+      margin-top: 0;
+    }
+
+    .chapters .shot {
+      margin-top: 18px;
+    }
+
+    .chapters li::before {
+      grid-row: auto;
+      grid-column: 1;
+      padding: 0 0 4px;
+    }
+
+    .chapters li > * {
+      grid-column: 1;
+    }
+  }
+</style>

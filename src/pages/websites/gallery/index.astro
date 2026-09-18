@@ -1,0 +1,139 @@
+---
+import Websites from "../../../layouts/Websites.astro";
+import ProjectCard from "../../../components/websites/ProjectCard.astro";
+import { getGalleryProjects, projectHref } from "../../../lib/projects";
+
+export const prerender = true;
+
+const projects = await getGalleryProjects();
+
+const site = Astro.site ?? Astro.url;
+const abs = (path: string) => new URL(path, site).href;
+
+const collection = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Website projects",
+  url: abs("/websites/gallery"),
+  mainEntity: {
+    "@type": "ItemList",
+    itemListElement: projects.map((p, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "CreativeWork",
+        name: p.data.status === "concept" ? `${p.data.clientName} (Concept)` : p.data.clientName,
+        url: abs(projectHref(p)),
+        image: abs(p.data.screenshots.desktop.src),
+        ...(p.data.launchedAt && { dateCreated: p.data.launchedAt.toISOString().slice(0, 10) }),
+      },
+    })),
+  },
+};
+
+const breadcrumbs = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Websites", item: abs("/websites") },
+    { "@type": "ListItem", position: 2, name: "Gallery", item: abs("/websites/gallery") },
+  ],
+};
+---
+
+<Websites
+  title="Website projects · Lorenzo Marchisio"
+  description="Websites built for small businesses."
+  noindex={projects.length === 0}
+  back="/websites"
+  cta="/websites?ref=gallery#start"
+  skip={{ href: "#content", label: "Skip to content" }}
+  jsonLd={[collection, breadcrumbs]}
+>
+  <nav slot="nav" class="ws-crumbs" aria-label="Breadcrumb">
+    <ol>
+      <li><a href="/websites">Websites</a></li>
+      <li><span aria-current="page">Gallery</span></li>
+    </ol>
+  </nav>
+
+  <header class="ws-section head">
+    <h1 class="ws-h2 title">Website projects</h1>
+    <p class="lead">Every site I've built, with the story behind each one.</p>
+  </header>
+
+  <div class="list">
+    {
+      projects.length > 0 ? (
+        projects.map((project) => <ProjectCard project={project} variant="full" />)
+      ) : (
+        <div class="empty">
+          <p class="lead">
+            The first projects are being built right now. Prices, the process and answers to common
+            questions are on the studio page.
+          </p>
+          <a class="ws-link" href="/websites">Go to the studio page</a>
+        </div>
+      )
+    }
+  </div>
+
+  <section class="ws-section cta" aria-labelledby="cta-title">
+    <h2 id="cta-title" class="ws-h2">Want a website for your business?</h2>
+    <p class="lead">Tell me about it, and I'll reply within one working day.</p>
+    <div class="row">
+      <a class="ws-btn" href="/websites?ref=gallery#start">Request a free 30-minute call</a>
+    </div>
+  </section>
+</Websites>
+
+<style>
+  .head {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding-bottom: 24px;
+    border-top: 0;
+  }
+
+  .title {
+    font-size: clamp(40px, 6vw, 76px);
+  }
+
+  .list {
+    padding: 0 var(--ws-gutter) var(--pad-y);
+  }
+
+  .empty {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 32px 0 0;
+    border-top: 1px solid var(--hair);
+  }
+
+  .empty .lead {
+    max-width: 640px;
+  }
+
+  .cta {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .row {
+    margin-top: 8px;
+  }
+
+  @media (max-width: 768px) {
+    .list {
+      padding: 0 16px 56px;
+    }
+
+    .row .ws-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>

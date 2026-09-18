@@ -1,0 +1,111 @@
+---
+// Bar for the pages that open from a home page section (websites, photo
+// gallery): the home bar's look, a way back to that section, and the section's
+// angle. Every item is a 44px row, so the bar matches the home bar's height.
+interface Props {
+  back: string;
+  angle: string;
+}
+
+const { back, angle } = Astro.props;
+// Rendered first: a page can pass a slot that renders to nothing.
+const action = Astro.slots.has("default") ? (await Astro.slots.render("default")).trim() : "";
+---
+
+<header class:list={["bar", { action: !!action }]}>
+  <a class="wordmark" href="/" aria-label="Lorenzo Marchisio, home">LM<span>.</span></a>
+  <slot name="nav" />
+  <div class="end">
+    <a class="back" href={back}>← BACK</a>
+    <Fragment set:html={action} />
+    <span class="angle" aria-hidden="true">{angle}</span>
+  </div>
+</header>
+
+<style>
+  .bar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding: 13px var(--pad-x);
+    background: linear-gradient(var(--ink) 62%, rgba(12, 11, 10, 0));
+    /* The bar itself must not eat clicks on the page behind it. */
+    pointer-events: none;
+  }
+
+  /* Global: the nav and the call to action come from the page. */
+  .bar :global(a) {
+    pointer-events: auto;
+  }
+
+  .wordmark,
+  .back,
+  .angle {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-family: var(--mono);
+    line-height: 1;
+  }
+
+  .wordmark {
+    font-size: 12px;
+    letter-spacing: 0.18em;
+  }
+
+  .wordmark span {
+    color: var(--signal);
+  }
+
+  .end {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 2.4vw, 32px);
+    white-space: nowrap;
+  }
+
+  .back {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--warm);
+  }
+
+  .back:hover {
+    color: var(--signal);
+  }
+
+  .angle {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--signal);
+  }
+
+  @media (max-width: 768px) {
+    .bar {
+      gap: 12px;
+      padding: 16px 20px 20px;
+      background: linear-gradient(var(--ink) 58%, rgba(12, 11, 10, 0));
+    }
+
+    .wordmark {
+      font-size: 13px;
+    }
+
+    .back {
+      font-size: 10px;
+    }
+
+    .end {
+      gap: 14px;
+    }
+
+    /* No room for the angle next to a call to action on a phone. */
+    .action .angle {
+      display: none;
+    }
+  }
+</style>

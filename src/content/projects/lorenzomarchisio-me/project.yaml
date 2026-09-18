@@ -1,0 +1,79 @@
+slug: c3cf5fb4-b1b0-4e12-a5a4-079a42a6b609
+status: live
+clientName: Lorenzo Marchisio
+category: Portfolio
+location: { city: Leuven, country: Belgium }
+package: custom
+languages: [en]
+# Nothing booked, ordered or on a menu here, so this is not the example the
+# studio page's integrations claim should point at.
+integrations: []
+stack: [Astro, TypeScript, Cloudflare Pages, Resend]
+liveUrl: https://lorenzomarchisio.me
+launchedAt: 2026-09-16
+carePlan: false
+featured: true
+featuredScreenshot: desktop
+order: 1
+screenshots:
+  desktop: ./desktop.webp
+  mobile: ./mobile.webp
+text:
+  summary: "My own site: one page for three kinds of work, a gallery of 132 photographs, and this studio page. Quick on a phone, nothing to click through."
+  before: A single page from 2025 with a link to my CV. Nobody could see the photographs, and nothing on it said I build websites for other businesses.
+  built:
+    - One page a visitor reads top to bottom, engineer, founder and photographer, with no menu to learn
+    - A gallery of 132 photographs that opens in about a second on phone data
+    - This studio page, with the prices in the open and a form that reaches my inbox in seconds
+    - No cookie banner, no adverts, and nothing following visitors around
+  alt:
+    desktop: "The lorenzomarchisio.me home page on a laptop: the name in large type over a faint orbit of shapes, with the section links in the top bar."
+    mobile: The same home page on a phone, with the name and the opening lines stacked at the bottom of the first screen.
+  sections:
+    - title: One page, no menu to learn
+      body:
+        - >-
+          A visitor lands and gets the whole story in one scroll: the engineering work, the
+          websites I build for other businesses, and the photographs. Nothing hides behind a
+          menu, and there is no page to come back from.
+        - >-
+          The bar at the top lights up the part being read, so someone always knows where
+          they are and can jump straight to the part they came for.
+      image: ./engineer.webp
+      alt: The engineering part of the home page, with four short principles listed on the left and a dotted brace pair drawn on the right.
+    - title: 132 photographs that open like text
+      body:
+        - >-
+          Pictures are the slowest thing on most websites. Here the grid shows small versions
+          first and fetches the full photograph only when someone opens it, so the gallery
+          appears in about a second, even on phone data away from wifi.
+        - >-
+          Visitors can narrow it to motorcycles, football, Slovenia or Croatia without the
+          page reloading, and every photograph carries my name in the corner.
+      image: ./photo-gallery.webp
+      alt: The photo gallery page, with the heading EVERY FRAME, a frame count, subject filters and a grid of photographs.
+    - title: Prices in the open, before anyone has to ask
+      body:
+        - >-
+          What each package costs, what it includes, how the work runs and the questions
+          people actually ask are all on this one page. Someone can decide whether to write
+          to me without sending an email first to find out the price.
+        - >-
+          Every price is kept in one place, so the cards, the answers under them and what
+          Google shows can never drift apart. The form reaches my inbox in seconds, and the
+          junk is dropped before it gets there.
+      image: ./prices.webp
+      alt: The packages and prices section of the studio page, with three packages side by side and what every package includes underneath.
+    - title: Easy to find, and quiet about its visitors
+      body:
+        - >-
+          Every page is finished before anyone asks for it, so it opens quickly wherever the
+          visitor happens to be, and search engines can read all of it: the right title on
+          each page, the right description, nothing left out of the list they crawl.
+        - >-
+          No cookie banner, no adverts, nobody else watching who came by. There is nothing to
+          accept, and nothing kept beyond what a person types into the form.
+  seo:
+    title: lorenzomarchisio.me · Portfolio and photo gallery
+    description: "A one-page portfolio with 132 photographs and this studio page: prices in the open, quick on a phone, and no cookie banner for visitors."
+consent: { showWork: true, showName: true, testimonial: false, creditLink: false, recordedAt: 2026-09-17 }

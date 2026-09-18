@@ -1,0 +1,257 @@
+---
+// Shell for the websites section: the bar, the footer and the styles its
+// pages share.
+import Layout from "./Layout.astro";
+import PageBar from "../components/components/PageBar.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  /** Share image path, as in Layout. */
+  image?: string;
+  noindex?: boolean;
+  /** Where the bar's back link goes. */
+  back: string;
+  /** Where the bar's call to action goes; none on pages that aren't selling. */
+  cta?: string;
+  skip: { href: string; label: string };
+  jsonLd: object[];
+}
+
+const { title, description, image, noindex, back, cta, skip, jsonLd } = Astro.props;
+---
+
+<Layout title={title} description={description} image={image} noindex={noindex}>
+  <Fragment slot="head">
+    {jsonLd.map((data) => (
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(data)} />
+    ))}
+  </Fragment>
+
+  <div class="ws">
+    <a class="ws-skip" href={skip.href}>{skip.label}</a>
+
+    <PageBar back={back} angle="120°">
+      <slot name="nav" slot="nav" />
+      {cta && <a class="ws-btn" href={cta}>Start a project</a>}
+    </PageBar>
+
+    <main id="content" tabindex="-1">
+      <slot />
+    </main>
+
+    <footer class="ws-footer">
+      <span>© 2026 LORENZO MARCHISIO</span>
+      <nav aria-label="Footer">
+        <a href="/websites">Websites</a>
+        <a href="/websites/gallery">Gallery</a>
+        <a href="/privacy">Privacy policy</a>
+        <a href="/">Portfolio</a>
+      </nav>
+    </footer>
+  </div>
+</Layout>
+
+<style is:global>
+  .ws {
+    --ws-max: 1280px;
+    /* Side padding that grows past --ws-max, so every row (bar, sections,
+       footer) shares one centered column. The % resolves where it's used. */
+    --ws-gutter: max(var(--pad-x), calc((100% - var(--ws-max)) / 2));
+    font-size: clamp(17px, 0.3vw + 13.5px, 19px);
+    line-height: 1.6;
+  }
+
+  .ws :target,
+  .ws [id] {
+    scroll-margin-top: 84px;
+  }
+
+  .ws-skip {
+    position: absolute;
+    left: var(--pad-x);
+    top: -100px;
+    z-index: 60;
+    background: var(--signal);
+    color: var(--ink);
+    padding: 12px 18px;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+
+  .ws-skip:focus {
+    top: 12px;
+    color: var(--ink);
+  }
+
+  .ws header nav ol,
+  .ws header nav ul {
+    display: flex;
+    gap: clamp(14px, 2.4vw, 30px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Set on the nav itself, not only its links: inline links inside list
+     items at the page's 17px sat on a taller line, below the wordmark. */
+  .ws header nav {
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.6;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .ws header nav a,
+  .ws header nav span {
+    color: var(--warm);
+  }
+
+  .ws header nav a:hover {
+    color: var(--signal);
+  }
+
+  .ws header nav [aria-current] {
+    color: var(--bone);
+  }
+
+  .ws-crumbs li + li::before {
+    content: "›";
+    margin-right: clamp(14px, 2.4vw, 30px);
+    color: var(--dim);
+  }
+
+  .ws-btn,
+  .ws-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .ws-btn {
+    padding: 12px 20px;
+    /* Dark type on saturated red reads thin at this size; the weight, not the
+       colour, is what was short (5.3:1 either way). */
+    font-weight: 600;
+    background: var(--signal);
+    color: var(--ink);
+    border: 0;
+  }
+
+  .ws-btn:hover {
+    background: var(--bone);
+    color: var(--ink);
+  }
+
+  .ws-link {
+    width: fit-content;
+    border-bottom: 1px solid var(--signal);
+  }
+
+  .ws-section {
+    padding: var(--pad-y) var(--ws-gutter);
+    border-top: 1px solid var(--hair);
+  }
+
+  .ws-h2 {
+    margin: 0 0 20px;
+    font-size: clamp(30px, 4.4vw, 60px);
+    font-weight: 700;
+    font-stretch: 82%;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    text-wrap: balance;
+  }
+
+  .ws-h3 {
+    margin: 0 0 8px;
+    font-size: clamp(20px, 0.4vw + 16px, 23px);
+    font-weight: 600;
+    font-stretch: 90%;
+    line-height: 1.2;
+  }
+
+  .ws p {
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  .ws details {
+    border-top: 1px solid var(--hair-3);
+  }
+
+  .ws summary {
+    padding: 16px 0;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .ws summary:hover {
+    color: var(--signal);
+  }
+
+  .ws details[open] summary {
+    color: var(--bone);
+  }
+
+  .ws-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 30px var(--ws-gutter) 44px;
+    border-top: 1px solid var(--hair);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--dim);
+  }
+
+  .ws-footer nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+  }
+
+  .ws-footer a {
+    color: var(--warm);
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 768px) {
+    .ws {
+      font-size: 16px;
+    }
+
+    /* The phone bar keeps the wordmark, the back link and the call to
+       action; section links and breadcrumbs would not fit. */
+    .ws header nav {
+      display: none;
+    }
+
+    .ws-btn {
+      padding: 10px 14px;
+      font-size: 11px;
+    }
+
+    .ws-section {
+      padding: 56px 16px;
+    }
+
+    .ws-footer {
+      flex-direction: column;
+      padding: 26px 16px 40px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+</style>

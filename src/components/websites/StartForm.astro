@@ -1,0 +1,368 @@
+---
+// Project request form, kept short on purpose: contact details and a few lines
+// about the business. Everything else is asked on the call. Works without
+// JavaScript: a plain POST that the endpoint answers with a 303 to #sent or
+// #send-error, shown by :target. With JavaScript it validates inline and
+// submits with fetch instead.
+import { MESSAGE_MAX, STUDIO_EMAIL } from "../../data/studio";
+---
+
+<section id="start" class="ws-section" aria-labelledby="start-title" tabindex="-1">
+  <div class="intro">
+    <h2 id="start-title" class="ws-h2">Let's talk about your website</h2>
+    <p class="lead">
+      Tell me about your business. I'll reply within one working day to set up a free video call.
+    </p>
+    <p class="direct">
+      Prefer email? Write to <a href={`mailto:${STUDIO_EMAIL}`}>{STUDIO_EMAIL}</a>
+    </p>
+  </div>
+
+  <div id="sent" class="notice" tabindex="-1">
+    <h3 class="ws-h3">Request sent</h3>
+    <p>
+      Thank you. I'll reply within one working day to set up a video call, and a confirmation is
+      on its way to your inbox.
+    </p>
+  </div>
+
+  <div id="send-error" class="notice failed" tabindex="-1">
+    <h3 class="ws-h3">Your request wasn't sent</h3>
+    <p>
+      Something went wrong on my side. Please try again, or email me directly at
+      <a href={`mailto:${STUDIO_EMAIL}`}>{STUDIO_EMAIL}</a>.</p>
+  </div>
+
+  <form method="post" action="/api/send-email">
+    <input type="hidden" name="type" value="project-inquiry" />
+    <input type="hidden" name="ref" value="" />
+    <!-- Filled from ?package= when the visitor came from a package card. -->
+    <input type="hidden" name="package" value="" />
+    <!-- Honeypot: never shown, never focusable. Anything in it is a bot. -->
+    <input class="trap" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+    <div class="grid">
+      <label class="field">
+        <span class="label">Your name</span>
+        <input type="text" name="name" required maxlength="100" autocomplete="name" aria-describedby="error-name" />
+        <span class="error" id="error-name" hidden></span>
+      </label>
+
+      <label class="field">
+        <span class="label">Email</span>
+        <input type="email" name="email" required maxlength="200" autocomplete="email" inputmode="email" aria-describedby="error-email" />
+        <span class="error" id="error-email" hidden></span>
+      </label>
+
+      <label class="field">
+        <span class="label">Business name</span>
+        <input type="text" name="business" required maxlength="200" autocomplete="organization" aria-describedby="error-business" />
+        <span class="error" id="error-business" hidden></span>
+      </label>
+
+      <label class="field">
+        <span class="label">Phone or WhatsApp <span class="opt">(optional)</span></span>
+        <input type="tel" name="phone" maxlength="50" autocomplete="tel" aria-describedby="error-phone" />
+        <span class="error" id="error-phone" hidden></span>
+      </label>
+    </div>
+
+    <label class="field">
+      <span class="label">Your business in a few words <span class="opt">(optional)</span></span>
+      <span class="hint" id="hint-message">What you do, where you are, and what you'd like the website to do.</span>
+      <textarea name="message" rows="4" maxlength={MESSAGE_MAX} aria-describedby="hint-message error-message"></textarea>
+      <span class="error" id="error-message" hidden></span>
+    </label>
+
+    <div class="actions">
+      <button class="ws-btn" type="submit">
+        <span class="idle">Send</span>
+        <span class="busy">Sending…</span>
+      </button>
+      <p class="note">I only use your details to reply to you. <a href="/privacy">Privacy policy</a></p>
+      <p class="status" role="alert"></p>
+    </div>
+  </form>
+</section>
+
+<style>
+  #start {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 680px;
+  }
+
+  .direct a {
+    border-bottom: 1px solid var(--signal);
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    max-width: 820px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 28px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--caption);
+  }
+
+  .opt {
+    color: var(--dim);
+  }
+
+  .hint,
+  .note {
+    font-size: 14px;
+    color: var(--warm);
+  }
+
+  .note a {
+    border-bottom: 1px solid var(--signal);
+  }
+
+  input:not([type="hidden"]),
+  textarea {
+    width: 100%;
+    min-height: 46px;
+    padding: 10px 12px;
+    font: inherit;
+    font-size: 16px;
+    color: var(--bone);
+    background: var(--panel);
+    border: 1px solid var(--field);
+    border-radius: 0;
+  }
+
+  textarea {
+    resize: vertical;
+    line-height: 1.5;
+  }
+
+  input:focus,
+  textarea:focus {
+    border-color: var(--bone);
+  }
+
+  [aria-invalid="true"] {
+    border-color: var(--signal) !important;
+  }
+
+  .error,
+  .status {
+    font-size: 14px;
+    color: var(--signal);
+  }
+
+  /* Beats the 100% width rule on inputs, which pushed it off the page. */
+  input.trap {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .actions .ws-btn {
+    width: fit-content;
+    padding: 16px 28px;
+  }
+
+  .busy,
+  form[aria-busy="true"] .idle {
+    display: none;
+  }
+
+  form[aria-busy="true"] .busy {
+    display: inline;
+  }
+
+  /* Confirmation and failure notices: hidden until the URL points at them. */
+  .notice {
+    display: none;
+    max-width: 680px;
+    padding: 22px 24px;
+    border-left: 3px solid var(--bone);
+    background: var(--panel);
+  }
+
+  .notice:target {
+    display: block;
+  }
+
+  .failed {
+    border-left-color: var(--signal);
+  }
+
+  .notice a {
+    border-bottom: 1px solid var(--signal);
+  }
+
+  /* Wide screens: the pitch stays in view on the left while the form scrolls. */
+  @media (min-width: 1100px) {
+    #start {
+      display: grid;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: 32px clamp(48px, 6vw, 96px);
+      align-items: start;
+    }
+
+    .intro {
+      grid-column: 1;
+      grid-row: 1 / span 3;
+      position: sticky;
+      top: 110px;
+    }
+
+    .notice,
+    form {
+      grid-column: 2;
+      max-width: none;
+    }
+  }
+
+  /* Once sent, the form has done its job. */
+  #start:has(#sent:target) form {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+
+    .actions .ws-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("#start form")!;
+  const status = form.querySelector<HTMLElement>(".status")!;
+  form.noValidate = true;
+
+  type Control = HTMLInputElement | HTMLTextAreaElement;
+  const field = (name: string) => form.elements.namedItem(name) as Control;
+
+  // ?ref=gallery-cafe-nord&package=launch, from links around the site and the
+  // ones sent by hand. The endpoint ignores a package it doesn't know.
+  const query = new URLSearchParams(location.search);
+  field("ref").value = (query.get("ref") ?? "").slice(0, 100);
+  field("package").value = (query.get("package") ?? "").slice(0, 20);
+
+  // The endpoint answers a failed check with these codes too.
+  const messages: Record<string, string> = {
+    required: "Please fill in this field.",
+    email: "Please enter a valid email address.",
+    tooLong: "This is too long.",
+    rate: "Too many requests from your connection. Please try again in a few minutes.",
+  };
+  const message = (code: string) => messages[code] ?? messages.required;
+
+  // Codes come from the browser's own constraint checks, so the rules live in
+  // the markup once and the server repeats them.
+  const codeFor = (name: string): string | null => {
+    const { validity } = field(name);
+    if (validity.valid) return null;
+    if (validity.tooLong) return "tooLong";
+    if (validity.typeMismatch) return "email";
+    return "required";
+  };
+
+  const show = (name: string, code: string | null) => {
+    const error = document.getElementById(`error-${name}`);
+    if (!error) return;
+    error.textContent = code ? message(code) : "";
+    error.hidden = !code;
+    if (code) field(name).setAttribute("aria-invalid", "true");
+    else field(name).removeAttribute("aria-invalid");
+  };
+
+  const checked = ["name", "email", "business", "phone", "message"];
+
+  // Once a field has shown an error, it re-checks as the visitor fixes it.
+  form.addEventListener("input", (event) => {
+    const name = (event.target as Control).name;
+    if (document.getElementById(`error-${name}`)?.hidden === false) show(name, codeFor(name));
+  });
+
+  const reveal = (id: string) => {
+    location.hash = id;
+    document.getElementById(id)?.focus();
+  };
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (form.getAttribute("aria-busy") === "true") return;
+    status.textContent = "";
+
+    const invalid = checked.filter((name) => {
+      const code = codeFor(name);
+      show(name, code);
+      return code;
+    });
+    if (invalid.length) return field(invalid[0]).focus();
+
+    form.setAttribute("aria-busy", "true");
+    try {
+      const response = await fetch(form.action, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(Object.fromEntries(new FormData(form))),
+      });
+
+      if (response.status === 201) return reveal("sent");
+      if (response.status === 429) {
+        status.textContent = message("rate");
+        return;
+      }
+      if (response.status === 422) {
+        const { errors = {} } = (await response.json()) as { errors?: Record<string, string> };
+        const names = checked.filter((name) => errors[name]);
+        if (names.length) {
+          names.forEach((name) => show(name, errors[name]));
+          return field(names[0]).focus();
+        }
+      }
+      reveal("send-error");
+    } catch {
+      reveal("send-error");
+    } finally {
+      form.removeAttribute("aria-busy");
+    }
+  });
+</script>

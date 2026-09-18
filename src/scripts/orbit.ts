@@ -41,11 +41,10 @@ const STOPS: [string, number][] = [
   ["contact", 300],
 ];
 
-const NAV_ANGLE: Record<string, number> = {
-  engineer: 0,
-  founder: 120,
-  photography: 240,
-};
+const navTargets = Array.from(navLinks, (link) => ({
+  link,
+  section: document.getElementById(link.dataset.nav ?? ""),
+}));
 
 // `max` must come from the document's scrollable extent: deriving it from
 // body height alone yields 0 when the body is viewport-height, which pins the
@@ -86,18 +85,22 @@ function angleAt(y: number) {
 let lastAngle = -1;
 
 function chrome(angle: number, progress: number) {
-  if (progFill) progFill.style.width = progress.toFixed(2) + "%";
+  if (progFill) progFill.style.transform = `scaleX(${(progress / 100).toFixed(4)})`;
   if (angle === lastAngle) return;
   lastAngle = angle;
 
   const label = String(angle).padStart(3, "0") + "°";
   angleOuts.forEach((el) => (el.textContent = label));
   if (angHead) angHead.style.left = ((angle / 360) * 100).toFixed(2) + "%";
+}
 
-  navLinks.forEach((el) => {
-    const target = NAV_ANGLE[el.dataset.nav ?? ""] ?? 0;
-    const near = Math.abs(((angle - target + 540) % 360) - 180) <= 14;
-    el.toggleAttribute("data-active", near);
+// A link is lit for as long as its section holds the middle of the viewport.
+// Matching the angle to the section's (within 14°) lit the photographer link
+// only near the centre of its section, which is several screens tall.
+function nav(vh: number) {
+  navTargets.forEach(({ link, section }) => {
+    const rect = section?.getBoundingClientRect();
+    link.toggleAttribute("data-active", !!rect && rect.top <= vh / 2 && rect.bottom > vh / 2);
   });
 }
 
@@ -284,8 +287,11 @@ function shots(vh: number) {
   // Centre stage shows the same photograph as the slot it grew out of — and
   // drops back to the stripes when that slot has no file yet, rather than
   // holding the previous frame's photo.
+  // Not fetched until the section is two screens away: at the top of the page
+  // the hero is invisible, and its full-size file would compete with
+  // everything the first screen needs.
   const photo = slot.querySelector("img")?.getAttribute("src") ?? "";
-  if (shotHeroImg && shotHeroImg.getAttribute("src") !== photo) {
+  if (rect.top < vh * 2 && shotHeroImg && shotHeroImg.getAttribute("src") !== photo) {
     if (photo) shotHeroImg.setAttribute("src", photo);
     else shotHeroImg.removeAttribute("src");
   }
@@ -313,6 +319,7 @@ function update() {
   const vh = viewportH();
   const { y, max } = scrollPos();
   chrome(angleAt(y), clamp01(y / max) * 100);
+  nav(vh);
   rise(vh);
   if (reduce.matches) return;
   parallax(vh);

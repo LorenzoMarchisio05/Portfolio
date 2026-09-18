@@ -6,13 +6,16 @@ interface Props {
   description?: string;
   /** Share image path. 1200×630, like the default — the size meta below is fixed. */
   image?: string;
+  /** Keep the page out of search results, while still following its links. */
+  noindex?: boolean;
 }
 
 const {
   title = "Lorenzo Marchisio · Engineer, Founder, Photographer",
   description =
     "Nothing here resolves until you stand somewhere specific. There are three such places, and the shape is different from each one.",
-  image = "/og.png?v=2",
+  image = "/social/og-home.png",
+  noindex = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
@@ -24,9 +27,10 @@ const og = new URL(image, Astro.site ?? Astro.url);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" />
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
     <meta name="theme-color" content="#0C0B0A" />
 
     <!-- Self-hosted, same origin: no third-party request on page load, which is
@@ -77,6 +81,7 @@ const og = new URL(image, Astro.site ?? Astro.url);
         });
       }
     </script>
+    <slot name="head" />
   </head>
   <body>
     <slot />

@@ -1,0 +1,97 @@
+---
+import Websites from "../layouts/Websites.astro";
+
+export const prerender = true;
+---
+
+<Websites
+  title="Privacy policy · Lorenzo Marchisio"
+  description="How lorenzomarchisio.me handles the data sent through its forms."
+  back="/"
+  skip={{ href: "#content", label: "Skip to content" }}
+  jsonLd={[]}
+>
+  <article class="ws-section policy">
+    <h1 class="ws-h2">Privacy policy</h1>
+    <p class="meta">Last updated: 17 September 2026</p>
+
+    <h2>Who is responsible</h2>
+    <p>Lorenzo Marchisio, reachable at <a href="mailto:me@lorenzomarchisio.me">me@lorenzomarchisio.me</a>.</p>
+
+    <h2>What is collected</h2>
+    <p>
+      <strong>Project request form</strong> (on the websites page): your name, email and business
+      name, and, if you give them, your phone number and message. The form also sends the package
+      you clicked on, if any, and, if you arrived from a link I sent, a short label for that link.
+    </p>
+    <p><strong>Contact form</strong> (on the home page): your name, email and message.</p>
+
+    <h2>Why, and on what legal basis</h2>
+    <p>
+      To reply to you and, for a project request, to prepare a proposal. For project requests, the
+      legal basis is taking steps at your request before a contract (GDPR, Article 6(1)(b)). For the
+      contact form, it is my legitimate interest in replying to messages sent to me (Article
+      6(1)(f)).
+    </p>
+
+    <h2>How long it is kept</h2>
+    <p>
+      Requests are kept for 12 months if no project starts, then deleted. If a project starts, they
+      are kept for as long as the contract and accounting law require.
+    </p>
+
+    <h2>Who receives it</h2>
+    <p>
+      Form submissions are delivered to me by email only; nothing is stored in a database. These
+      processors handle data on my behalf: <strong>Resend</strong> (email delivery), my email
+      provider, and <strong>Cloudflare</strong> (hosting and delivery of this site). Resend and
+      Cloudflare are based in the United States; those transfers rely on the EU–US Data Privacy
+      Framework or the European Commission's standard contractual clauses. Your data is never sold
+      or shared for advertising.
+    </p>
+
+    <h2>Cookies and storage</h2>
+    <p>This site sets no cookies and stores nothing in your browser.</p>
+
+    <h2>Your rights</h2>
+    <p>
+      You can ask to access, correct or delete your data, to restrict or object to its use, or to
+      receive it in a portable format. Email
+      <a href="mailto:me@lorenzomarchisio.me">me@lorenzomarchisio.me</a>. You can also complain to a
+      data protection authority, such as the Belgian Data Protection Authority or the one where you
+      live.
+    </p>
+  </article>
+</Websites>
+
+<style>
+  .policy {
+    border-top: 0;
+  }
+
+  .policy > * {
+    max-width: 760px;
+  }
+
+  .meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--warm);
+  }
+
+  .policy h2 {
+    margin: 36px 0 10px;
+    font-size: 22px;
+    font-weight: 600;
+    font-stretch: 90%;
+  }
+
+  .policy p {
+    margin: 0 0 12px;
+    color: var(--caption);
+  }
+
+  .policy a {
+    border-bottom: 1px solid var(--signal);
+  }
+</style>

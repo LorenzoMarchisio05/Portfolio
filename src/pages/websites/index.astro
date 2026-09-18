@@ -1,0 +1,624 @@
+---
+import Websites from "../../layouts/Websites.astro";
+import ProjectCard from "../../components/websites/ProjectCard.astro";
+import StartForm from "../../components/websites/StartForm.astro";
+import { getFeaturedProjects, getGalleryProjects, projectHref } from "../../lib/projects";
+import {
+  allPackages,
+  carePlan,
+  currency,
+  domainFeeTypicalMax,
+  extras,
+  money,
+  packages,
+  paymentTerms,
+  vatIncluded,
+} from "../../data/pricing";
+import { STUDIO_NAME } from "../../data/studio";
+
+// Static: the only per-visit input, ?ref= and ?package=, is read by the form
+// script in the browser.
+export const prerender = true;
+
+const gallery = await getGalleryProjects();
+const featured = await getFeaturedProjects();
+
+const cta = "Request a free 30-minute call";
+const days = Object.fromEntries(packages.map((p) => [p.id, p.deliveryDays]));
+const deposit = `${paymentTerms.depositPercent}%`;
+const onLaunch = `${paymentTerms.onLaunchPercent}%`;
+
+const forYou = [
+  {
+    title: "New customers can find you on Google",
+    text: "People search for what they want, like “brunch near me”, not for your name. Your website tells Google everything you offer and strengthens your Google Business Profile, which helps you show up higher. No one can promise a position, but without a site you start behind.",
+  },
+  {
+    title: "More visitors become customers",
+    text: "Photos, prices, opening hours and one clear button to call, book or get directions. People decide in seconds on a phone, and a fast, clear page makes the decision easy.",
+  },
+  {
+    title: "You look like the obvious choice",
+    text: "When people compare two places, the one with a proper website looks established and trustworthy. Without one, some will wonder if you're even still open.",
+  },
+  {
+    title: "Every customer feels welcome",
+    text: "Students, tourists and expats search in their own language. A site in English, Dutch or French speaks to them before they walk in.",
+  },
+  {
+    title: "Fewer calls with the same questions",
+    text: "Hours, prices, parking, whether you take cards: it's all on your site, even at midnight when you're closed.",
+  },
+  {
+    title: "It's yours, not a platform's",
+    text: "Social media decides who sees your posts, and accounts get hacked or blocked. Your website and your domain keep working, whatever a platform decides.",
+  },
+];
+
+const steps = [
+  { title: "Free video call", text: "We talk about your business and what the site needs." },
+  {
+    title: `Approve and pay ${deposit}`,
+    text: "You get a written proposal with what's included, the price and the terms. Once you approve it, you pay the deposit.",
+  },
+  { title: "Preview", text: "I build the site and send you a preview link." },
+  { title: "Changes", text: "You get one round of changes." },
+  { title: "Launch", text: `The site goes live and you pay the final ${onLaunch}.` },
+];
+
+const why = [
+  {
+    title: "Fast on phones",
+    text: "Pages are plain HTML with almost no JavaScript, so they open quickly even on mobile data.",
+  },
+  {
+    title: "Secure, with no plugins to get hacked",
+    text: "Your site is a set of static files on a global network, with no admin panel or plugins, so there's far less to break into.",
+  },
+  {
+    title: "Built in several languages",
+    text: "Every language gets its own proper text, not a translation widget.",
+    proof: gallery.find((p) => p.data.languages.length > 1),
+  },
+  {
+    title: "Can connect bookings, menus and ordering",
+    text: "I write the code myself, so your site can work with the tools you already use.",
+    proof: gallery.find((p) => p.data.integrations.length > 0),
+  },
+];
+
+const notice = `${carePlan.noticeMonths} month${carePlan.noticeMonths === 1 ? "'s" : "s'"} notice`;
+
+const faq = [
+  {
+    question: "Who owns the website and the domain?",
+    answer: `You do, once the site is paid in full. The domain is registered in your name and you pay its yearly fee directly, usually under ${money(domainFeeTypicalMax)}. You can take both anywhere.`,
+  },
+  {
+    question: "What do I need to provide?",
+    answer: "Photos and a logo you have the right to use, and your business details. I can write the text from what you tell me, and you check every page before it goes live.",
+  },
+  {
+    question: "Do you use AI?",
+    answer: "Yes, to build faster. Every page is then reviewed, corrected and finished by me.",
+  },
+  {
+    question: "Can I cancel the care plan?",
+    answer: `Yes, after the first ${carePlan.minimumMonths} months, with ${notice}.`,
+  },
+  {
+    question: "What if I want changes later?",
+    answer: "Small changes are covered by the care plan. Bigger ones get a price first, and nothing starts until you agree.",
+  },
+  {
+    question: "Do you work with businesses outside Belgium?",
+    answer: "Yes, anywhere in the world. We work together remotely, by video call and email, and if you're nearby, we can also meet in person.",
+  },
+  {
+    question: "Is the legally required business information included?",
+    answer: "Yes. I add the details the law asks a business website to show, like your company and VAT numbers, and a privacy notice for the contact form, using the information you give me. It's a standard setup, not legal advice.",
+  },
+];
+
+const nav = [
+  ...(featured.length ? [["work", "Work"]] : []),
+  ["prices", "Prices"],
+  ["process", "How it works"],
+  ["faq", "Questions"],
+];
+
+// ---- structured data, from the same data the page renders ----
+const site = Astro.site ?? Astro.url;
+const url = new URL("/websites", site).href;
+
+const service = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "@id": `${url}#studio`,
+  name: `${STUDIO_NAME} · Websites`,
+  url,
+  email: "me@lorenzomarchisio.me",
+  availableLanguage: ["English"],
+  image: new URL("/social/og-websites.png", site).href,
+  // The cheapest package up, in the currency the offers below use.
+  priceRange: `${money(Math.min(...packages.map((p) => p.price ?? Infinity)))}+`,
+  founder: { "@id": new URL("/#person", site).href },
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Website packages",
+    itemListElement: packages.map((p) => ({
+      "@type": "Offer",
+      name: `${p.name} website`,
+      ...(p.price !== null && {
+        price: p.price,
+        priceCurrency: currency,
+        priceSpecification: {
+          "@type": "PriceSpecification",
+          price: p.price,
+          priceCurrency: currency,
+          valueAddedTaxIncluded: vatIncluded,
+        },
+      }),
+    })),
+  },
+};
+
+const faqPage = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faq.map(({ question, answer }) => ({
+    "@type": "Question",
+    name: question,
+    acceptedAnswer: { "@type": "Answer", text: answer },
+  })),
+};
+---
+
+<Websites
+  title="Websites for small businesses, anywhere · Lorenzo Marchisio"
+  description="Fast, multilingual websites for small businesses anywhere in the world, at fixed prices."
+  image="/social/og-websites.png"
+  back="/#founder"
+  cta="#start"
+  skip={{ href: "#start", label: "Skip to start a project" }}
+  jsonLd={[service, faqPage]}
+>
+  <nav slot="nav" class="ws-sections" aria-label="On this page">
+    <ul>
+      {nav.map(([id, label]) => <li><a href={`#${id}`}>{label}</a></li>)}
+      <li><a href="/websites/gallery">Gallery</a></li>
+    </ul>
+  </nav>
+
+  <!-- 1 · Opening -->
+  <section id="top" class="ws-section hero" aria-labelledby="top-title">
+    <p class="eyebrow">120° · WEBSITE STUDIO</p>
+    <h1 id="top-title" class="title">Websites that make your business easy to find and easy to choose.</h1>
+    <p class="lead sub">
+      In the languages your customers speak. Live in {days.launch} to {days.business} working days,
+      at a fixed price from {money(packages[0].price!)}.
+    </p>
+    <div class="row">
+      <a class="ws-btn" href="#start">{cta}</a>
+      {featured.length > 0 && <a class="ws-link" href="#work">See my work</a>}
+    </div>
+  </section>
+
+  <!-- 2 · Selected work: hidden until there is work to show -->
+  {
+    featured.length > 0 && (
+      <section id="work" class="ws-section" aria-labelledby="work-title" tabindex="-1">
+        <h2 id="work-title" class="ws-h2">Selected work</h2>
+        <p class="lead">Recent sites, each built to open fast on a phone.</p>
+        <div class="work">
+          {featured.map((project) => <ProjectCard project={project} variant="compact" />)}
+        </div>
+        <a class="ws-link" href="/websites/gallery">See all projects ({gallery.length})</a>
+      </section>
+    )
+  }
+
+  <!-- 3 · What a website does for them -->
+  <section id="for-you" class="ws-section" aria-labelledby="for-you-title" tabindex="-1">
+    <h2 id="for-you-title" class="ws-h2">What a website does for your business</h2>
+    <p class="lead">
+      Before they visit, call or book, many people look you up on their phone. What they find
+      decides whether they choose you or the place next door.
+    </p>
+    <ul class="cols three">
+      {
+        forYou.map(({ title, text }) => (
+          <li>
+            <p class="ws-h3">{title}</p>
+            <p class="muted">{text}</p>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="lead unsure">
+      Not sure a website is worth it for your business? Ask me on the free call. If it won't help,
+      I'll say so.
+    </p>
+    <a class="ws-link" href="#start">{cta}</a>
+  </section>
+
+  <!-- 4 · Packages and prices -->
+  <section id="prices" class="ws-section" aria-labelledby="prices-title" tabindex="-1">
+    <h2 id="prices-title" class="ws-h2">Packages and prices</h2>
+    <p class="lead">Fixed prices, agreed before I start. All prices exclude VAT.</p>
+
+    <div class="cols three packages">
+      {
+        packages.map((p) => (
+          <div>
+            <h3 class="ws-h3">{p.name}</h3>
+            <p class={p.price === null ? "price quote" : "price"}>
+              {p.price === null ? "Price on request" : money(p.price)}
+            </p>
+            <p class="muted">
+              {p.deliveryDays ? `Live in ${p.deliveryDays} working days` : "Timeline agreed together"}
+            </p>
+            <ul class="ticks">
+              {p.includes.map((item) => <li>{item}</li>)}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="cols two shared">
+      <div>
+        <p class="small-label">Every package includes</p>
+        <ul class="ticks">
+          {allPackages.includes.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+      <div>
+        <p class="small-label">No package includes</p>
+        <ul class="crosses">
+          {allPackages.excludes.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </div>
+
+    <dl class="cols three terms">
+      <div>
+        <dt class="ws-h3">Extras</dt>
+        <dd>Additional language: {money(extras.language)}.</dd>
+        <dd>Additional page: {money(extras.page)}.</dd>
+      </div>
+      <div>
+        <dt class="ws-h3">Payment</dt>
+        <dd>{deposit} to start, {onLaunch} at launch.</dd>
+      </div>
+      <div>
+        <dt class="ws-h3">VAT</dt>
+        <dd>Prices exclude VAT, which is added where it applies.</dd>
+      </div>
+    </dl>
+
+    <div class="row">
+      <a class="ws-btn" href="#start">{cta}</a>
+    </div>
+  </section>
+
+  <!-- 5 · How it works -->
+  <section id="process" class="ws-section" aria-labelledby="process-title" tabindex="-1">
+    <h2 id="process-title" class="ws-h2">How it works</h2>
+    <ol class="steps">
+      {
+        steps.map(({ title, text }) => (
+          <li>
+            <p class="ws-h3">{title}</p>
+            <p class="muted">{text}</p>
+          </li>
+        ))
+      }
+    </ol>
+    <p class="lead">
+      Launch takes {days.launch} working days and Business {days.business}, counted from when you
+      approve the proposal and send your texts and photos. Days the preview waits for your feedback
+      don't count.
+    </p>
+  </section>
+
+  <!-- 6 · Care plan -->
+  <section id="care-plan" class="ws-section" aria-labelledby="care-title" tabindex="-1">
+    <h2 id="care-title" class="ws-h2">Care plan</h2>
+    <p class="lead">Nothing to manage, and one person to ask.</p>
+    <ul class="care">
+      <li>
+        Hosting, security updates, backups, uptime monitoring, your domain's settings with a
+        reminder before it renews, and {carePlan.includedChangeMinutes} minutes of changes a month,
+        menu updates included. Unused minutes don't carry over.
+      </li>
+      <li class="price">{money(carePlan.monthly)} a month.</li>
+      <li>
+        Minimum {carePlan.minimumMonths} months, then cancel any time with {notice}.
+      </li>
+      <li>
+        The care plan is optional. Without it, or after you cancel it, I hand the finished site over
+        to you, and hosting, the contact form and changes become yours to manage.
+      </li>
+    </ul>
+  </section>
+
+  <!-- 7 · Why a software engineer -->
+  <section id="why" class="ws-section" aria-labelledby="why-title" tabindex="-1">
+    <h2 id="why-title" class="ws-h2">Why a software engineer</h2>
+    <ul class="cols two">
+      {
+        why.map(({ title, text, proof }) => (
+          <li>
+            <p class="ws-h3">{title}</p>
+            <p class="muted">{text}</p>
+            {proof && (
+              <a class="ws-link" href={projectHref(proof)}>
+                See an example: {proof.data.clientName}
+              </a>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+    <a class="ws-link" href="/">More about me</a>
+  </section>
+
+  <!-- 8 · FAQ -->
+  <section id="faq" class="ws-section" aria-labelledby="faq-title" tabindex="-1">
+    <h2 id="faq-title" class="ws-h2">Questions</h2>
+    <div class="faq">
+      {
+        faq.map(({ question, answer }) => (
+          <details>
+            <summary>{question}</summary>
+            <p class="muted answer">{answer}</p>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- 9 · Start a project -->
+  <StartForm />
+</Websites>
+
+<style>
+  .hero {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding-top: clamp(56px, 12vh, 140px);
+    border-top: 0;
+  }
+
+  .hero p {
+    margin: 0;
+  }
+
+  .title {
+    margin: 0;
+    max-width: 1000px;
+    font-size: clamp(36px, 5.6vw, 76px);
+    font-weight: 700;
+    font-stretch: 80%;
+    letter-spacing: -0.03em;
+    line-height: 0.98;
+    text-wrap: balance;
+  }
+
+  .sub {
+    max-width: 44em;
+    font-size: clamp(17px, 1.6vw, 20px);
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 28px;
+    margin-top: 8px;
+  }
+
+  .ws-section .lead {
+    max-width: 42em;
+  }
+
+  .muted {
+    color: var(--warm);
+  }
+
+  .cols {
+    display: grid;
+    gap: 28px clamp(24px, 4vw, 48px);
+    margin: 28px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cols > * {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 16px;
+    border-top: 1px solid var(--hair-3);
+  }
+
+  .work {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px;
+    margin: 28px 0 32px;
+  }
+
+  .price {
+    --size: clamp(28px, 3.2vw, 40px);
+    display: flex;
+    align-items: flex-end;
+    min-height: calc(var(--size) * 1.1);
+    font-size: var(--size);
+    font-weight: 600;
+    font-stretch: 88%;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+
+  /* Smaller so the words fit, same height so the three columns line up. */
+  .price.quote {
+    font-size: clamp(20px, 2.4vw, 28px);
+  }
+
+  .small-label {
+    margin-top: 8px !important;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  .ticks,
+  .crosses {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 15px;
+  }
+
+  .ticks li::before,
+  .crosses li::before {
+    display: inline-block;
+    width: 1.4em;
+  }
+
+  .ticks li::before {
+    content: "+";
+    color: var(--signal);
+  }
+
+  .crosses li {
+    color: var(--warm);
+  }
+
+  .crosses li::before {
+    content: "–";
+  }
+
+  .terms {
+    margin-bottom: 32px;
+  }
+
+  .unsure {
+    margin: 40px 0 12px !important;
+  }
+
+  .terms dd {
+    margin: 0;
+    color: var(--warm);
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 24px;
+    margin: 28px 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+  }
+
+  .steps li {
+    counter-increment: step;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 14px;
+    border-top: 1px solid var(--hair-3);
+  }
+
+  .steps li::before {
+    content: counter(step, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--signal);
+  }
+
+  .care {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 680px;
+    margin: 24px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .care .price {
+    font-size: clamp(20px, 2.4vw, 26px);
+  }
+
+  #why .cols {
+    margin-bottom: 32px;
+  }
+
+  .faq {
+    max-width: 800px;
+    border-bottom: 1px solid var(--hair-3);
+  }
+
+  .answer {
+    padding: 0 0 18px;
+  }
+
+  /* Wide screens: heading on the left, content on the right. */
+  @media (min-width: 1100px) {
+    #care-plan,
+    #faq {
+      display: grid;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      /* The tall right column stretches the last row, not the heading's. */
+      grid-template-rows: auto 1fr;
+      column-gap: clamp(48px, 6vw, 96px);
+      align-items: start;
+    }
+
+    #care-plan > .care,
+    #faq > .faq {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      max-width: none;
+      margin-top: 0;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .work {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .three,
+    .two,
+    .steps {
+      grid-template-columns: 1fr;
+    }
+
+    .row .ws-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
