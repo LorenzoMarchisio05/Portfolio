@@ -247,7 +247,7 @@ const faqPage = {
     <h2 id="prices-title" class="ws-h2">Packages and prices</h2>
     <p class="lead">Fixed prices, agreed before I start. All prices exclude VAT.</p>
 
-    <div class="cols three packages">
+    <div class="cols four packages">
       {
         packages.map((p) => (
           <div>
@@ -258,6 +258,9 @@ const faqPage = {
             <p class="muted">
               {p.deliveryDays ? `Live in ${p.deliveryDays} working days` : "Timeline agreed together"}
             </p>
+            {p.plus && (
+              <p class="plus">Everything in {packages.find((q) => q.id === p.plus)!.name}, plus:</p>
+            )}
             <ul class="ticks">
               {p.includes.map((item) => <li>{item}</li>)}
             </ul>
@@ -316,7 +319,8 @@ const faqPage = {
       }
     </ol>
     <p class="lead">
-      Launch takes {days.launch} working days and Business {days.business}, counted from when you
+      Launch takes {days.launch} working days, Presence {days.presence} and Business
+      {days.business}, counted from when you
       approve the proposal and send your texts and photos. Days the preview waits for your feedback
       don't count.
     </p>
@@ -440,6 +444,10 @@ const faqPage = {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .four {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
   .two {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -471,9 +479,15 @@ const faqPage = {
     line-height: 1.1;
   }
 
-  /* Smaller so the words fit, same height so the three columns line up. */
+  /* Smaller so the words fit, same height so the columns line up. */
   .price.quote {
     font-size: clamp(20px, 2.4vw, 28px);
+  }
+
+  .plus {
+    margin: 0;
+    font-size: 15px;
+    color: var(--warm);
   }
 
   .small-label {
@@ -600,6 +614,7 @@ const faqPage = {
   }
 
   @media (max-width: 1024px) {
+    .four,
     .steps {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -611,6 +626,7 @@ const faqPage = {
 
   @media (max-width: 768px) {
     .three,
+    .four,
     .two,
     .steps {
       grid-template-columns: 1fr;

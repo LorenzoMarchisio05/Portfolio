@@ -9,5 +9,5 @@ export const STUDIO_EMAIL = "me@lorenzomarchisio.me";
 export const allLanguages = ["en", "it", "nl", "fr", "de"] as const;
 
 // Form-only choices.
-export const packageChoices = ["launch", "business", "custom"] as const;
+export const packageChoices = ["launch", "presence", "business", "custom"] as const;
 export const MESSAGE_MAX = 2000;

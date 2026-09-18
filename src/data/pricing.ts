@@ -12,6 +12,7 @@ export interface PackageDef {
   deliveryDays: number | null; // null = agreed per project
   price: number | null; // null = on request
   includes: string[]; // only what sets this package apart
+  plus?: PackageId; // shown as "Everything in <that package>, plus:"
 }
 
 export const currency = "EUR";
@@ -54,13 +55,19 @@ export const packages: PackageDef[] = [
     includes: ["One page", "One language"],
   },
   {
+    id: "presence",
+    name: "Presence",
+    deliveryDays: 8,
+    price: 1290,
+    includes: ["Up to five pages", "Up to three languages"],
+  },
+  {
     id: "business",
     name: "Business",
     deliveryDays: 10,
     price: 1490,
+    plus: "presence",
     includes: [
-      "Up to five pages",
-      "Up to three languages",
       "Menu or price list as a real web page, easy to read on a phone (not a PDF)",
       "Booking button connected to the booking service you already use",
       "Visitor statistics without cookies",
@@ -71,11 +78,8 @@ export const packages: PackageDef[] = [
     name: "Custom",
     deliveryDays: null,
     price: null,
-    includes: [
-      "Online ordering",
-      "A booking system built for your business",
-      "Connections to the tools you already use",
-    ],
+    plus: "business",
+    includes: ["Advanced features, designed and built around how your business works"],
   },
 ];
 
