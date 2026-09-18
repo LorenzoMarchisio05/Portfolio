@@ -221,7 +221,15 @@ import stops from "../../content/journey.json";
     }
   }
 
+  /* Twins: orbit.ts swaps between them to rebuild the animation when the
+     variables change (see measureCorridor). */
   @keyframes journey-travel {
+    to {
+      transform: translate3d(calc(-1 * var(--j-travel, 0px)), 0, 0);
+    }
+  }
+
+  @keyframes journey-travel-b {
     to {
       transform: translate3d(calc(-1 * var(--j-travel, 0px)), 0, 0);
     }

@@ -211,6 +211,7 @@ let pinned = false;
 let shown = -1;
 let shownAt = 0;
 let catching = 0;
+let twin = false;
 
 function measureCorridor() {
   if (!journeySection || !jPin || !corridor || !corridorTrack) return;
@@ -236,6 +237,14 @@ function measureCorridor() {
   journeySection.style.setProperty("--j-travel", corridorMax + "px");
   journeySection.style.setProperty("--j-start", -pinTop + dwell + "px");
   journeySection.style.setProperty("--j-end", dwell + "px");
+  // WebKit hands a running animation to its compositor with the values the
+  // variables had then, and never re-reads them: the computed transform moves,
+  // the cards on screen do not. A new name makes a new animation, built from
+  // the values above. The twin keyframes are identical (Journey.astro).
+  if (scrollDriven)
+    corridorTrack.style.animationName = (twin = !twin)
+      ? "journey-travel-b"
+      : "journey-travel";
   // A new layout is not a movement: land on it rather than glide there.
   shown = -1;
 }
@@ -432,21 +441,20 @@ function remeasure() {
 addEventListener("resize", remeasure);
 addEventListener("orientationchange", remeasure);
 reduce.addEventListener("change", remeasure);
-// Fonts land after first paint and change every measurement below them.
-document.fonts?.ready.then(remeasure);
 
 // Any reflow that changes the track's width or the pin's height — a font
 // swapping in after first paint, a text metric settling — changes how far it
-// travels. Catch it at the source instead of re-deriving it every frame.
+// travels. Catch it at the source instead of re-deriving it every frame; the
+// body covers everything else the loop reads.
+// Its first call, right after the browser's own first layout, is also where
+// everything starts. Measuring any earlier, as the script runs, forced that
+// layout early, on the script's clock.
+let running = false;
 const resized = new ResizeObserver(() => {
   measureCorridor();
-  journey();
+  lastTop = null; // redraw on the next frame, moved or not
+  if (running) return;
+  running = true;
+  requestAnimationFrame(tick);
 });
-if (corridorTrack) resized.observe(corridorTrack);
-if (jPin) resized.observe(jPin);
-
-// Measured before the first frame, which forces the page's first layout from
-// here (Lighthouse's "forced reflow"). Deferring it to the observer's first
-// call broke the corridor in WebKit, so it stays.
-remeasure();
-requestAnimationFrame(tick);
+for (const el of [corridorTrack, jPin, document.body]) if (el) resized.observe(el);
