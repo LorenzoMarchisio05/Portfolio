@@ -1,5 +1,10 @@
 ---
 import Layout from "../layouts/Layout.astro";
+
+// Prerendered so the build has a top-level 404.html: without one, Cloudflare
+// Pages treats the site as a single-page app and answers every unknown URL
+// with the home page and a 200.
+export const prerender = true;
 ---
 
 <Layout

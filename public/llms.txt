@@ -1,0 +1,20 @@
+# Lorenzo Marchisio
+
+> Personal site of Lorenzo Marchisio: engineer, founder and photographer, studying at Politecnico di Torino and moving from Cuneo, Italy, to Leuven, Belgium. It also presents his studio that builds websites for small businesses.
+
+## Pages
+
+- [Home](https://lorenzomarchisio.me/): who Lorenzo is, as an engineer, a founder and a photographer, plus his journey from Cuneo to Leuven
+- [Websites](https://lorenzomarchisio.me/websites/): fast, multilingual websites for small businesses anywhere in the world, at fixed prices
+- [Website projects](https://lorenzomarchisio.me/websites/gallery/): websites built for small businesses
+- [Photo gallery](https://lorenzomarchisio.me/gallery/): motorcycle, football and travel photographs from Slovenia and Croatia
+- [CV](https://lorenzomarchisio.me/cv.pdf): curriculum vitae, PDF
+
+## Profiles
+
+- [GitHub](https://github.com/lorenzomarchisio05)
+- [LinkedIn](https://www.linkedin.com/in/lorenzo-marchisio-9b75432b0/)
+
+## Optional
+
+- [Privacy policy](https://lorenzomarchisio.me/privacy/): how the site handles data sent through its forms
