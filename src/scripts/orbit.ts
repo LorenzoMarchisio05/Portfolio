@@ -475,11 +475,33 @@ function tick() {
   requestAnimationFrame(tick);
 }
 
+// The browser honours a hash in the URL against the layout it has at that
+// moment, which is the one before any of this has measured: at 1440x900 the
+// journey section alone then grows 1431px, everything below it slides down,
+// and `/#photography` — the gallery's way back, and the footer's — leaves you
+// looking at the journey. So the target is re-aimed after each measure, until
+// the visitor takes the page over. Every measure, not just the first: the
+// first runs before a font has swapped or a card's image has arrived, either
+// of which moves the sections again.
+const hashTarget = () =>
+  location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+
+let aiming = !!location.hash;
+for (const event of ["wheel", "touchstart", "keydown"])
+  addEventListener(event, () => (aiming = false), { passive: true, once: true });
+
+function aim() {
+  if (!aiming) return;
+  const target = hashTarget();
+  if (target) target.scrollIntoView({ behavior: "instant", block: "start" });
+}
+
 // Geometry only the viewport can change is measured here rather than in the
 // loop, so the loop reads a value that cannot move under it.
 function remeasure() {
   measureCorridor();
   measureShots();
+  aim();
   update();
 }
 
@@ -498,6 +520,7 @@ let running = false;
 const resized = new ResizeObserver(() => {
   measureCorridor();
   measureShots();
+  aim();
   lastTop = null; // redraw on the next frame, moved or not
   if (running) return;
   running = true;
