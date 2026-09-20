@@ -314,6 +314,7 @@ function catchUp(now: number) {
 // ---- Six frames takeover ----------------------------------------------
 
 const shotTrack = $("shotTrack");
+const shotStage = $("shotStage");
 const shotHero = $("shotHero");
 const shotVeil = $("shotVeil");
 const shotHeroCap = $("shotHeroCap");
@@ -329,13 +330,56 @@ const shotNums = photography
   ? Array.from(photography.querySelectorAll<HTMLElement>("[data-shotn]"))
   : [];
 
+// Share of the viewport one frame holds centre stage. A phone frame is most of
+// the screen, so it is given longer.
+const HOLD = 0.25;
+const HOLD_M = 0.4;
+
+// Sticky holds the stage for exactly `track height - stage height`, so the
+// track is sized as the stage plus the scroll the takeover needs and the two
+// become the same stretch of the page. The heights this replaces were guesses
+// at a multiple of the viewport and missed in both directions: 250vh left
+// 444px of the pin at 1440x900 with the sequence already over — frozen, with
+// nothing left to animate — while 340vh on a 390x844 phone ran 127px past the
+// pin, so the last frame docked into a slot already sliding away.
+let shotPinTop = 0;
+let shotTravel = 0;
+
+function measureShots() {
+  if (!shotTrack || !shotStage || !frames.length) return;
+  // No takeover, so no runway to make room for: the track collapses to the
+  // stage and every frame is already in its slot (Photography.astro).
+  if (reduce.matches) {
+    shotTrack.style.height = "";
+    shotStage.style.top = "";
+    return;
+  }
+  const vh = viewportH();
+  // Read back from CSS rather than restated here: `--sticky` is a custom
+  // property, so it is substituted as written and never resolves to a length.
+  // Cleared first, or this reads back the value the last pass set.
+  shotStage.style.top = "";
+  const sticky = parseFloat(getComputedStyle(shotStage).top) || 0;
+  const stageH = shotStage.offsetHeight;
+  // A stage taller than the screen parks with its bottom edge on the screen's:
+  // held at the resting offset instead, a phone kept the last 219px of it
+  // below the fold for the whole pin and frame 05 docked out of sight. Never
+  // past the first frame's own top, though — where the frames alone are taller
+  // than the screen that took frame 01 off the top of it instead. Something
+  // has to go, and it is the heading, which has been read by then.
+  shotPinTop = Math.max(-frames[0].offsetTop, Math.min(sticky, vh - stageH));
+  shotTravel = Math.round(frames.length * vh * (innerWidth <= MOBILE ? HOLD_M : HOLD));
+  shotStage.style.top = shotPinTop + "px";
+  shotTrack.style.height = stageH + shotTravel + "px";
+}
+
 function shots(vh: number) {
   if (!shotTrack || !shotHero || !frames.length) return;
 
   const mobile = innerWidth <= MOBILE;
   const vw = innerWidth;
   const rect = shotTrack.getBoundingClientRect();
-  const p = clamp01(-rect.top / Math.max(1, rect.height - vh));
+  const p = clamp01((shotPinTop - rect.top) / Math.max(1, shotTravel));
   const n = frames.length;
   const q = p * n;
   const idx = Math.max(0, Math.min(n - 1, Math.floor(q)));
@@ -435,6 +479,7 @@ function tick() {
 // loop, so the loop reads a value that cannot move under it.
 function remeasure() {
   measureCorridor();
+  measureShots();
   update();
 }
 
@@ -452,9 +497,11 @@ reduce.addEventListener("change", remeasure);
 let running = false;
 const resized = new ResizeObserver(() => {
   measureCorridor();
+  measureShots();
   lastTop = null; // redraw on the next frame, moved or not
   if (running) return;
   running = true;
   requestAnimationFrame(tick);
 });
-for (const el of [corridorTrack, jPin, document.body]) if (el) resized.observe(el);
+for (const el of [corridorTrack, jPin, shotStage, document.body])
+  if (el) resized.observe(el);

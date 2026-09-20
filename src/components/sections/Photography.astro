@@ -220,6 +220,9 @@ const sizes = (f: Frame, row: Frame[]) => {
     background: var(--signal);
   }
 
+  /* Runway for the takeover, for the one paint before the script measures and
+     for a visitor without it. With the script the height is the stage plus the
+     scroll the six frames need, set inline (orbit.ts). */
   #shotTrack {
     position: relative;
     height: clamp(1500px, 250vh, 2600px);
@@ -420,11 +423,8 @@ const sizes = (f: Frame, row: Frame[]) => {
       height: 8px;
     }
 
-    #shotTrack {
-      height: 340vh;
-    }
-
     #shotStage {
+      /* Read back by the script as the stage's resting offset. */
       top: 92px;
       flex-direction: column;
       gap: 22px;
