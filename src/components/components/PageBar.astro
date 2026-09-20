@@ -2,19 +2,61 @@
 // Bar for the pages that open from a home page section (websites, photo
 // gallery): the home bar's look, a way back to that section, and the section's
 // angle. Every item is a 44px row, so the bar matches the home bar's height.
+interface Crumb {
+  label: string;
+  /** Left off the last one, which is the page you are on. */
+  href?: string;
+}
+
 interface Props {
   back: string;
   angle: string;
+  /** The trail after the wordmark, which is always its first step. */
+  crumbs: Crumb[];
 }
 
-const { back, angle } = Astro.props;
+const { back, angle, crumbs } = Astro.props;
 // Rendered first: a page can pass a slot that renders to nothing.
 const action = Astro.slots.has("default") ? (await Astro.slots.render("default")).trim() : "";
+
+// The same trail for a crawler, off the same array the bar draws, so the two
+// cannot drift. The wordmark is step one in both.
+const site = Astro.site ?? Astro.url;
+const abs = (path: string) => new URL(path, site).href;
+
+const breadcrumbs = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [{ label: "Home", href: "/" }, ...crumbs].map((crumb, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: crumb.label,
+    item: abs(crumb.href ?? Astro.url.pathname),
+  })),
+};
 ---
 
 <header class:list={["bar", { action: !!action }]}>
-  <a class="wordmark" href="/" aria-label="Lorenzo Marchisio, home">LM<span>.</span></a>
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <ol>
+      <li>
+        <a class="wordmark" href="/" aria-label="Lorenzo Marchisio, home">LM<span>.</span></a>
+      </li>
+      {crumbs.map((crumb) => (
+        <li>
+          {crumb.href ? (
+            <a href={crumb.href}>{crumb.label}</a>
+          ) : (
+            <span aria-current="page">{crumb.label}</span>
+          )}
+        </li>
+      ))}
+    </ol>
+  </nav>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbs)} />
+
   <slot name="nav" />
+
   <div class="end">
     <a class="back" href={back}>← BACK</a>
     <Fragment set:html={action} />
@@ -60,6 +102,47 @@ const action = Astro.slots.has("default") ? (await Astro.slots.render("default")
     color: var(--signal);
   }
 
+  .crumbs {
+    display: flex;
+    min-width: 0;
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.6;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .crumbs ol {
+    display: flex;
+    align-items: center;
+    gap: clamp(14px, 2.4vw, 30px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* The wordmark is the trail's first step and keeps its own type and colour;
+     everything after it is a crumb. `a` is coloured site-wide, so the links
+     have to be named rather than left to inherit. */
+  .crumbs li + li a,
+  .crumbs li + li span {
+    color: var(--warm);
+  }
+
+  .crumbs li + li a:hover {
+    color: var(--signal);
+  }
+
+  .crumbs [aria-current] {
+    color: var(--bone);
+  }
+
+  .crumbs li + li::before {
+    content: "›";
+    margin-right: clamp(14px, 2.4vw, 30px);
+    color: var(--dim);
+  }
+
   .end {
     margin-left: auto;
     display: flex;
@@ -103,7 +186,12 @@ const action = Astro.slots.has("default") ? (await Astro.slots.render("default")
       gap: 14px;
     }
 
-    /* No room for the angle next to a call to action on a phone. */
+    /* The phone bar keeps the trail's first step — the wordmark — and drops
+       the rest of it, along with the angle when there is a call to action. */
+    .crumbs li + li {
+      display: none;
+    }
+
     .action .angle {
       display: none;
     }

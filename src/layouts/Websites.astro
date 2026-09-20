@@ -17,9 +17,11 @@ interface Props {
   cta?: string;
   skip: { href: string; label: string };
   jsonLd: object[];
+  /** The bar's trail, after the wordmark. See PageBar. */
+  crumbs: { label: string; href?: string }[];
 }
 
-const { title, description, image, noindex, back, cta, skip, jsonLd } = Astro.props;
+const { title, description, image, noindex, back, cta, skip, jsonLd, crumbs } = Astro.props;
 ---
 
 <Layout title={title} description={description} image={image} noindex={noindex}>
@@ -32,7 +34,7 @@ const { title, description, image, noindex, back, cta, skip, jsonLd } = Astro.pr
   <div class="ws">
     <a class="ws-skip" href={skip.href}>{skip.label}</a>
 
-    <PageBar back={back} angle="120°">
+    <PageBar back={back} angle="120°" crumbs={crumbs}>
       <slot name="nav" slot="nav" />
       {cta && <a class="ws-btn" href={cta}>Start a project</a>}
     </PageBar>
@@ -78,8 +80,7 @@ const { title, description, image, noindex, back, cta, skip, jsonLd } = Astro.pr
     color: var(--ink);
   }
 
-  .ws header nav ol,
-  .ws header nav ul {
+  .ws-sections ul {
     display: flex;
     gap: clamp(14px, 2.4vw, 30px);
     margin: 0;
@@ -89,7 +90,10 @@ const { title, description, image, noindex, back, cta, skip, jsonLd } = Astro.pr
 
   /* Set on the nav itself, not only its links: inline links inside list
      items at the page's 17px sat on a taller line, below the wordmark. */
-  .ws header nav {
+  .ws-sections {
+    /* Off the trail by more than the trail's own spacing, or the two read as
+       one run of links. */
+    padding-left: clamp(6px, 1.4vw, 22px);
     font-family: var(--mono);
     font-size: 11px;
     line-height: 1.6;
@@ -97,17 +101,21 @@ const { title, description, image, noindex, back, cta, skip, jsonLd } = Astro.pr
     text-transform: uppercase;
   }
 
-  .ws header nav a,
-  .ws header nav span {
+  .ws-sections a {
     color: var(--warm);
   }
 
-  .ws header nav a:hover {
+  .ws-sections a:hover {
     color: var(--signal);
   }
 
-  .ws header nav [aria-current] {
-    color: var(--bone);
+  /* The trail, the section links, the back link and the call to action share
+     one row. Below this they start colliding, and the trail is the part every
+     other page has. */
+  @media (max-width: 1200px) {
+    .ws-sections {
+      display: none;
+    }
   }
 
   .ws-btn,
@@ -191,12 +199,6 @@ const { title, description, image, noindex, back, cta, skip, jsonLd } = Astro.pr
     .ws {
       --footer-x: 16px;
       font-size: 16px;
-    }
-
-    /* The phone bar keeps the wordmark, the back link and the call to
-       action; section links and breadcrumbs would not fit. */
-    .ws header nav {
-      display: none;
     }
 
     .ws-btn {

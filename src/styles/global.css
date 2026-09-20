@@ -251,50 +251,6 @@ img {
   }
 }
 
-/* Breadcrumb for a page bar. Global rather than in the websites layout,
-   because the photo gallery has a bar and no layout to share. Hidden on a
-   phone: the bar there keeps the wordmark, the back link and the angle. */
-.crumbs {
-  font-family: var(--mono);
-  font-size: 11px;
-  line-height: 1.6;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.crumbs ol {
-  display: flex;
-  gap: clamp(14px, 2.4vw, 30px);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.crumbs a,
-.crumbs span {
-  color: var(--warm);
-}
-
-.crumbs a:hover {
-  color: var(--signal);
-}
-
-.crumbs [aria-current] {
-  color: var(--bone);
-}
-
-.crumbs li + li::before {
-  content: "›";
-  margin-right: clamp(14px, 2.4vw, 30px);
-  color: var(--dim);
-}
-
-@media (max-width: 768px) {
-  .crumbs {
-    display: none;
-  }
-}
-
 /* ---- Section shell --------------------------------------------------- */
 
 .section {

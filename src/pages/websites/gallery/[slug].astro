@@ -62,16 +62,6 @@ const work = {
   },
   ...(data.launchedAt && { dateCreated: data.launchedAt.toISOString().slice(0, 10) }),
 };
-
-const breadcrumbs = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Websites", item: abs("/websites") },
-    { "@type": "ListItem", position: 2, name: "Gallery", item: abs("/websites/gallery") },
-    { "@type": "ListItem", position: 3, name: data.clientName, item: here },
-  ],
-};
 ---
 
 <Websites
@@ -81,16 +71,13 @@ const breadcrumbs = {
   back="/websites/gallery"
   cta={similar}
   skip={{ href: "#content", label: "Skip to content" }}
-  jsonLd={[work, breadcrumbs]}
+  crumbs={[
+    { label: "Websites", href: "/websites" },
+    { label: "Gallery", href: "/websites/gallery" },
+    { label: data.clientName },
+  ]}
+  jsonLd={[work]}
 >
-  <nav slot="nav" class="crumbs" aria-label="Breadcrumb">
-    <ol>
-      <li><a href="/websites">Websites</a></li>
-      <li><a href="/websites/gallery">Gallery</a></li>
-      <li><span aria-current="page">{data.clientName}</span></li>
-    </ol>
-  </nav>
-
   <!-- 1 · Who it is, and the facts beside it -->
   <section class="ws-section hero" aria-labelledby="project-title">
     <div class="intro">
