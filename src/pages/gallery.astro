@@ -40,6 +40,21 @@ const photos = await Promise.all(
 
 const categories = [...new Set(photos.map((p) => p.category).filter(Boolean))].sort();
 const count = String(photos.length).padStart(2, "0");
+
+// The trail the bar shows, and the same trail for a crawler. The parent is a
+// section of the home page rather than a page of its own — which is what the
+// bar's back link points at too.
+const site = Astro.site ?? Astro.url;
+const abs = (path: string) => new URL(path, site).href;
+
+const breadcrumbs = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Photography", item: abs("/#photography") },
+    { "@type": "ListItem", position: 2, name: "Every Frame", item: abs("/gallery") },
+  ],
+};
 ---
 
 <Layout
@@ -47,7 +62,18 @@ const count = String(photos.length).padStart(2, "0");
   description="Motorcycle, football and travel photographs from Slovenia and Croatia, by Lorenzo Marchisio."
   image="/social/og-gallery.jpg"
 >
-  <PageBar back="/#photography" angle="240°" />
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbs)} />
+  </Fragment>
+
+  <PageBar back="/#photography" angle="240°">
+    <nav slot="nav" class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/#photography">Photography</a></li>
+        <li><span aria-current="page">Every Frame</span></li>
+      </ol>
+    </nav>
+  </PageBar>
 
   <main>
     <div class="glow"></div>
