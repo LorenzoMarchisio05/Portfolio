@@ -62,7 +62,7 @@ const steps = [
     text: "You get a written proposal with what's included, the price and the terms. Once you approve it, you pay the deposit.",
   },
   { title: "Preview", text: "I build the site and send you a preview link." },
-  { title: "Changes", text: "You get one round of changes." },
+  { title: "Changes", text: "You get two rounds of changes." },
   { title: "Launch", text: `The site goes live and you pay the final ${onLaunch}.` },
 ];
 
@@ -150,11 +150,11 @@ const service = {
       "@type": "Offer",
       name: `${p.name} website`,
       ...(p.price !== null && {
-        price: p.price,
         priceCurrency: currency,
+        ...(p.from ? {} : { price: p.price }),
         priceSpecification: {
           "@type": "PriceSpecification",
-          price: p.price,
+          [p.from ? "minPrice" : "price"]: p.price,
           priceCurrency: currency,
           valueAddedTaxIncluded: vatIncluded,
         },
@@ -213,7 +213,9 @@ const faqPage = {
         <div class="work">
           {featured.map((project) => <ProjectCard project={project} variant="compact" />)}
         </div>
-        <a class="ws-link" href="/websites/gallery">See all projects ({gallery.length})</a>
+        <a class="ws-link" href="/websites/gallery">
+          {gallery.length >= 3 ? `See all projects (${gallery.length})` : "See all projects"}
+        </a>
       </section>
     )
   }
@@ -252,8 +254,8 @@ const faqPage = {
         packages.map((p) => (
           <div>
             <h3 class="ws-h3">{p.name}</h3>
-            <p class={p.price === null ? "price quote" : "price"}>
-              {p.price === null ? "Price on request" : money(p.price)}
+            <p class={p.price === null || p.from ? "price quote" : "price"}>
+              {p.price === null ? "Price on request" : p.from ? `From ${money(p.price)}` : money(p.price)}
             </p>
             <p class="muted">
               {p.deliveryDays ? `Live in ${p.deliveryDays} working days` : "Timeline agreed together"}
@@ -337,6 +339,7 @@ const faqPage = {
         menu updates included. Unused minutes don't carry over.
       </li>
       <li class="price">{money(carePlan.monthly)} a month.</li>
+      <li>Excluding VAT, which is added where it applies.</li>
       <li>
         Minimum {carePlan.minimumMonths} months, then cancel any time with {notice}.
       </li>

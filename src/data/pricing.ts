@@ -11,6 +11,7 @@ export interface PackageDef {
   name: string;
   deliveryDays: number | null; // null = agreed per project
   price: number | null; // null = on request
+  from?: boolean; // price is a starting point, not the whole job
   includes: string[]; // only what sets this package apart
   plus?: PackageId; // shown as "Everything in <that package>, plus:"
 }
@@ -50,22 +51,22 @@ export const packages: PackageDef[] = [
   {
     id: "launch",
     name: "Launch",
-    deliveryDays: 7,
+    deliveryDays: 10,
     price: 990,
     includes: ["One page", "One language"],
   },
   {
     id: "presence",
     name: "Presence",
-    deliveryDays: 8,
-    price: 1290,
+    deliveryDays: 15,
+    price: 1690,
     includes: ["Up to five pages", "Up to three languages"],
   },
   {
     id: "business",
     name: "Business",
-    deliveryDays: 10,
-    price: 1490,
+    deliveryDays: 20,
+    price: 2490,
     plus: "presence",
     includes: [
       "Menu or price list as a real web page, easy to read on a phone (not a PDF)",
@@ -77,16 +78,17 @@ export const packages: PackageDef[] = [
     id: "custom",
     name: "Custom",
     deliveryDays: null,
-    price: null,
+    price: 3500,
+    from: true,
     plus: "business",
     includes: ["Advanced features, designed and built around how your business works"],
   },
 ];
 
-export const extras = { language: 190, page: 150 };
+export const extras = { language: 290, page: 150 };
 
 export const carePlan = {
-  monthly: 49,
+  monthly: 79,
   minimumMonths: 12,
   noticeMonths: 1,
   includedChangeMinutes: 30,
