@@ -245,8 +245,14 @@ import stops from "../../content/journey.json";
     user-select: none;
   }
 
+  /* `width`, never `flex-basis`: WebKit sizes a `max-content` flex container
+     from its items' content, ignoring a basis wider than that — the track came
+     out 288px short of the cards standing in it, and the corridor stopped with
+     the last stop still off screen. The axis was worse: its ticks are four
+     characters, so that row measured 323px. */
   .cards li {
-    flex: 0 0 var(--w);
+    flex: none;
+    width: var(--w);
     border-left: 1px solid var(--hair-3);
     padding: 0 18px 40px 16px;
     display: flex;
@@ -317,7 +323,8 @@ import stops from "../../content/journey.json";
   }
 
   .axis > div {
-    flex: 0 0 var(--w);
+    flex: none;
+    width: var(--w);
     border-left: 1px solid var(--hair-3);
     padding: 9px 0 0 16px;
     font-family: var(--mono);
@@ -352,18 +359,14 @@ import stops from "../../content/journey.json";
       height: 56px;
     }
 
-    /* One stop per screen. `flex`, not `flex-basis` alone: this has to beat
-       the shorthand above outright rather than reach into it, because that one
-       carries `var(--w)` — 430px on the Leuven card, wider than the phone it
-       has to cross. `min-width` drops flexbox's automatic minimum so content
-       can never push a card back out past its basis, and the cap keeps a card
-       from outgrowing the corridor on a narrow phone. Cards and ticks share
-       the rule: if the two ever disagree the axis desyncs from the stops. */
+    /* One stop per screen, and never wider than the corridor on a narrow
+       phone. `min-width` drops flexbox's automatic minimum so content can
+       never push a card back out past that. Cards and ticks share the rule:
+       if the two ever disagree the axis desyncs from the stops. */
     .cards li,
     .axis > div {
-      flex: 0 0 300px;
+      width: min(300px, calc(100vw - 2 * var(--pad-x)));
       min-width: 0;
-      max-width: calc(100vw - 2 * var(--pad-x));
     }
 
     .cards li {
