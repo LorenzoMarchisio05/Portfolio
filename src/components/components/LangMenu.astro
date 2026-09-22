@@ -1,0 +1,111 @@
+---
+// The bar's angle readout, doubling as the language picker: the readout and
+// the page's language code share one button, and the other languages open
+// under it. Native popover, so it closes on Esc and on a click elsewhere with
+// no script. The footer keeps the plain list (LangSwitch).
+import { locales, localize, useI18n } from "../../i18n";
+
+const names = { en: "English", it: "Italiano", fr: "Français" };
+const { lang, t } = useI18n(Astro.url);
+---
+
+<button class="trigger" popovertarget="lang-menu" aria-label={`${t.language}: ${names[lang]}`}>
+  <span class="angle" aria-hidden="true"><slot /></span>
+  <span class="code" aria-hidden="true">{lang.toUpperCase()}</span>
+</button>
+
+<nav id="lang-menu" popover aria-label={t.language}>
+  {
+    locales.map((l) => (
+      <a
+        href={localize(Astro.url, l)}
+        hreflang={l}
+        lang={l}
+        aria-current={l === lang ? "true" : undefined}
+      >
+        <span class="code">{l.toUpperCase()}</span>
+        {names[l]}
+      </a>
+    ))
+  }
+</nav>
+
+<style>
+  .trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1;
+    cursor: pointer;
+    /* The bars let clicks through everywhere but their controls. */
+    pointer-events: auto;
+  }
+
+  .angle {
+    min-width: 36px;
+    text-align: right;
+    letter-spacing: 0.1em;
+    color: var(--signal);
+  }
+
+  .code {
+    letter-spacing: 0.14em;
+    color: var(--warm);
+  }
+
+  .trigger:hover .code,
+  .trigger:focus-visible .code {
+    color: var(--bone);
+  }
+
+  /* Fixed under the bar's right end, where the button always sits.
+     ponytail: fixed offsets, not anchored to the button; switch to CSS anchor
+     positioning if the button ever moves away from the top-right corner. */
+  [popover] {
+    position: fixed;
+    inset: 64px var(--pad-x) auto auto;
+    margin: 0;
+    padding: 6px 0;
+    min-width: 168px;
+    border: 1px solid rgba(242, 239, 233, 0.12);
+    background: var(--ink);
+    pointer-events: auto;
+  }
+
+  [popover] a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 44px;
+    padding: 0 18px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--warm);
+  }
+
+  [popover] a:hover {
+    color: var(--signal);
+  }
+
+  [popover] [aria-current] {
+    color: var(--bone);
+  }
+
+  [popover] [aria-current] .code {
+    color: var(--signal);
+  }
+
+  @media (max-width: 768px) {
+    [popover] {
+      inset: 64px 20px auto auto;
+    }
+  }
+</style>

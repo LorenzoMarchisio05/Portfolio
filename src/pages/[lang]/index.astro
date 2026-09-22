@@ -1,0 +1,77 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Chrome from "../../components/components/Chrome.astro";
+import Footer from "../../components/components/Footer.astro";
+import Orbit from "../../components/components/Orbit.astro";
+import Hero from "../../components/sections/Hero.astro";
+import Engineer from "../../components/sections/Engineer.astro";
+import Journey from "../../components/sections/Journey.astro";
+import Founder from "../../components/sections/Founder.astro";
+import Photography from "../../components/sections/Photography.astro";
+import Contact from "../../components/sections/Contact.astro";
+import { localeParams, useI18n } from "../../i18n";
+
+export const prerender = true;
+export const getStaticPaths = localeParams;
+
+const { href, lang, t } = useI18n(Astro.url);
+const site = Astro.site ?? Astro.url;
+
+// Who the site is about, for search engines: lets a search for the name tie
+// this site and the profiles in Contact together.
+const person = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  // The websites studio names this as its founder. One id for the person
+  // whichever language the page is in.
+  "@id": new URL("/#person", site).href,
+  name: "Lorenzo Marchisio",
+  url: new URL(href("/"), site).href,
+  description: t.meta.description,
+  homeLocation: { "@type": "Place", name: "Leuven, Belgium" },
+  email: "me@lorenzomarchisio.me",
+  affiliation: { "@type": "CollegeOrUniversity", name: "Politecnico di Torino" },
+  sameAs: [
+    "https://github.com/lorenzomarchisio05",
+    "https://www.linkedin.com/in/lorenzo-marchisio-9b75432b0/",
+  ],
+};
+
+// The name Google prints above the result instead of the bare domain.
+const website = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": new URL("/#website", site).href,
+  name: "Lorenzo Marchisio",
+  alternateName: "lorenzomarchisio.me",
+  url: new URL("/", site).href,
+  inLanguage: lang,
+  author: { "@id": person["@id"] },
+};
+---
+
+<Layout>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify([person, website])} />
+  <Chrome />
+
+  <main>
+    <!-- Hero and Engineer share one clip container: the object cluster crosses
+         the section seam uncut. -->
+    <Orbit>
+      <Hero />
+      <Engineer />
+    </Orbit>
+
+    <Journey />
+    <Founder />
+    <Photography />
+    <Contact />
+  </main>
+
+  <Footer />
+</Layout>
+
+<script>
+  import "../../scripts/orbit.ts";
+</script>
+

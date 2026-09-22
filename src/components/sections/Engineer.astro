@@ -1,38 +1,8 @@
 ---
 import Silhouette from "../components/Silhouette.astro";
+import { useI18n } from "../../i18n";
 
-const method = [
-  {
-    n: "01",
-    t: "Find the binding constraint",
-    d: "Most problems are one limit wearing a costume. I go looking for the one that actually moves before touching anything else.",
-  },
-  {
-    n: "02",
-    t: "Measure before arguing",
-    d: "A number I trust beats a story I like. If it can't be measured, it doesn't get claimed.",
-  },
-  {
-    n: "03",
-    t: "Tolerances, not perfection",
-    d: "Decide what's allowed to be wrong, and by how much, while it's still cheap to decide.",
-  },
-  {
-    n: "04",
-    t: "The failure is at the interface",
-    d: "Parts rarely break alone. I read the handoffs: between systems, teams, and the people who will use the thing.",
-  },
-  {
-    n: "05",
-    t: "Crudest version that survives",
-    d: "Build what holds under real contact first, then make every addition earn its place.",
-  },
-  {
-    n: "06",
-    t: "Leave it legible",
-    d: "Someone has to change this without me in the room. That's part of the spec, not a courtesy.",
-  },
-];
+const { t } = useI18n(Astro.url);
 ---
 
 <section id="engineer" class="section">
@@ -48,27 +18,23 @@ const method = [
 
   <header class="head" data-rise>
     <div class="title">
-      <p class="eyebrow">000° · ENGINEER</p>
-      <h2 class="headline">WHAT I<br class="narrow-only" /> REACH FOR<br />FIRST</h2>
+      <p class="eyebrow">000° · {t.roles.engineer}</p>
+      <h2 class="headline" set:html={t.engineer.headline} />
     </div>
-    <p class="lead intro">
-      Not a language. A method. Engineering school taught me an order of
-      operations long before it taught me a stack, and the order is the part
-      that transfers.
-    </p>
+    <p class="lead intro">{t.engineer.intro}</p>
   </header>
 
   <div class="body">
     <ol class="method" data-rise>
       {
-        method.map((m) => (
+        t.engineer.method.map((m, i) => (
           <li>
             <span class="index" aria-hidden="true">
-              {m.n}
+              {String(i + 1).padStart(2, "0")}
             </span>
             <div class="principle">
-              <h3>{m.t}</h3>
-              <p class="lead">{m.d}</p>
+              <h3>{m.title}</h3>
+              <p class="lead">{m.text}</p>
             </div>
           </li>
         ))
@@ -83,12 +49,9 @@ const method = [
           </div>
         </div>
         <div class="note" data-rise>
-          <p class="cap">FROM HERE THE OBJECT<br />READS AS A BRACE PAIR</p>
-          <p class="lead sentence">
-            The shape of something that has to hold, which is what engineering
-            is, before it is any particular tool.
-          </p>
-          <a class="cv" href="/cv.pdf">READ THE CV ↓</a>
+          <p class="cap" set:html={t.engineer.caption} />
+          <p class="lead sentence">{t.engineer.sentence}</p>
+          <a class="cv" href="/cv.pdf">{t.engineer.cv}</a>
         </div>
       </div>
     </div>
@@ -117,7 +80,8 @@ const method = [
     max-width: 440px;
   }
 
-  .narrow-only {
+  /* In the headline, which is set from the dictionary as HTML. */
+  .title :global(.narrow-only) {
     display: none;
   }
 
@@ -276,7 +240,7 @@ const method = [
       gap: 18px;
     }
 
-    .narrow-only {
+    .title :global(.narrow-only) {
       display: inline;
     }
 

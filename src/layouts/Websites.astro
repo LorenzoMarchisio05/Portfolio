@@ -4,6 +4,7 @@
 import Layout from "./Layout.astro";
 import PageBar from "../components/components/PageBar.astro";
 import Footer from "../components/components/Footer.astro";
+import { useI18n } from "../i18n";
 
 interface Props {
   title: string;
@@ -22,6 +23,7 @@ interface Props {
 }
 
 const { title, description, image, noindex, back, cta, skip, jsonLd, crumbs } = Astro.props;
+const { t } = useI18n(Astro.url);
 ---
 
 <Layout title={title} description={description} image={image} noindex={noindex}>
@@ -36,7 +38,7 @@ const { title, description, image, noindex, back, cta, skip, jsonLd, crumbs } = 
 
     <PageBar back={back} angle="120°" crumbs={crumbs}>
       <slot name="nav" slot="nav" />
-      {cta && <a class="ws-btn" href={cta}>Start a project</a>}
+      {cta && <a class="ws-btn" href={cta}>{t.studio.start}</a>}
     </PageBar>
 
     <main id="content" tabindex="-1">

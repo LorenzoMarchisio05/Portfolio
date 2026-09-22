@@ -2,39 +2,50 @@
 // One page per project: the screenshots, the facts and the whole story. The
 // gallery is only the index into these.
 import type { GetStaticPaths } from "astro";
-import Websites from "../../../layouts/Websites.astro";
-import { getGalleryProjects, type Project } from "../../../lib/projects";
-import { packages } from "../../../data/pricing";
+import Websites from "../../../../layouts/Websites.astro";
+import { getGalleryProjects, projectHref, type Project } from "../../../../lib/projects";
+import { packages } from "../../../../data/pricing";
+import { intlLocale, locales, useI18n } from "../../../../i18n";
 
 export const prerender = true;
 
-export const getStaticPaths = (async () =>
-  (await getGalleryProjects()).map((project) => ({
-    params: { slug: project.data.slug },
-    props: { project },
-  }))) satisfies GetStaticPaths;
+export const getStaticPaths = (async () => {
+  const projects = await getGalleryProjects();
+  return locales.flatMap((lang) =>
+    projects.map((project) => ({
+      params: { lang, slug: project.data.slug },
+      props: { project },
+    })),
+  );
+}) satisfies GetStaticPaths;
 
 const { project } = Astro.props as { project: Project };
 const { id, data } = project;
+const { t, lang, href } = useI18n(Astro.url);
+const text = data.text[lang];
+const f = t.projects.facts;
 
-const languageName = new Intl.DisplayNames("en", { type: "language" });
-const languages = new Intl.ListFormat("en").format(data.languages.map((l) => languageName.of(l)!));
-const month = (date: Date) => date.toLocaleDateString("en-GB", { month: "long", year: "numeric" });
-const day = (date: Date) => date.toLocaleDateString("en-GB", { dateStyle: "long" });
+const locale = intlLocale[lang];
+const languageName = new Intl.DisplayNames(locale, { type: "language" });
+const languages = new Intl.ListFormat(locale).format(data.languages.map((l) => languageName.of(l)!));
+const month = (date: Date) => date.toLocaleDateString(locale, { month: "long", year: "numeric" });
+const day = (date: Date) => date.toLocaleDateString(locale, { dateStyle: "long" });
 
 const concept = data.status === "concept";
 // The schema guarantees the URL that matches the status.
 const url = (concept ? data.conceptUrl : data.liveUrl)!;
 const domain = new URL(url).hostname.replace(/^www\./, "");
-const name = concept ? `${data.clientName} (Concept)` : data.clientName;
-const similar = `/websites?ref=project-${id}&package=${data.package}#start`;
+const name = concept ? t.projects.named(data.clientName) : data.clientName;
+const studio = href("/websites");
+const gallery = href("/websites/gallery");
+const similar = `${studio}?ref=project-${id}&package=${data.package}#start`;
 
 const facts: [string, string][] = [
-  ["Status", concept ? "Concept" : "Live"],
-  ["Package", packages.find((p) => p.id === data.package)!.name],
-  ["Languages", languages],
-  ...(data.deliveryDays ? ([["Delivered in", `${data.deliveryDays} days`]] as [string, string][]) : []),
-  ...(data.launchedAt ? ([["Launched", month(data.launchedAt)]] as [string, string][]) : []),
+  [f.status, concept ? t.projects.concept : f.live],
+  [f.package, packages.find((p) => p.id === data.package)!.name],
+  [f.languages, languages],
+  ...(data.deliveryDays ? ([[f.delivered, f.days(data.deliveryDays)]] as [string, string][]) : []),
+  ...(data.launchedAt ? ([[f.launched, month(data.launchedAt)]] as [string, string][]) : []),
 ];
 
 const showTestimonial = data.testimonial && data.consent.testimonial;
@@ -42,7 +53,7 @@ const showTestimonial = data.testimonial && data.consent.testimonial;
 // ---- structured data ----
 const site = Astro.site ?? Astro.url;
 const abs = (path: string) => new URL(path, site).href;
-const here = abs(`/websites/gallery/${data.slug}`);
+const here = abs(projectHref(project, lang));
 
 const work = {
   "@context": "https://schema.org",
@@ -52,7 +63,7 @@ const work = {
   url: here,
   sameAs: url,
   image: abs(data.screenshots.desktop.src),
-  abstract: data.text.summary,
+  abstract: text.summary,
   inLanguage: data.languages,
   creator: { "@id": abs("/#person") },
   about: {
@@ -65,15 +76,15 @@ const work = {
 ---
 
 <Websites
-  title={data.text.seo?.title ?? `${name} · Website by Lorenzo Marchisio`}
-  description={data.text.seo?.description ?? data.text.summary}
+  title={text.seo?.title ?? t.projects.pageTitle(name)}
+  description={text.seo?.description ?? text.summary}
   image={data.screenshots.desktop.src}
-  back="/websites/gallery"
+  back={gallery}
   cta={similar}
-  skip={{ href: "#content", label: "Skip to content" }}
+  skip={{ href: "#content", label: t.skip }}
   crumbs={[
-    { label: "Websites", href: "/websites" },
-    { label: "Gallery", href: "/websites/gallery" },
+    { label: t.studio.crumb, href: studio },
+    { label: t.projects.crumb, href: gallery },
     { label: data.clientName },
   ]}
   jsonLd={[work]}
@@ -81,21 +92,21 @@ const work = {
   <!-- 1 · Who it is, and the facts beside it -->
   <section class="ws-section hero" aria-labelledby="project-title">
     <div class="intro">
-      <p class="eyebrow">{data.category} · {data.location.city}, {data.location.country}</p>
+      <p class="eyebrow">{text.category} · {text.location}</p>
       <h1 id="project-title" class="title">
         {data.clientName}
-        {concept && <span class="tag">Concept</span>}
+        {concept && <span class="tag">{t.projects.concept}</span>}
       </h1>
-      <p class="lead sub">{data.text.summary}</p>
+      <p class="lead sub">{text.summary}</p>
       <div class="row">
         <a
           class="ws-btn"
           href={url}
           target="_blank"
           rel="noopener"
-          aria-label={`${concept ? "Concept site" : "Live site"}: ${domain} (opens in a new tab)`}
+          aria-label={t.projects.site(concept, domain)}
         >
-          Visit {domain} <span aria-hidden="true">↗</span>
+          {t.projects.visit(domain)} <span aria-hidden="true">↗</span>
         </a>
       </div>
     </div>
@@ -119,35 +130,35 @@ const work = {
         src={data.screenshots.desktop.src}
         width={data.screenshots.desktop.width}
         height={data.screenshots.desktop.height}
-        alt={data.text.alt.desktop}
+        alt={text.alt.desktop}
       />
-      <figcaption>Desktop</figcaption>
+      <figcaption>{t.projects.desktop}</figcaption>
     </figure>
     <figure class="frame phone">
       <img
         src={data.screenshots.mobile.src}
         width={data.screenshots.mobile.width}
         height={data.screenshots.mobile.height}
-        alt={data.text.alt.mobile}
+        alt={text.alt.mobile}
         loading="lazy"
         decoding="async"
       />
-      <figcaption>Phone</figcaption>
+      <figcaption>{t.projects.phone}</figcaption>
     </figure>
   </div>
 
   <!-- 3 · The brief -->
   <section class="ws-section brief" aria-labelledby="brief-title">
-    <h2 id="brief-title" class="ws-h2">The brief</h2>
+    <h2 id="brief-title" class="ws-h2">{t.projects.brief}</h2>
     <div class="two">
       <div>
-        <p class="label">Before</p>
-        <p>{data.text.before}</p>
+        <p class="label">{t.projects.before}</p>
+        <p>{text.before}</p>
       </div>
       <div>
-        <p class="label">What was built</p>
+        <p class="label">{t.projects.built}</p>
         <ul>
-          {data.text.built.map((line) => <li>{line}</li>)}
+          {text.built.map((line) => <li>{line}</li>)}
         </ul>
       </div>
     </div>
@@ -155,11 +166,11 @@ const work = {
 
   <!-- 4 · The build, chapter by chapter -->
   {
-    data.text.sections.length > 0 && (
+    text.sections.length > 0 && (
       <section class="ws-section chapters" aria-labelledby="chapters-title">
-        <h2 id="chapters-title" class="ws-h2">Inside the site</h2>
+        <h2 id="chapters-title" class="ws-h2">{t.projects.inside}</h2>
         <ol>
-          {data.text.sections.map((section) => (
+          {text.sections.map((section) => (
             <li>
               <h3 class="chapter">{section.title}</h3>
               {section.body.map((paragraph) => (
@@ -187,7 +198,7 @@ const work = {
   {
     data.results.length > 0 && (
       <section class="ws-section" aria-labelledby="results-title">
-        <h2 id="results-title" class="ws-h2">Results</h2>
+        <h2 id="results-title" class="ws-h2">{t.projects.results}</h2>
         <dl class="results">
           {data.results.map((result) => (
             <div>
@@ -195,7 +206,7 @@ const work = {
               <dd>
                 <strong>{result.value}</strong>
                 <span class="meta">
-                  Measured {day(result.measuredAt)}. Source: {result.source}
+                  {t.projects.measured(day(result.measuredAt), result.source)}
                 </span>
               </dd>
             </div>
@@ -208,7 +219,7 @@ const work = {
   {
     showTestimonial && (
       <section class="ws-section quote" aria-labelledby="quote-title">
-        <h2 id="quote-title" class="ws-h2">What the client says</h2>
+        <h2 id="quote-title" class="ws-h2">{t.projects.quote}</h2>
         <figure>
           <blockquote>{data.testimonial!.quote}</blockquote>
           <figcaption>
@@ -221,12 +232,12 @@ const work = {
 
   <!-- 6 · The way out -->
   <section class="ws-section end" aria-labelledby="end-title">
-    {data.stack.length > 0 && <p class="meta">Built with: {data.stack.join(", ")}</p>}
-    <h2 id="end-title" class="ws-h2">Want something like this?</h2>
-    <p class="lead">Tell me about your business, and I'll reply within one working day.</p>
+    {data.stack.length > 0 && <p class="meta">{t.projects.stack(data.stack.join(", "))}</p>}
+    <h2 id="end-title" class="ws-h2">{t.projects.similar}</h2>
+    <p class="lead">{t.projects.similarLead}</p>
     <div class="row">
-      <a class="ws-btn" href={similar}>Request a free 30-minute call</a>
-      <a class="ws-link quiet" href="/websites/gallery">← All projects</a>
+      <a class="ws-btn" href={similar}>{t.studio.cta}</a>
+      <a class="ws-link quiet" href={gallery}>{t.projects.all}</a>
     </div>
   </section>
 </Websites>
@@ -312,6 +323,11 @@ const work = {
   dd {
     margin: 0;
     text-align: right;
+  }
+
+  /* French and Italian name languages and months in lower case. */
+  .facts dd::first-letter {
+    text-transform: uppercase;
   }
 
   /* ---- 2 · screenshots ---- */

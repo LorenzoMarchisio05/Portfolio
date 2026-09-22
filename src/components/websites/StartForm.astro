@@ -5,36 +5,36 @@
 // #send-error, shown by :target. With JavaScript it validates inline and
 // submits with fetch instead.
 import { MESSAGE_MAX, STUDIO_EMAIL } from "../../data/studio";
+import { useI18n } from "../../i18n";
+
+const { t, lang, href } = useI18n(Astro.url);
 ---
 
 <section id="start" class="ws-section" aria-labelledby="start-title" tabindex="-1">
   <div class="intro">
-    <h2 id="start-title" class="ws-h2">Let's talk about your website</h2>
-    <p class="lead">
-      Tell me about your business. I'll reply within one working day to set up a free video call.
-    </p>
+    <h2 id="start-title" class="ws-h2">{t.start.title}</h2>
+    <p class="lead">{t.start.lead}</p>
     <p class="direct">
-      Prefer email? Write to <a href={`mailto:${STUDIO_EMAIL}`}>{STUDIO_EMAIL}</a>
+      {t.start.direct} <a href={`mailto:${STUDIO_EMAIL}`}>{STUDIO_EMAIL}</a>
     </p>
   </div>
 
   <div id="sent" class="notice" tabindex="-1">
-    <h3 class="ws-h3">Request sent</h3>
-    <p>
-      Thank you. I'll reply within one working day to set up a video call, and a confirmation is
-      on its way to your inbox.
-    </p>
+    <h3 class="ws-h3">{t.start.sent}</h3>
+    <p>{t.start.sentText}</p>
   </div>
 
   <div id="send-error" class="notice failed" tabindex="-1">
-    <h3 class="ws-h3">Your request wasn't sent</h3>
+    <h3 class="ws-h3">{t.start.failed}</h3>
     <p>
-      Something went wrong on my side. Please try again, or email me directly at
+      {t.start.failedText}
       <a href={`mailto:${STUDIO_EMAIL}`}>{STUDIO_EMAIL}</a>.</p>
   </div>
 
-  <form method="post" action="/api/send-email">
+  <form method="post" action="/api/send-email" data-errors={JSON.stringify(t.start.errors)}>
     <input type="hidden" name="type" value="project-inquiry" />
+    <!-- The endpoint answers, redirects and confirms in this language. -->
+    <input type="hidden" name="lang" value={lang} />
     <input type="hidden" name="ref" value="" />
     <!-- Filled from ?package= when the visitor came from a package card. -->
     <input type="hidden" name="package" value="" />
@@ -43,43 +43,43 @@ import { MESSAGE_MAX, STUDIO_EMAIL } from "../../data/studio";
 
     <div class="grid">
       <label class="field">
-        <span class="label">Your name</span>
+        <span class="label">{t.start.name}</span>
         <input type="text" name="name" required maxlength="100" autocomplete="name" aria-describedby="error-name" />
         <span class="error" id="error-name" hidden></span>
       </label>
 
       <label class="field">
-        <span class="label">Email</span>
+        <span class="label">{t.start.email}</span>
         <input type="email" name="email" required maxlength="200" autocomplete="email" inputmode="email" aria-describedby="error-email" />
         <span class="error" id="error-email" hidden></span>
       </label>
 
       <label class="field">
-        <span class="label">Business name</span>
+        <span class="label">{t.start.business}</span>
         <input type="text" name="business" required maxlength="200" autocomplete="organization" aria-describedby="error-business" />
         <span class="error" id="error-business" hidden></span>
       </label>
 
       <label class="field">
-        <span class="label">Phone or WhatsApp <span class="opt">(optional)</span></span>
+        <span class="label">{t.start.phone} <span class="opt">{t.start.optional}</span></span>
         <input type="tel" name="phone" maxlength="50" autocomplete="tel" aria-describedby="error-phone" />
         <span class="error" id="error-phone" hidden></span>
       </label>
     </div>
 
     <label class="field">
-      <span class="label">Your business in a few words <span class="opt">(optional)</span></span>
-      <span class="hint" id="hint-message">What you do, where you are, and what you'd like the website to do.</span>
+      <span class="label">{t.start.message} <span class="opt">{t.start.optional}</span></span>
+      <span class="hint" id="hint-message">{t.start.messageHint}</span>
       <textarea name="message" rows="4" maxlength={MESSAGE_MAX} aria-describedby="hint-message error-message"></textarea>
       <span class="error" id="error-message" hidden></span>
     </label>
 
     <div class="actions">
       <button class="ws-btn" type="submit">
-        <span class="idle">Send</span>
-        <span class="busy">Sending…</span>
+        <span class="idle">{t.start.send}</span>
+        <span class="busy">{t.start.sending}</span>
       </button>
-      <p class="note">I only use your details to reply to you. <a href="/privacy">Privacy policy</a></p>
+      <p class="note">{t.start.note} <a href={href("/privacy")}>{t.start.privacy}</a></p>
       <p class="status" role="alert"></p>
     </div>
   </form>
@@ -284,13 +284,9 @@ import { MESSAGE_MAX, STUDIO_EMAIL } from "../../data/studio";
   field("ref").value = (query.get("ref") ?? "").slice(0, 100);
   field("package").value = (query.get("package") ?? "").slice(0, 20);
 
-  // The endpoint answers a failed check with these codes too.
-  const messages: Record<string, string> = {
-    required: "Please fill in this field.",
-    email: "Please enter a valid email address.",
-    tooLong: "This is too long.",
-    rate: "Too many requests from your connection. Please try again in a few minutes.",
-  };
+  // The endpoint answers a failed check with these codes too. In the page's
+  // language, from the dictionary.
+  const messages: Record<string, string> = JSON.parse(form.dataset.errors!);
   const message = (code: string) => messages[code] ?? messages.required;
 
   // Codes come from the browser's own constraint checks, so the rules live in

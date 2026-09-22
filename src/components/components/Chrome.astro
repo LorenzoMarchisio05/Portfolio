@@ -1,10 +1,14 @@
 ---
 // Fixed chrome: the bar with the live angle readout, and the scroll progress
 // rule pinned to the bottom of the viewport (the top, on a phone).
+import LangMenu from "./LangMenu.astro";
+import { useI18n } from "../../i18n";
+
+const { t } = useI18n(Astro.url);
 const links = [
-  { href: "#engineer", label: "ENGINEER" },
-  { href: "#founder", label: "FOUNDER" },
-  { href: "#photography", label: "PHOTOGRAPHER" },
+  { href: "#engineer", label: t.roles.engineer },
+  { href: "#founder", label: t.roles.founder },
+  { href: "#photography", label: t.roles.photographer },
 ];
 ---
 
@@ -19,7 +23,7 @@ const links = [
       ))
     }
   </nav>
-  <span class="angle" data-angle>068°</span>
+  <div class="lang"><LangMenu><span data-angle>068°</span></LangMenu></div>
 </div>
 
 <div class="progress">
@@ -72,15 +76,6 @@ const links = [
     color: var(--signal);
   }
 
-  .angle {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    color: var(--signal);
-    min-width: 44px;
-    text-align: right;
-  }
-
   .progress {
     position: fixed;
     left: 0;
@@ -126,14 +121,13 @@ const links = [
     }
 
     /* The phone design drops the section links: only the wordmark and the
-       angle readout survive. */
+       angle readout, which holds the languages, survive. */
     .links {
       display: none;
     }
 
-    .angle {
+    .lang {
       margin-left: auto;
-      letter-spacing: 0.12em;
     }
   }
 </style>

@@ -1,85 +1,232 @@
 [
   {
-    "year": "2019 → 2024",
-    "name": "IIS Vallauri",
     "w": 168,
     "size": 21,
     "mSize": 26,
     "yearRed": false,
-    "detail": ["IT DIPLOMA", "FOSSANO"],
     "tick": "2019",
-    "tickRed": false
+    "tickRed": false,
+    "en": {
+      "year": "2019 → 2024",
+      "name": "IIS Vallauri",
+      "detail": [
+        "IT DIPLOMA",
+        "FOSSANO"
+      ]
+    },
+    "it": {
+      "year": "2019 → 2024",
+      "name": "IIS Vallauri",
+      "detail": [
+        "PERITO INFORMATICO",
+        "FOSSANO"
+      ]
+    },
+    "fr": {
+      "year": "2019 → 2024",
+      "name": "IIS Vallauri",
+      "detail": [
+        "DIPLÔME EN INFORMATIQUE",
+        "FOSSANO"
+      ]
+    }
   },
   {
-    "year": "2022",
-    "name": "Maggioli S.p.A.",
     "w": 186,
     "size": 24,
     "mSize": 28,
     "yearRed": false,
-    "detail": ["FIRST INTERNSHIP", "PUBLIC-SECTOR SOFTWARE"],
     "tick": "2022",
-    "tickRed": false
+    "tickRed": false,
+    "en": {
+      "year": "2022",
+      "name": "Maggioli S.p.A.",
+      "detail": [
+        "FIRST INTERNSHIP",
+        "PUBLIC-SECTOR SOFTWARE"
+      ]
+    },
+    "it": {
+      "year": "2022",
+      "name": "Maggioli S.p.A.",
+      "detail": [
+        "PRIMO TIROCINIO",
+        "SOFTWARE PER LA PA"
+      ]
+    },
+    "fr": {
+      "year": "2022",
+      "name": "Maggioli S.p.A.",
+      "detail": [
+        "PREMIER STAGE",
+        "LOGICIELS POUR LE SECTEUR PUBLIC"
+      ]
+    }
   },
   {
-    "year": "2023",
-    "name": "Maggioli S.p.A.",
     "w": 210,
     "size": 27,
     "mSize": 30,
     "yearRed": false,
-    "detail": ["SECOND INTERNSHIP", "FEATURES AND FIXES"],
     "tick": "2023",
-    "tickRed": false
+    "tickRed": false,
+    "en": {
+      "year": "2023",
+      "name": "Maggioli S.p.A.",
+      "detail": [
+        "SECOND INTERNSHIP",
+        "FEATURES AND FIXES"
+      ]
+    },
+    "it": {
+      "year": "2023",
+      "name": "Maggioli S.p.A.",
+      "detail": [
+        "SECONDO TIROCINIO",
+        "FUNZIONALITÀ E BUGFIX"
+      ]
+    },
+    "fr": {
+      "year": "2023",
+      "name": "Maggioli S.p.A.",
+      "detail": [
+        "DEUXIÈME STAGE",
+        "FONCTIONNALITÉS ET CORRECTIFS"
+      ]
+    }
   },
   {
-    "year": "2023",
-    "name": "National CS competition",
     "w": 252,
     "size": 30,
     "mSize": 30,
     "yearRed": false,
-    "detail": ["GARA NAZIONALE DI INFORMATICA", "NATIONAL FINALIST"],
     "tick": "2023",
-    "tickRed": false
+    "tickRed": false,
+    "en": {
+      "year": "2023",
+      "name": "National CS competition",
+      "detail": [
+        "GARA NAZIONALE DI INFORMATICA",
+        "NATIONAL FINALIST"
+      ]
+    },
+    "it": {
+      "year": "2023",
+      "name": "Gara Nazionale di Informatica",
+      "detail": [
+        "FINALISTA NAZIONALE"
+      ]
+    },
+    "fr": {
+      "year": "2023",
+      "name": "Concours national d'informatique",
+      "detail": [
+        "GARA NAZIONALE DI INFORMATICA",
+        "FINALISTE NATIONAL"
+      ]
+    }
   },
   {
-    "year": "2024 → ONGOING",
-    "name": "Politecnico di Torino",
     "w": 288,
     "size": 36,
     "mSize": 32,
     "yearRed": true,
-    "detail": ["COMPUTER ENGINEERING", "BSc, IN PROGRESS"],
     "tick": "2024 →",
-    "tickRed": true
+    "tickRed": true,
+    "en": {
+      "year": "2024 → ONGOING",
+      "name": "Politecnico di Torino",
+      "detail": [
+        "COMPUTER ENGINEERING",
+        "BSc, IN PROGRESS"
+      ]
+    },
+    "it": {
+      "year": "2024 → IN CORSO",
+      "name": "Politecnico di Torino",
+      "detail": [
+        "INGEGNERIA INFORMATICA",
+        "LAUREA TRIENNALE, IN CORSO"
+      ]
+    },
+    "fr": {
+      "year": "2024 → EN COURS",
+      "name": "Politecnico di Torino",
+      "detail": [
+        "GÉNIE INFORMATIQUE",
+        "BACHELIER, EN COURS"
+      ]
+    }
   },
   {
-    "year": "2024 → 2026",
-    "name": "Leonardo Web S.r.l.",
     "w": 326,
     "size": 42,
     "mSize": 34,
     "yearRed": false,
-    "detail": [
-      "FULL-STACK SOFTWARE ENGINEER",
-      "C# / .NET · FLUTTER · POSTGRES",
-      "PIEMONTE, IT"
-    ],
     "tick": "2024",
-    "tickRed": false
+    "tickRed": false,
+    "en": {
+      "year": "2024 → 2026",
+      "name": "Leonardo Web S.r.l.",
+      "detail": [
+        "FULL-STACK SOFTWARE ENGINEER",
+        "C# / .NET · FLUTTER · POSTGRES",
+        "PIEMONTE, IT"
+      ]
+    },
+    "it": {
+      "year": "2024 → 2026",
+      "name": "Leonardo Web S.r.l.",
+      "detail": [
+        "SOFTWARE ENGINEER FULL-STACK",
+        "C# / .NET · FLUTTER · POSTGRES",
+        "PIEMONTE, IT"
+      ]
+    },
+    "fr": {
+      "year": "2024 → 2026",
+      "name": "Leonardo Web S.r.l.",
+      "detail": [
+        "INGÉNIEUR LOGICIEL FULL-STACK",
+        "C# / .NET · FLUTTER · POSTGRES",
+        "PIÉMONT, IT"
+      ]
+    }
   },
   {
-    "year": "2026 → NEXT",
-    "name": "Leuven,\nBelgium",
     "w": 430,
     "size": 52,
     "mSize": 38,
     "yearRed": true,
     "next": true,
-    "pitch": "Moving for the pace: fast engineering culture, people who think at that speed, and room to start something of my own.",
-    "detail": ["50.88°N 4.70°E · +560KM", "THE RIDGE FLATTENS INTO PLAIN"],
     "tick": "2026 →",
-    "tickRed": true
+    "tickRed": true,
+    "en": {
+      "year": "2026 → NEXT",
+      "name": "Leuven,\nBelgium",
+      "pitch": "Moving for the pace: fast engineering culture, people who think at that speed, and room to start something of my own.",
+      "detail": [
+        "50.88°N 4.70°E · +560KM",
+        "THE RIDGE FLATTENS INTO PLAIN"
+      ]
+    },
+    "it": {
+      "year": "2026 → PROSSIMA TAPPA",
+      "name": "Leuven,\nBelgio",
+      "pitch": "Mi trasferisco per il ritmo: una cultura ingegneristica veloce, persone che pensano a quella velocità e spazio per avviare qualcosa di mio.",
+      "detail": [
+        "50.88°N 4.70°E · +560KM",
+        "LA CRESTA SI FA PIANURA"
+      ]
+    },
+    "fr": {
+      "year": "2026 → PROCHAINE ÉTAPE",
+      "name": "Louvain,\nBelgique",
+      "pitch": "Je m'y installe pour le rythme\u00a0: une culture d'ingénierie rapide, des gens qui pensent à cette vitesse, et de la place pour lancer mon propre projet.",
+      "detail": [
+        "50.88°N 4.70°E · +560KM",
+        "LA CRÊTE DEVIENT PLAINE"
+      ]
+    }
   }
 ]

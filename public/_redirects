@@ -1,0 +1,6 @@
+/websites     /en/websites          301
+/websites/*   /en/websites/:splat   301
+/gallery      /en/gallery           301
+/gallery/     /en/gallery/          301
+/privacy      /en/privacy           301
+/privacy/     /en/privacy/          301

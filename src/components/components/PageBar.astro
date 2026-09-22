@@ -2,6 +2,9 @@
 // Bar for the pages that open from a home page section (websites, photo
 // gallery): the home bar's look, a way back to that section, and the section's
 // angle. Every item is a 44px row, so the bar matches the home bar's height.
+import LangMenu from "./LangMenu.astro";
+import { useI18n } from "../../i18n";
+
 interface Crumb {
   label: string;
   /** Left off the last one, which is the page you are on. */
@@ -16,6 +19,7 @@ interface Props {
 }
 
 const { back, angle, crumbs } = Astro.props;
+const { t, href } = useI18n(Astro.url);
 // Rendered first: a page can pass a slot that renders to nothing.
 const action = Astro.slots.has("default") ? (await Astro.slots.render("default")).trim() : "";
 
@@ -27,7 +31,7 @@ const abs = (path: string) => new URL(path, site).href;
 const breadcrumbs = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
-  itemListElement: [{ label: "Home", href: "/" }, ...crumbs].map((crumb, i) => ({
+  itemListElement: [{ label: t.pageBar.home, href: href("/") }, ...crumbs].map((crumb, i) => ({
     "@type": "ListItem",
     position: i + 1,
     name: crumb.label,
@@ -37,10 +41,13 @@ const breadcrumbs = {
 ---
 
 <header class:list={["bar", { action: !!action }]}>
-  <nav class="crumbs" aria-label="Breadcrumb">
+  <!-- Back to the home section this page opened from; the wordmark after it is
+       the home page's top. Only the arrow shows, the label is for readers. -->
+  <a class="back" href={back} aria-label={t.pageBar.back}>←</a>
+  <nav class="crumbs" aria-label={t.pageBar.trail}>
     <ol>
       <li>
-        <a class="wordmark" href="/" aria-label="Lorenzo Marchisio, home">LM<span>.</span></a>
+        <a class="wordmark" href={href("/")} aria-label={t.pageBar.wordmark}>LM<span>.</span></a>
       </li>
       {crumbs.map((crumb) => (
         <li>
@@ -58,9 +65,8 @@ const breadcrumbs = {
   <slot name="nav" />
 
   <div class="end">
-    <a class="back" href={back}>← BACK</a>
     <Fragment set:html={action} />
-    <span class="angle" aria-hidden="true">{angle}</span>
+    <div class="lang"><LangMenu>{angle}</LangMenu></div>
   </div>
 </header>
 
@@ -84,8 +90,7 @@ const breadcrumbs = {
   }
 
   .wordmark,
-  .back,
-  .angle {
+  .back {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
@@ -151,19 +156,17 @@ const breadcrumbs = {
     white-space: nowrap;
   }
 
+  /* A 44px target, pulled left by its padding so the arrow itself lines up
+     with the page's left edge. */
   .back {
-    font-size: 11px;
-    letter-spacing: 0.14em;
+    justify-content: center;
+    min-width: 44px;
+    margin: 0 -18px 0 -15px;
+    font-size: 15px;
     color: var(--warm);
   }
 
   .back:hover {
-    color: var(--signal);
-  }
-
-  .angle {
-    font-size: 11px;
-    letter-spacing: 0.1em;
     color: var(--signal);
   }
 
@@ -178,21 +181,18 @@ const breadcrumbs = {
       font-size: 13px;
     }
 
-    .back {
-      font-size: 10px;
-    }
-
     .end {
       gap: 14px;
     }
 
     /* The phone bar keeps the trail's first step — the wordmark — and drops
-       the rest of it, along with the angle when there is a call to action. */
+       the rest of it, along with the angle readout and its languages when
+       there is a call to action. The footer still has the languages. */
     .crumbs li + li {
       display: none;
     }
 
-    .action .angle {
+    .action .lang {
       display: none;
     }
   }

@@ -1,13 +1,20 @@
 ---
 import { readFile } from "node:fs/promises";
 import { imageMetadata } from "astro/assets/utils";
-import Layout from "../layouts/Layout.astro";
-import PageBar from "../components/components/PageBar.astro";
-import Footer from "../components/components/Footer.astro";
+import Layout from "../../layouts/Layout.astro";
+import PageBar from "../../components/components/PageBar.astro";
+import Footer from "../../components/components/Footer.astro";
+import { localeParams, useI18n } from "../../i18n";
 
 // Built once, not per request: the grid needs every photo's size, and only the
 // build has the files on disk — the worker has no node:fs.
 export const prerender = true;
+export const getStaticPaths = localeParams;
+
+const { t, lang, href } = useI18n(Astro.url);
+const g = t.gallery;
+// A filename word in the page's language; one the dictionary leaves out as it is spelled.
+const word = (w: string) => g.words[w] ?? w.replaceAll("_", " ");
 
 // Grid rows are 2/3 of a column wide, so these spans land on the common ratios:
 // 2×2 is 3:2, 1×2 is 3:4, 2×3 is square, 4×2 is 3:1. A photo in between is
@@ -18,8 +25,8 @@ const shape = (ratio: number) =>
 // Every photograph in /public/photos/, as written by scripts/photos.sh. Files
 // are named `<number>-<category>[-more-words].webp`: `07-alpine-lake` is photo 7
 // in ALPINE. Any number of digits, sorted numerically so 9 comes before 10; a
-// two-word category takes an underscore, `08-street_food`. The words are only
-// used as alt text — nothing from the filename is shown.
+// two-word category takes an underscore, `08-street_food`. The words name the
+// filters and make the alt text, through the dictionary's `words`.
 const photos = await Promise.all(
   Object.keys(import.meta.glob("/public/photos/*.webp"))
     .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
@@ -27,44 +34,46 @@ const photos = await Promise.all(
       const { width, height } = await imageMetadata(await readFile(`.${path}`));
       const name = path.slice(path.lastIndexOf("/") + 1, -".webp".length);
       const [n, category = "", ...words] = name.split("-");
-      const subject = [category, ...words].join(" ").replaceAll("_", " ");
+      const subject = [category, ...words].filter(Boolean).map(word).join(" ");
       return {
         src: path.slice("/public".length),
         thumb: `/photos/thumbs/${name}.webp`,
-        alt: subject ? `Photograph ${n}, ${subject}` : `Photograph ${n}`,
-        category: category.replaceAll("_", " "),
+        alt: g.alt(n, subject),
+        category,
         shape: shape(width / height),
       };
     }),
 );
 
-const categories = [...new Set(photos.map((p) => p.category).filter(Boolean))].sort();
+const categories = [...new Set(photos.map((p) => p.category).filter(Boolean))]
+  .map((c) => ({ id: c, label: word(c) }))
+  .sort((a, b) => a.label.localeCompare(b.label, lang));
 const count = String(photos.length).padStart(2, "0");
 ---
 
 <Layout
-  title="Gallery · Lorenzo Marchisio"
-  description="Motorcycle, football and travel photographs from Slovenia and Croatia, by Lorenzo Marchisio."
+  title={g.title}
+  description={g.description}
   image="/social/og-gallery.jpg"
 >
-  <PageBar back="/#photography" angle="240°" crumbs={[{ label: "Every Frame" }]} />
+  <PageBar back={href("/#photography")} angle="240°" crumbs={[{ label: g.crumb }]} />
 
   <main>
     <div class="glow"></div>
 
     <div class="intro">
-      <p class="eyebrow">240° · PHOTOGRAPHER</p>
-      <h1 class="headline">EVERY<br />FRAME</h1>
-      <p class="meta">{count} FRAMES</p>
+      <p class="eyebrow">240° · {t.roles.photographer}</p>
+      <h1 class="headline" set:html={g.headline} />
+      <p class="meta">{g.count(count)}</p>
       {
         categories.length > 1 && (
-          <div class="filters" role="group" aria-label="Filter by category">
+          <div class="filters" role="group" aria-label={g.filter}>
             <button type="button" data-filter="" aria-pressed="true">
-              ALL
+              {g.all}
             </button>
             {categories.map((c) => (
-              <button type="button" data-filter={c} aria-pressed="false">
-                {c.toUpperCase()}
+              <button type="button" data-filter={c.id} aria-pressed="false">
+                {c.label.toLocaleUpperCase(lang)}
               </button>
             ))}
           </div>
@@ -87,14 +96,19 @@ const count = String(photos.length).padStart(2, "0");
 
   <Footer />
 
-  <dialog id="viewer" aria-label="Photograph">
-    <button class="close" type="button">CLOSE ×</button>
+  <dialog id="viewer" aria-label={g.viewer}>
+    <button class="close" type="button">{g.close}</button>
     <figure data-cursor="frame">
       <img alt="" />
       <span class="pip"></span>
     </figure>
-    <p class="keys" aria-hidden="true">← → BROWSE · ESC CLOSE</p>
-    <a class="remove" href="mailto:me@lorenzomarchisio.me">REQUEST REMOVAL</a>
+    <p class="keys" aria-hidden="true">{g.keys}</p>
+    <a
+      class="remove"
+      href="mailto:me@lorenzomarchisio.me"
+      data-subject={g.removalSubject}
+      data-body={g.removalBody}>{g.removal}</a
+    >
   </dialog>
 </Layout>
 
@@ -127,8 +141,8 @@ const count = String(photos.length).padStart(2, "0");
     // No server and no email quota: the request leaves from the visitor's own
     // mail app, already naming the photo, with an address to reply to.
     const name = shot.dataset.full!.slice("/photos/".length, -".webp".length);
-    const subject = `Photo removal request: ${name}`;
-    const body = `Photo: ${name}\n\nReason:\n`;
+    const subject = remove.dataset.subject!.replace("{name}", name);
+    const body = remove.dataset.body!.replace("{name}", name);
     remove.href = `${inbox}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 

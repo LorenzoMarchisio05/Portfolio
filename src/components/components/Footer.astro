@@ -1,21 +1,28 @@
 ---
 // One footer for every page. Its side padding follows the page's column:
 // the websites pages set --footer-x to their centered gutter.
+import LangSwitch from "./LangSwitch.astro";
+import { useI18n } from "../../i18n";
+
+const { t, href } = useI18n(Astro.url);
 const links = [
-  ["/", "Portfolio"],
-  ["/gallery", "Photo gallery"],
-  ["/websites", "Websites"],
-  ["/privacy", "Privacy policy"],
+  [href("/"), t.footer.home],
+  [href("/gallery"), t.footer.gallery],
+  [href("/websites"), t.footer.websites],
+  [href("/privacy"), t.footer.privacy],
 ];
-const here = Astro.url.pathname.replace(/\/$/, "") || "/";
+// The home link ends in a slash ("/en/"), so both sides drop it.
+const bare = (path: string) => path.replace(/\/$/, "");
+const here = bare(Astro.url.pathname);
 ---
 
 <footer>
   <span>© 2026 LORENZO MARCHISIO</span>
-  <nav aria-label="Footer">
+  <LangSwitch />
+  <nav aria-label={t.footer.label}>
     {
-      links.map(([href, label]) => (
-        <a href={href} aria-current={href === here ? "page" : undefined}>
+      links.map(([link, label]) => (
+        <a href={link} aria-current={bare(link) === here ? "page" : undefined}>
           {label}
         </a>
       ))
@@ -27,6 +34,7 @@ const here = Astro.url.pathname.replace(/\/$/, "") || "/";
   footer {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     gap: 20px;
     flex-wrap: wrap;
     padding: 30px var(--footer-x, var(--pad-x)) 44px;
@@ -60,6 +68,7 @@ const here = Astro.url.pathname.replace(/\/$/, "") || "/";
   @media (max-width: 768px) {
     footer {
       flex-direction: column;
+      align-items: flex-start;
       padding: 26px var(--footer-x, var(--pad-x)) 40px;
     }
   }

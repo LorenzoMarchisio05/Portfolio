@@ -1,19 +1,19 @@
 ---
 // 000°–360°: the readout in the eyebrow is the same scalar the top bar shows.
+import { useI18n } from "../../i18n";
+
+const { t } = useI18n(Astro.url);
 const ticks = ["000", "120", "240", "360"];
 ---
 
 <section id="top">
   <div class="copy" data-par="-.04" data-par-m="0">
-    <p class="eyebrow"><span data-angle>068°</span> · UNRESOLVED</p>
+    <p class="eyebrow"><span data-angle>068°</span> · {t.hero.status}</p>
     <h1 class="name">LORENZO<br />MARCHISIO</h1>
-    <p class="intro">
-      Nothing here resolves until you stand somewhere specific. There are three
-      such places, and the shape is different from each one.
-    </p>
+    <p class="intro">{t.hero.intro}</p>
     <p class="meta">
-      COMPUTER ENGINEERING · POLITECNICO DI TORINO<br />
-      LEUVEN<span class="wide">, VLAAMS-BRABANT</span> · 50.88°N 4.70°E
+      {t.hero.study}<br />
+      {t.hero.city}<span class="wide">{t.hero.region}</span> · 50.88°N 4.70°E
     </p>
   </div>
 
@@ -28,7 +28,7 @@ const ticks = ["000", "120", "240", "360"];
         <div id="angHead"></div>
       </div>
     </div>
-    <p class="hint">SCROLL TO ORBIT<span class="narrow"> ↓</span></p>
+    <p class="hint">{t.hero.hint}<span class="narrow"> ↓</span></p>
   </div>
 </section>
 

@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { intlLocale, locales, localize, useI18n } from "../i18n";
 
 interface Props {
   title?: string;
@@ -10,26 +11,32 @@ interface Props {
   noindex?: boolean;
 }
 
+const { lang, t } = useI18n(Astro.url);
+
 const {
-  title = "Lorenzo Marchisio · Engineer, Founder, Photographer",
-  description =
-    "Nothing here resolves until you stand somewhere specific. There are three such places, and the shape is different from each one.",
+  title = t.meta.title,
+  description = t.meta.description,
   image = "/social/og-home.png",
   noindex = false,
 } = Astro.props;
 
-const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
-const og = new URL(image, Astro.site ?? Astro.url);
+const site = Astro.site ?? Astro.url;
+const canonical = new URL(Astro.url.pathname, site);
+const og = new URL(image, site);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <link rel="canonical" href={canonical} />
+    <!-- The same page in each language. The root has no page of its own: it
+         sends each visitor to their language, which is what x-default is for. -->
+    {locales.map((l) => <link rel="alternate" hreflang={l} href={new URL(localize(Astro.url, l), site)} />)}
+    <link rel="alternate" hreflang="x-default" href={new URL("/", site)} />
     {noindex && <meta name="robots" content="noindex, follow" />}
     <meta name="theme-color" content="#0C0B0A" />
 
@@ -59,6 +66,8 @@ const og = new URL(image, Astro.site ?? Astro.url);
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:site_name" content="Lorenzo Marchisio" />
+    <meta property="og:locale" content={intlLocale[lang].replace("-", "_")} />
+    {locales.filter((l) => l !== lang).map((l) => <meta property="og:locale:alternate" content={intlLocale[l].replace("-", "_")} />)}
     <meta property="og:image" content={og} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />

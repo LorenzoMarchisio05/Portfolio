@@ -1,5 +1,8 @@
 ---
 import Silhouette from "../components/Silhouette.astro";
+import { useI18n } from "../../i18n";
+
+const { t, href } = useI18n(Astro.url);
 ---
 
 <section id="founder" class="section">
@@ -19,46 +22,30 @@ import Silhouette from "../components/Silhouette.astro";
   <div data-par=".03" data-par-m="0">
     <div class="head" data-rise>
       <div class="title">
-        <p class="eyebrow">120° · FOUNDER</p>
-        <p class="statement">
-          The angle exists in the geometry first. Turned this far, the same
-          points read as a network.
-        </p>
+        <p class="eyebrow">120° · {t.roles.founder}</p>
+        <p class="statement">{t.founder.statement}</p>
       </div>
-      <h2 class="big">WHAT I AM<br />BUILDING</h2>
+      <h2 class="big" set:html={t.founder.headline} />
     </div>
   </div>
 
   <ol class="activities">
     <li data-par=".04" data-par-m="0">
       <div class="activity" data-rise>
-        <p class="num">01 · WEBSITE STUDIO</p>
-        <h3 class="name">Websites for small businesses</h3>
-        <p class="first">
-          Fast, multilingual websites for restaurants, shops and practices,
-          anywhere in the world. Fixed prices, live in days, built with the same
-          method as the software I write for industry.
-        </p>
-        <a class="go" href="/websites">SEE THE STUDIO →</a>
+        <p class="num">{t.founder.studio.label}</p>
+        <h3 class="name">{t.founder.studio.title}</h3>
+        <p class="first">{t.founder.studio.text}</p>
+        <a class="go" href={href("/websites")}>{t.founder.studio.link}</a>
       </div>
     </li>
 
     <li data-par=".04" data-par-m="0">
       <div class="activity" data-rise>
-        <p class="num">02 · UNNAMED</p>
-        <h3 class="name">Too early to name</h3>
+        <p class="num">{t.founder.unnamed.label}</p>
+        <h3 class="name">{t.founder.unnamed.title}</h3>
         <div class="cols">
-          <p class="first">
-            It is early enough that describing it would be a claim rather than
-            a fact, so this part holds its shape and waits.
-          </p>
-          <p class="second">
-            What I can say: it starts from work I do every day inside industrial
-            software, and from how much of it is still done by hand. I am not
-            recruiting anyone and I am not pitching. And it does not have to be this:
-            any idea, any field. If what you are building needs what I can do, I
-            am listening.
-          </p>
+          <p class="first">{t.founder.unnamed.first}</p>
+          <p class="second">{t.founder.unnamed.second}</p>
         </div>
       </div>
     </li>

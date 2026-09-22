@@ -5,7 +5,7 @@ gallery card's anchor and the `ref` on the contact link. Never rename a
 published one.
 
 The page's URL comes from `slug:` instead, an opaque GUID
-(`/websites/gallery/c3cf5fb4-b1b0-4e12-a5a4-079a42a6b609`), so a client's name
+(`/en/websites/gallery/c3cf5fb4-b1b0-4e12-a5a4-079a42a6b609`), so a client's name
 is never in a link. Generate one per project and never change it after the page
 is published:
 
@@ -55,6 +55,17 @@ Keep numbers, they are the most convincing thing on the page — a second, 132
 photographs, 7 days, two languages — but only ones that are true and checkable.
 
 ## Writing each field
+
+The site is in English, Italian and French, so every prose field lives under
+`text.en`, `text.it` and `text.fr` (the locales in `src/i18n/locales.ts`); the
+build fails if one is missing. Write each one in its own language rather than
+translating word for word. The fields below are named without the locale:
+`text.summary` means `text.en.summary`, `text.it.summary` and
+`text.fr.summary`.
+
+**`text.category`** / **`text.location`** — shown above the title and on the
+card ("Café", "Leuven, Belgium"), so they are in the reader's language too:
+"Leuven, Belgio", "Louvain, Belgique".
 
 **`text.summary`** (≤200 chars, shown on the gallery card and as the page's
 lead). What the site is and who it is for, in one breath. No build words.
@@ -108,8 +119,6 @@ estimate. Concepts cannot have them.
 slug: 6b1f0b8e-6d8f-4a9e-9a1b-2c4d5e6f7a80   # uuidgen, never changed
 status: concept            # live | concept | archived
 clientName: Café Nord
-category: Café
-location: { city: Leuven, country: Belgium }
 package: launch
 languages: [en, nl]
 integrations: [Google Business Profile]

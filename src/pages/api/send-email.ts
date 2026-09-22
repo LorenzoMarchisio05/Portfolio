@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { getSecret } from "astro:env/server";
 import { z } from "astro/zod";
 import { MESSAGE_MAX, packageChoices } from "../../data/studio";
+import { dictionaries, isLocale, type Locale } from "../../i18n";
 
 export const prerender = false;
 
@@ -81,23 +82,17 @@ const errorCode = (field: string, issue: z.ZodIssue) => {
   return "required";
 };
 
-// Deliberately free of anything the visitor typed: the reply goes to whatever
-// address was entered, so it must not be a way to mail someone else a message.
-const autoReply = {
-  subject: "Your project request",
-  text: "Hello,\n\nThank you for your project request. I'll reply within one working day to set up a free 30-minute video call.\n\nIf you want to add anything in the meantime, reply to this email.\n\nLorenzo Marchisio\nhttps://lorenzomarchisio.me/websites",
-};
-
 const oneLine = (s: string) => s.replace(/\s+/g, " ");
 
-async function projectInquiry(body: Record<string, unknown>, viaFetch: boolean) {
-  // A plain form post lands back on the page, where :target shows the notice.
-  const back = (anchor: "sent" | "send-error") =>
-    new Response(null, { status: 303, headers: { Location: `/websites#${anchor}` } });
+// A plain form post lands back on the page it came from, where :target shows
+// the notice.
+const back = (lang: Locale, anchor: "sent" | "send-error") =>
+  new Response(null, { status: 303, headers: { Location: `/${lang}/websites#${anchor}` } });
 
+async function projectInquiry(body: Record<string, unknown>, viaFetch: boolean, lang: Locale) {
   const parsed = inquirySchema.safeParse(body);
   if (!parsed.success) {
-    if (!viaFetch) return back("send-error");
+    if (!viaFetch) return back(lang, "send-error");
     const errors: Record<string, string> = {};
     for (const issue of parsed.error.issues) {
       const field = String(issue.path[0] ?? "");
@@ -119,22 +114,25 @@ async function projectInquiry(body: Record<string, unknown>, viaFetch: boolean) 
       `Phone: ${d.phone || "—"}`,
       `Package clicked: ${pkg}`,
       `Ref: ${d.ref || "—"}`,
+      `Language: ${lang}`,
       "",
       d.message || "(no message)",
     ].join("\n"),
   });
-  if (!delivered) return viaFetch ? message("Failed to send", 502) : back("send-error");
+  if (!delivered) return viaFetch ? message("Failed to send", 502) : back(lang, "send-error");
 
   // Conversion count without personal data; read it in the worker logs.
   console.log(
-    JSON.stringify({ event: "project-inquiry", package: pkg, ref: d.ref }),
+    JSON.stringify({ event: "project-inquiry", package: pkg, ref: d.ref, lang }),
   );
 
   // Best effort: the request already reached me, so a failed confirmation
-  // must not tell the visitor to send it again.
-  await send({ to: d.email, reply_to: TO, ...autoReply });
+  // must not tell the visitor to send it again. Deliberately free of anything
+  // the visitor typed: it goes to whatever address was entered, so it must not
+  // be a way to mail someone else a message.
+  await send({ to: d.email, reply_to: TO, ...dictionaries[lang].email });
 
-  return viaFetch ? message("Request sent", 201) : back("sent");
+  return viaFetch ? message("Request sent", 201) : back(lang, "sent");
 }
 
 // ---- entry ------------------------------------------------------------------
@@ -157,25 +155,24 @@ export const POST: APIRoute = async ({ request }) => {
     return message("Please fill in all fields", 400);
   }
   const project = body.type === "project-inquiry";
+  // The language of the page the form was on; the forms send it hidden.
+  const lang = isLocale(body.lang) ? body.lang : "en";
 
   // Honeypot: hidden in both forms, so anything here is a bot. Answer success
   // so it has no signal to retry against.
   if (String(body.company ?? "").trim()) {
     if (!project) return message("Email sent successfully", 200);
-    return viaFetch
-      ? message("Request sent", 201)
-      : new Response(null, { status: 303, headers: { Location: "/websites#sent" } });
+    return viaFetch ? message("Request sent", 201) : back(lang, "sent");
   }
 
   // Cloudflare sets this header at its edge, so a client cannot forge it. It is
   // absent in local dev, where every request shares one count.
   if (!allow(request.headers.get("CF-Connecting-IP") ?? "")) {
-    if (project && !viaFetch)
-      return new Response(null, { status: 303, headers: { Location: "/websites#send-error" } });
+    if (project && !viaFetch) return back(lang, "send-error");
     return message("Too many messages. Please try again later.", 429);
   }
 
-  if (project) return projectInquiry(body, viaFetch);
+  if (project) return projectInquiry(body, viaFetch, lang);
   if (!viaFetch) return message("Please fill in all fields", 400);
 
   // ---- contact (the home page form) ----
@@ -201,7 +198,7 @@ export const POST: APIRoute = async ({ request }) => {
     to: TO,
     reply_to: email,
     subject: `Portfolio contact — ${name}`,
-    text: `Name: ${name}\nEmail: ${email}\n\n${text}`,
+    text: `Name: ${name}\nEmail: ${email}\nLanguage: ${lang}\n\n${text}`,
   });
   if (!sent) return message("Failed to send message. Please try again.", 502);
 

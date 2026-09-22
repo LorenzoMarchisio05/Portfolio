@@ -1,0 +1,49 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Footer from "../../components/components/Footer.astro";
+import { localeParams, useI18n } from "../../i18n";
+
+// Prerendered, then moved to /<lang>/404.html with the English one also at
+// /404.html (astro.config.mjs). Cloudflare Pages answers an unknown URL with
+// the nearest 404.html up its path, and without a top-level one it treats the
+// site as a single-page app, answering every unknown URL with a 200.
+export const prerender = true;
+export const getStaticPaths = localeParams;
+
+const { t, href } = useI18n(Astro.url);
+---
+
+<Layout title={t.notFound.title} description={t.notFound.description}>
+  <main>
+    <p class="eyebrow">{t.notFound.eyebrow}</p>
+    <h1 class="headline" set:html={t.notFound.headline} />
+    <p class="lead">{t.notFound.lead}</p>
+    <a href={href("/")}>{t.notFound.back}</a>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  main {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 24px;
+    padding: 120px var(--pad-x) 56px;
+    max-width: 720px;
+  }
+
+  main p {
+    margin: 0;
+  }
+
+  a {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    border-bottom: 1px solid var(--signal);
+    padding-bottom: 6px;
+    width: fit-content;
+  }
+</style>

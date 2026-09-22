@@ -1,10 +1,8 @@
 slug: c3cf5fb4-b1b0-4e12-a5a4-079a42a6b609
 status: live
 clientName: Lorenzo Marchisio
-category: Portfolio
-location: { city: Leuven, country: Belgium }
 package: custom
-languages: [en]
+languages: [en, it, fr]
 # Nothing booked, ordered or on a menu here, so this is not the example the
 # studio page's integrations claim should point at.
 integrations: []
@@ -19,61 +17,190 @@ screenshots:
   desktop: ./desktop.webp
   mobile: ./mobile.webp
 text:
-  summary: "My own site: one page for three kinds of work, a gallery of 132 photographs, and this studio page. Quick on a phone, nothing to click through."
-  before: A single page from 2025 with a link to my CV. Nobody could see the photographs, and nothing on it said I build websites for other businesses.
-  built:
-    - One page a visitor reads top to bottom, engineer, founder and photographer, with no menu to learn
-    - A gallery of 132 photographs that opens in about a second on phone data
-    - This studio page, with the prices in the open and a form that reaches my inbox in seconds
-    - No cookie banner, no adverts, and nothing following visitors around
-  alt:
-    desktop: "The lorenzomarchisio.me home page on a laptop: the name in large type over a faint orbit of shapes, with the section links in the top bar."
-    mobile: The same home page on a phone, with the name and the opening lines stacked at the bottom of the first screen.
-  sections:
-    - title: One page, no menu to learn
-      body:
-        - >-
-          A visitor lands and gets the whole story in one scroll: the engineering work, the
-          websites I build for other businesses, and the photographs. Nothing hides behind a
-          menu, and there is no page to come back from.
-        - >-
-          The bar at the top lights up the part being read, so someone always knows where
-          they are and can jump straight to the part they came for.
-      image: ./engineer.webp
-      alt: The engineering part of the home page, with four short principles listed on the left and a dotted brace pair drawn on the right.
-    - title: 132 photographs that open like text
-      body:
-        - >-
-          Pictures are the slowest thing on most websites. Here the grid shows small versions
-          first and fetches the full photograph only when someone opens it, so the gallery
-          appears in about a second, even on phone data away from wifi.
-        - >-
-          Visitors can narrow it to motorcycles, football, Slovenia or Croatia without the
-          page reloading, and every photograph carries my name in the corner.
-      image: ./photo-gallery.webp
-      alt: The photo gallery page, with the heading EVERY FRAME, a frame count, subject filters and a grid of photographs.
-    - title: Prices in the open, before anyone has to ask
-      body:
-        - >-
-          What each package costs, what it includes, how the work runs and the questions
-          people actually ask are all on this one page. Someone can decide whether to write
-          to me without sending an email first to find out the price.
-        - >-
-          Every price is kept in one place, so the cards, the answers under them and what
-          Google shows can never drift apart. The form reaches my inbox in seconds, and the
-          junk is dropped before it gets there.
-      image: ./prices.webp
-      alt: The packages and prices section of the studio page, with three packages side by side and what every package includes underneath.
-    - title: Easy to find, and quiet about its visitors
-      body:
-        - >-
-          Every page is finished before anyone asks for it, so it opens quickly wherever the
-          visitor happens to be, and search engines can read all of it: the right title on
-          each page, the right description, nothing left out of the list they crawl.
-        - >-
-          No cookie banner, no adverts, nobody else watching who came by. There is nothing to
-          accept, and nothing kept beyond what a person types into the form.
-  seo:
-    title: lorenzomarchisio.me · Portfolio and photo gallery
-    description: "A one-page portfolio with 132 photographs and this studio page: prices in the open, quick on a phone, and no cookie banner for visitors."
+  en:
+    category: Portfolio
+    location: Leuven, Belgium
+    summary: "My own site: one page for three kinds of work, a gallery of 132 photographs, and this studio page. Quick on a phone, nothing to click through."
+    before: A single page from 2025 with a link to my CV. Nobody could see the photographs, and nothing on it said I build websites for other businesses.
+    built:
+      - One page a visitor reads top to bottom, engineer, founder and photographer, with no menu to learn
+      - A gallery of 132 photographs that opens in about a second on phone data
+      - This studio page, with the prices in the open and a form that reaches my inbox in seconds
+      - No cookie banner, no adverts, and nothing following visitors around
+    alt:
+      desktop: "The lorenzomarchisio.me home page on a laptop: the name in large type over a faint orbit of shapes, with the section links in the top bar."
+      mobile: The same home page on a phone, with the name and the opening lines stacked at the bottom of the first screen.
+    sections:
+      - title: One page, no menu to learn
+        body:
+          - >-
+            A visitor lands and gets the whole story in one scroll: the engineering work, the
+            websites I build for other businesses, and the photographs. Nothing hides behind a
+            menu, and there is no page to come back from.
+          - >-
+            The bar at the top lights up the part being read, so someone always knows where
+            they are and can jump straight to the part they came for.
+        image: ./engineer.webp
+        alt: The engineering part of the home page, with four short principles listed on the left and a dotted brace pair drawn on the right.
+      - title: 132 photographs that open like text
+        body:
+          - >-
+            Pictures are the slowest thing on most websites. Here the grid shows small versions
+            first and fetches the full photograph only when someone opens it, so the gallery
+            appears in about a second, even on phone data away from wifi.
+          - >-
+            Visitors can narrow it to motorcycles, football, Slovenia or Croatia without the
+            page reloading, and every photograph carries my name in the corner.
+        image: ./photo-gallery.webp
+        alt: The photo gallery page, with the heading EVERY FRAME, a frame count, subject filters and a grid of photographs.
+      - title: Prices in the open, before anyone has to ask
+        body:
+          - >-
+            What each package costs, what it includes, how the work runs and the questions
+            people actually ask are all on this one page. Someone can decide whether to write
+            to me without sending an email first to find out the price.
+          - >-
+            Every price is kept in one place, so the cards, the answers under them and what
+            Google shows can never drift apart. The form reaches my inbox in seconds, and the
+            junk is dropped before it gets there.
+        image: ./prices.webp
+        alt: The packages and prices section of the studio page, with four packages side by side and what every package includes underneath.
+      - title: Easy to find, and quiet about its visitors
+        body:
+          - >-
+            Every page is finished before anyone asks for it, so it opens quickly wherever the
+            visitor happens to be, and search engines can read all of it: the right title on
+            each page, the right description, nothing left out of the list they crawl.
+          - >-
+            No cookie banner, no adverts, nobody else watching who came by. There is nothing to
+            accept, and nothing kept beyond what a person types into the form.
+    seo:
+      title: lorenzomarchisio.me · Portfolio and photo gallery
+      description: "A one-page portfolio with 132 photographs and this studio page: prices in the open, quick on a phone, and no cookie banner for visitors."
+  it:
+    category: Portfolio
+    location: Leuven, Belgio
+    summary: "Il mio sito: una sola pagina per tre tipi di lavoro, una galleria di 132 fotografie e questa pagina dello studio. Veloce sul telefono, senza clic da una pagina all'altra."
+    before: Una sola pagina del 2025 con un link al mio CV. Nessuno poteva vedere le fotografie, e niente diceva che realizzo siti web per altre attività.
+    built:
+      - Una pagina da leggere dall'alto in basso, ingegnere, fondatore e fotografo, senza menu da imparare
+      - Una galleria di 132 fotografie che si apre in circa un secondo con i dati mobili
+      - Questa pagina dello studio, con i prezzi in chiaro e un modulo che arriva nella mia casella in pochi secondi
+      - Nessun banner dei cookie, nessuna pubblicità e niente che segua i visitatori
+    alt:
+      desktop: "La home page di lorenzomarchisio.me su un portatile: il nome a caratteri grandi sopra una tenue orbita di forme, con i link alle sezioni nella barra in alto."
+      mobile: La stessa home page su un telefono, con il nome e le prime righe impilati in fondo alla prima schermata.
+    sections:
+      - title: Una pagina, nessun menu da imparare
+        body:
+          - >-
+            Chi arriva trova tutta la storia in un solo scorrimento: il lavoro da ingegnere, i siti
+            che realizzo per altre attività e le fotografie. Niente si nasconde dietro un menu, e
+            non c'è nessuna pagina da cui tornare indietro.
+          - >-
+            La barra in alto evidenzia la parte che si sta leggendo, così chi visita sa sempre
+            dove si trova e può saltare dritto alla parte che cercava.
+        image: ./engineer.webp
+        alt: La parte della home page dedicata all'ingegneria, con quattro brevi principi elencati a sinistra e una coppia di graffe a puntini disegnata a destra.
+      - title: 132 fotografie che si aprono come testo
+        body:
+          - >-
+            Le immagini sono la cosa più lenta sulla maggior parte dei siti. Qui la griglia
+            mostra prima versioni piccole e scarica la fotografia intera solo quando qualcuno la
+            apre, così la galleria compare in circa un secondo, anche con i dati mobili,
+            lontano dal Wi-Fi.
+          - >-
+            Chi visita può filtrarla per moto, calcio, Slovenia o Croazia senza ricaricare la
+            pagina, e ogni fotografia porta il mio nome in un angolo.
+        image: ./photo-gallery.webp
+        alt: La pagina della galleria fotografica, con il titolo EVERY FRAME, il numero di scatti, i filtri per soggetto e una griglia di fotografie.
+      - title: Prezzi in chiaro, prima ancora che qualcuno li chieda
+        body:
+          - >-
+            Quanto costa ogni pacchetto, cosa include, come si svolge il lavoro e le domande che
+            le persone fanno davvero: è tutto in questa sola pagina. Si può decidere se scrivermi
+            senza mandare prima un'email per sapere il prezzo.
+          - >-
+            Ogni prezzo è scritto in un solo punto, così i riquadri, le risposte più in basso e
+            quello che mostra Google non possono mai contraddirsi. Il modulo arriva nella mia
+            casella in pochi secondi, e lo spam viene scartato prima ancora di raggiungerla.
+        image: ./prices.webp
+        alt: La sezione pacchetti e prezzi della pagina dello studio, con quattro pacchetti affiancati e, sotto, quello che include ogni pacchetto.
+      - title: Facile da trovare, e discreto con chi lo visita
+        body:
+          - >-
+            Ogni pagina è pronta prima che qualcuno la chieda, quindi si apre in fretta ovunque
+            si trovi chi visita, e i motori di ricerca possono leggere tutto: il titolo giusto
+            su ogni pagina, la descrizione giusta, niente lasciato fuori dall'elenco che
+            scansionano.
+          - >-
+            Nessun banner dei cookie, nessuna pubblicità, nessun altro che osservi chi è passato.
+            Non c'è niente da accettare, e non si conserva niente oltre a quello che una persona
+            scrive nel modulo.
+    seo:
+      title: lorenzomarchisio.me · Portfolio e galleria fotografica
+      description: "Un portfolio di una sola pagina con 132 fotografie e questa pagina dello studio: prezzi in chiaro, veloce sul telefono e nessun banner dei cookie."
+  fr:
+    category: Portfolio
+    location: Louvain, Belgique
+    summary: "Mon propre site : une seule page pour trois types de travail, une galerie de 132 photographies et cette page du studio. Rapide sur téléphone, sans clics inutiles."
+    before: Une seule page de 2025 avec un lien vers mon CV. Personne ne pouvait voir les photographies, et rien n'indiquait que je crée des sites web pour d'autres entreprises.
+    built:
+      - Une seule page qui se lit de haut en bas (ingénieur, fondateur et photographe), sans menu à apprendre
+      - Une galerie de 132 photographies qui s'ouvre en une seconde environ sur le réseau mobile
+      - Cette page du studio, avec les tarifs affichés et un formulaire dont les messages arrivent dans ma boîte de réception en quelques secondes
+      - Aucun bandeau de cookies, aucune publicité, et rien qui suive les visiteurs
+    alt:
+      desktop: "La page d'accueil de lorenzomarchisio.me sur un ordinateur portable : le nom en grands caractères au-dessus d'une discrète orbite de formes, avec les liens vers les sections dans la barre du haut."
+      mobile: La même page d'accueil sur un téléphone, avec le nom et les premières lignes empilés en bas du premier écran.
+    sections:
+      - title: Une page, aucun menu à apprendre
+        body:
+          - >-
+            Un visiteur arrive et découvre toute l'histoire en un seul défilement : le travail
+            d'ingénieur, les sites que je crée pour d'autres entreprises et les photographies.
+            Rien ne se cache derrière un menu, et il n'y a aucune page d'où il faudrait revenir.
+          - >-
+            La barre du haut met en évidence la partie en cours de lecture : on sait toujours où
+            l'on est, et on peut aller droit à ce qui nous amène.
+        image: ./engineer.webp
+        alt: La partie ingénierie de la page d'accueil, avec quatre courts principes listés à gauche et une paire d'accolades en pointillés dessinée à droite.
+      - title: 132 photographies qui s'ouvrent comme du texte
+        body:
+          - >-
+            Les images sont ce qu'il y a de plus lent sur la plupart des sites. Ici, la grille
+            affiche d'abord de petites versions et ne charge la photographie complète que
+            lorsque quelqu'un l'ouvre : la galerie apparaît en une seconde environ, même sur
+            le réseau mobile, loin du wifi.
+          - >-
+            Les visiteurs peuvent la filtrer par moto, football, Slovénie ou Croatie sans
+            recharger la page, et chaque photographie porte mon nom dans un coin.
+        image: ./photo-gallery.webp
+        alt: La page de la galerie photo, avec le titre EVERY FRAME, le nombre d'images, des filtres par sujet et une grille de photographies.
+      - title: Les tarifs affichés, avant même qu'on les demande
+        body:
+          - >-
+            Ce que coûte chaque formule, ce qu'elle comprend, comment se déroule le travail et
+            les questions que l'on se pose vraiment : tout est sur cette seule page. On peut
+            décider de m'écrire sans envoyer d'abord un e-mail pour connaître le prix.
+          - >-
+            Chaque prix est défini à un seul endroit : les encadrés, les réponses en dessous et ce
+            qu'affiche Google ne peuvent jamais se contredire. Le formulaire arrive dans ma boîte
+            en quelques secondes, et le spam est filtré avant d'y arriver.
+        image: ./prices.webp
+        alt: La section formules et tarifs de la page du studio, avec quatre formules côte à côte et, en dessous, ce que comprend chaque formule.
+      - title: Facile à trouver, et discret avec ses visiteurs
+        body:
+          - >-
+            Chaque page est prête avant que quiconque la demande : elle s'ouvre vite, où que se
+            trouve le visiteur, et les moteurs de recherche peuvent tout lire, avec le bon titre
+            sur chaque page, la bonne description, et rien d'oublié dans la liste qu'ils
+            parcourent.
+          - >-
+            Aucun bandeau de cookies, aucune publicité, personne d'autre pour observer qui est
+            passé. Il n'y a rien à accepter, et rien n'est conservé au-delà de ce qu'une personne
+            saisit dans le formulaire.
+    seo:
+      title: lorenzomarchisio.me · Portfolio et galerie photo
+      description: "Un portfolio d'une page avec 132 photographies et cette page du studio : tarifs affichés, rapide sur téléphone, et aucun bandeau de cookies."
 consent: { showWork: true, showName: true, testimonial: false, creditLink: false, recordedAt: 2026-09-17 }

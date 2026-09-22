@@ -1,8 +1,10 @@
 // Every price and package definition. Plain TypeScript with no Astro imports,
 // so a future proposal generator can reuse it. Pages format these with
 // `money` — never type a price anywhere else. One price list for every country.
+// The words describing each package are in the dictionaries (src/i18n).
 
 import { packageChoices } from "./studio";
+import { intlLocale, type Locale } from "../i18n/locales";
 
 export type PackageId = (typeof packageChoices)[number];
 
@@ -12,40 +14,26 @@ export interface PackageDef {
   deliveryDays: number | null; // null = agreed per project
   price: number | null; // null = on request
   from?: boolean; // price is a starting point, not the whole job
-  includes: string[]; // only what sets this package apart
   plus?: PackageId; // shown as "Everything in <that package>, plus:"
 }
 
 export const currency = "EUR";
 export const vatIncluded = false;
 
-export const money = (amount: number) =>
-  new Intl.NumberFormat("en-IE", {
-    style: "currency",
-    currency,
-    maximumFractionDigits: 0,
-    useGrouping: "always",
-  }).format(amount);
+// French groups digits with a narrow no-break space, which the trimmed fonts
+// leave out (scripts/fonts.sh); the plain no-break space is in them.
+const format = (value: number, lang: Locale, options: Intl.NumberFormatOptions) =>
+  new Intl.NumberFormat(intlLocale[lang], options).format(value).replaceAll("\u202f", "\u00a0");
+
+export const money = (amount: number, lang: Locale) =>
+  format(amount, lang, { style: "currency", currency, maximumFractionDigits: 0, useGrouping: "always" });
+
+export const percent = (value: number, lang: Locale) =>
+  format(value / 100, lang, { style: "percent" });
 
 // The domain is registered in the client's name and the client pays the
 // registrar directly. Only an upper bound for the copy, not something I bill.
 export const domainFeeTypicalMax = 20;
-
-// Shown once under the package cards, for all of them.
-export const allPackages = {
-  includes: [
-    "Contact form",
-    "Linked to your Google Business Profile",
-    "Set up to be found on Google",
-    "Legally required business details and a privacy notice",
-  ],
-  excludes: [
-    "Professional photography",
-    "Logo design",
-    "Email addresses, like info@yourbusiness.be",
-    `The domain's yearly fee, usually under ${money(domainFeeTypicalMax)}, which you pay directly`,
-  ],
-};
 
 export const packages: PackageDef[] = [
   {
@@ -53,14 +41,12 @@ export const packages: PackageDef[] = [
     name: "Launch",
     deliveryDays: 10,
     price: 990,
-    includes: ["One page", "One language"],
   },
   {
     id: "presence",
     name: "Presence",
     deliveryDays: 15,
     price: 1690,
-    includes: ["Up to five pages", "Up to three languages"],
   },
   {
     id: "business",
@@ -68,11 +54,6 @@ export const packages: PackageDef[] = [
     deliveryDays: 20,
     price: 2490,
     plus: "presence",
-    includes: [
-      "Menu or price list as a real web page, easy to read on a phone (not a PDF)",
-      "Booking button connected to the booking service you already use",
-      "Visitor statistics without cookies",
-    ],
   },
   {
     id: "custom",
@@ -81,7 +62,6 @@ export const packages: PackageDef[] = [
     price: 3500,
     from: true,
     plus: "business",
-    includes: ["Advanced features, designed and built around how your business works"],
   },
 ];
 

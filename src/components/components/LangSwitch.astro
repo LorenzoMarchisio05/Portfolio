@@ -1,0 +1,52 @@
+---
+// The same page in the other languages. Each name is in its own language, so
+// a reader finds theirs whatever language the page is in.
+import { locales, localize, useI18n } from "../../i18n";
+
+const names = { en: "English", it: "Italiano", fr: "Français" };
+const { lang, t } = useI18n(Astro.url);
+---
+
+<nav class="langs" aria-label={t.language}>
+  {
+    locales.map((l) => (
+      <a
+        href={localize(Astro.url, l)}
+        hreflang={l}
+        lang={l}
+        aria-label={names[l]}
+        aria-current={l === lang ? "true" : undefined}
+      >
+        {l.toUpperCase()}
+      </a>
+    ))
+  }
+</nav>
+
+<style>
+  .langs {
+    display: flex;
+    gap: 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1;
+    letter-spacing: 0.14em;
+  }
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--warm);
+    /* The bars let clicks through everywhere but their links. */
+    pointer-events: auto;
+  }
+
+  a:hover {
+    color: var(--signal);
+  }
+
+  [aria-current] {
+    color: var(--bone);
+  }
+</style>

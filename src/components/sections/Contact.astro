@@ -1,17 +1,20 @@
 ---
 import Silhouette from "../components/Silhouette.astro";
+import { useI18n } from "../../i18n";
+
+const { t, lang, href } = useI18n(Astro.url);
 
 const links = [
   { href: "https://github.com/lorenzomarchisio05", label: "GITHUB ↗" },
   { href: "https://www.linkedin.com/in/lorenzo-marchisio-9b75432b0/", label: "LINKEDIN ↗" },
-  { href: "/cv.pdf", label: "CV ↓" },
+  { href: "/cv.pdf", label: t.contact.cv },
 ];
 
 // [angle, delay, label translate, label, degrees]
 const spokes = [
-  { a: -90, d: 700, tx: "-50%", label: "ENGINEER", deg: "000°" },
-  { a: 30, d: 860, tx: "-100%", label: "FOUNDER", deg: "120°" },
-  { a: 150, d: 1020, tx: "0%", label: "PHOTOGRAPHER", deg: "240°" },
+  { a: -90, d: 700, tx: "-50%", label: t.roles.engineer, deg: "000°" },
+  { a: 30, d: 860, tx: "-100%", label: t.roles.founder, deg: "120°" },
+  { a: 150, d: 1020, tx: "0%", label: t.roles.photographer, deg: "240°" },
 ];
 ---
 
@@ -19,7 +22,7 @@ const spokes = [
   <div class="glow contact-glow"></div>
 
   <div class="ask" data-par="-.04" data-par-m="0">
-    <h2 class="headline">SAY THE<br />ACTUAL THING</h2>
+    <h2 class="headline" set:html={t.contact.headline} />
     <div class="links">
       <a class="mail" href="mailto:me@lorenzomarchisio.me"
         >me@lorenzomarchisio.me</a
@@ -34,30 +37,33 @@ const spokes = [
     </div>
   </div>
 
-  <form class="form" data-par=".05" data-par-m="0">
+  <form class="form" data-par=".05" data-par-m="0" data-errors={JSON.stringify(t.contact.errors)}>
     <div class="form-head">
-      <span>DIRECT MESSAGE</span><a href="/privacy">NO TRACKING · PRIVACY</a>
+      <span>{t.contact.form}</span><a href={href("/privacy")}>{t.contact.privacy}</a>
     </div>
 
     <label class="field">
-      <span class="label">NAME</span>
-      <input type="text" name="name" placeholder="Your name" required maxlength="100" autocomplete="name" />
+      <span class="label">{t.contact.name}</span>
+      <input type="text" name="name" placeholder={t.contact.namePlaceholder} required maxlength="100" autocomplete="name" />
     </label>
     <label class="field">
-      <span class="label">EMAIL</span>
-      <input type="email" name="email" inputmode="email" placeholder="you@company.com" required maxlength="200" autocomplete="email" />
+      <span class="label">{t.contact.email}</span>
+      <input type="email" name="email" inputmode="email" placeholder={t.contact.emailPlaceholder} required maxlength="200" autocomplete="email" />
     </label>
     <label class="field message">
-      <span class="label">MESSAGE</span>
-      <textarea name="message" rows="4" placeholder="Say the actual thing." required maxlength="5000"></textarea>
+      <span class="label">{t.contact.message}</span>
+      <textarea name="message" rows="4" placeholder={t.contact.messagePlaceholder} required maxlength="5000"></textarea>
     </label>
+
+    <!-- The language the message was written from, so the reply can match. -->
+    <input type="hidden" name="lang" value={lang} />
 
     <!-- Honeypot: never shown, never focusable. Anything in it is a bot. -->
     <input class="trap" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
 
     <div class="actions">
-      <button class="send" type="submit">SEND →</button>
-      <div class="sending">SENDING<div class="sliver"></div></div>
+      <button class="send" type="submit">{t.contact.send}</button>
+      <div class="sending">{t.contact.sending}<div class="sliver"></div></div>
     </div>
     <p class="error" role="alert"></p>
   </form>
@@ -94,11 +100,11 @@ const spokes = [
       }
 
       <div class="core">
-        <p class="core-title">RESOLVED</p>
-        <p class="core-sub">360° · MESSAGE RECEIVED</p>
+        <p class="core-title">{t.contact.resolved}</p>
+        <p class="core-sub">{t.contact.received}</p>
       </div>
     </div>
-    <button class="again" type="button">WRITE ANOTHER</button>
+    <button class="again" type="button">{t.contact.again}</button>
   </div>
 </section>
 
@@ -616,6 +622,8 @@ const spokes = [
   const section = document.getElementById("contact")!;
   const form = section.querySelector("form")!;
   const error = section.querySelector<HTMLParagraphElement>(".error")!;
+  // In the page's language, from the dictionary.
+  const errors = JSON.parse(form.dataset.errors!) as Record<"invalid" | "rate" | "failed", string>;
 
   const setState = (state: "idle" | "busy" | "done") =>
     section.setAttribute("data-state", state);
@@ -635,19 +643,17 @@ const spokes = [
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const body = (await response.json().catch(() => ({}))) as {
-        message?: string;
-      };
-
-      if (!response.ok) throw new Error(body.message ?? "Something went wrong");
-
-      form.reset();
-      setState("done");
-    } catch (cause) {
-      setState("idle");
+      if (response.ok) {
+        form.reset();
+        return setState("done");
+      }
+      const { status } = response;
       error.textContent =
-        cause instanceof Error ? cause.message : "Something went wrong";
+        status === 400 ? errors.invalid : status === 429 ? errors.rate : errors.failed;
+    } catch {
+      error.textContent = errors.failed;
     }
+    setState("idle");
   });
 
   section.querySelector(".again")!.addEventListener("click", () => {

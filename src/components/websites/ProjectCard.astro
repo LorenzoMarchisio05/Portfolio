@@ -3,6 +3,7 @@
 // in the gallery (both screenshots). The facts and the story are on the
 // project page, which both variants link to.
 import { projectHref, type Project } from "../../lib/projects";
+import { useI18n } from "../../i18n";
 
 interface Props {
   project: Project;
@@ -11,6 +12,8 @@ interface Props {
 
 const { project, variant } = Astro.props;
 const { id, data } = project;
+const { t, lang } = useI18n(Astro.url);
+const text = data.text[lang];
 const concept = data.status === "concept";
 // The schema guarantees the URL that matches the status.
 const url = (concept ? data.conceptUrl : data.liveUrl)!;
@@ -33,7 +36,7 @@ const Heading = full ? "h2" : "h3";
             src={image.src}
             width={image.width}
             height={image.height}
-            alt={data.text.alt[shot]}
+            alt={text.alt[shot]}
             loading="lazy"
             decoding="async"
           />
@@ -45,24 +48,24 @@ const Heading = full ? "h2" : "h3";
   <div class="body">
     <Heading class="ws-h3">
       {data.clientName}
-      {concept && <span class="tag">Concept</span>}
+      {concept && <span class="tag">{t.projects.concept}</span>}
     </Heading>
     <p class="place">
-      {data.category} · {data.location.city}, {data.location.country}
+      {text.category} · {text.location}
     </p>
 
-    <p class="summary">{data.text.summary}</p>
+    <p class="summary">{text.summary}</p>
 
     <div class="actions">
-      <a class="ws-link story" href={projectHref(project)}>
-        Read the full story <span aria-hidden="true">→</span>
+      <a class="ws-link story" href={projectHref(project, lang)}>
+        {t.projects.story} <span aria-hidden="true">→</span>
       </a>
       <a
         class="site"
         href={url}
         target="_blank"
         rel="noopener"
-        aria-label={`${concept ? "Concept site" : "Live site"}: ${domain} (opens in a new tab)`}
+        aria-label={t.projects.site(concept, domain)}
       >
         {domain} <span aria-hidden="true">↗</span>
       </a>

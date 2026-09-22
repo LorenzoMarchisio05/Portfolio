@@ -1,5 +1,8 @@
 ---
 import stops from "../../content/journey.json";
+import { useI18n } from "../../i18n";
+
+const { t, lang } = useI18n(Astro.url);
 
 // The CV as a corridor you travel east. Page scroll drives it while the
 // section is pinned; see src/scripts/orbit.ts.
@@ -18,13 +21,10 @@ import stops from "../../content/journey.json";
 
     <header class="head" data-rise>
       <div class="title">
-        <p class="eyebrow">CUNEO → LEUVEN</p>
-        <h2 class="headline">THE GROUND<br />FLATTENS</h2>
+        <p class="eyebrow">{t.journey.eyebrow}</p>
+        <h2 class="headline" set:html={t.journey.headline} />
       </div>
-      <p class="lead note">
-        Keep scrolling. The corridor runs east while the ridge behind it, the
-        Cuneo skyline, loses relief the further right you go.
-      </p>
+      <p class="lead note">{t.journey.note}</p>
     </header>
 
     <div id="jStage">
@@ -44,12 +44,12 @@ import stops from "../../content/journey.json";
                     style={`--w:${s.w}px;--size:${s.size}px;--msize:${s.mSize}px`}
                   >
                     <span class="year" style={s.yearRed ? "color:var(--signal)" : ""}>
-                      {s.year}
+                      {s[lang].year}
                     </span>
-                    <span class="name">{s.name}</span>
-                    {s.pitch && <span class="pitch">{s.pitch}</span>}
+                    <span class="name">{s[lang].name}</span>
+                    {s[lang].pitch && <span class="pitch">{s[lang].pitch}</span>}
                     <span class="detail">
-                      {s.detail.map((d) => (
+                      {s[lang].detail.map((d) => (
                         <span>{d}</span>
                       ))}
                     </span>

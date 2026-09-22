@@ -1,5 +1,8 @@
 ---
 import Silhouette from "../components/Silhouette.astro";
+import { useI18n } from "../../i18n";
+
+const { t, href } = useI18n(Astro.url);
 
 // Six frames that assemble as you scroll: each one holds centre stage, then
 // docks into its slot. One ratio per photograph at every width — nothing is
@@ -13,16 +16,16 @@ import Silhouette from "../components/Silhouette.astro";
 //
 // Drop the photographs in /public/photos/ under the names below. A frame with
 // no file keeps the striped placeholder, so they can land one at a time; a
-// frame WITH a file needs `alt` filled in — these are portfolio work, not
-// decoration.
+// frame WITH a file needs its alt text in the dictionaries (photography.alts,
+// in frame order) — these are portfolio work, not decoration.
 const frames = [
-  { src: "/photos/01-motorcycle.webp", alt: "Rider in a red helmet sitting on an orange enduro bike under hanging leaves, lit against the dark", flex: 150, ar: "3 / 2", mOrder: 1, mSpan: 2, cap: "3:2 · 01" },
-  { src: "/photos/02-croatia.webp", alt: "Trakošćan Castle on its wooded hill, mirrored in the still lake below", flex: 67, ar: "2 / 3", mOrder: 2, mSpan: 1, cap: "2:3 · 02" },
-  { src: "/photos/03-sport.webp", alt: "Football training seen through the goal net, a player in black in the foreground", flex: 150, ar: "3 / 2", mOrder: 4, mSpan: 1, cap: "3:2 · 03" },
-  { src: "/photos/04-sport.webp", alt: "Footballer in a black shirt walking away across the pitch in evening light", flex: 67, ar: "2 / 3", mOrder: 3, mSpan: 1, cap: "2:3 · 04" },
-  { src: "/photos/05-croatia.webp", alt: "Plitvice waterfalls falling into a turquoise pool between green cliffs", flex: 300, ar: "3 / 1", mOrder: 6, mSpan: 2, cap: "3:1 · 05" },
-  { src: "/photos/06-motorcycle.webp", alt: "Rider in a red helmet astride an orange enduro bike in the dark", flex: 150, ar: "3 / 2", mOrder: 5, mSpan: 1, cap: "3:2 · 06" },
-];
+  { src: "/photos/01-motorcycle.webp", flex: 150, ar: "3 / 2", mOrder: 1, mSpan: 2, cap: "3:2 · 01" },
+  { src: "/photos/02-croatia.webp", flex: 67, ar: "2 / 3", mOrder: 2, mSpan: 1, cap: "2:3 · 02" },
+  { src: "/photos/03-sport.webp", flex: 150, ar: "3 / 2", mOrder: 4, mSpan: 1, cap: "3:2 · 03" },
+  { src: "/photos/04-sport.webp", flex: 67, ar: "2 / 3", mOrder: 3, mSpan: 1, cap: "2:3 · 04" },
+  { src: "/photos/05-croatia.webp", flex: 300, ar: "3 / 1", mOrder: 6, mSpan: 2, cap: "3:1 · 05" },
+  { src: "/photos/06-motorcycle.webp", flex: 150, ar: "3 / 2", mOrder: 5, mSpan: 1, cap: "3:2 · 06" },
+].map((frame, i) => ({ ...frame, alt: t.photography.alts[i] }));
 
 // Until the files exist there is nothing to point an <img> at. Resolved at
 // build time — this renders in a Cloudflare worker, which has no node:fs.
@@ -74,8 +77,8 @@ const sizes = (f: Frame, row: Frame[]) => {
   <div id="shotTrack">
     <div id="shotStage" data-rise>
       <div class="side">
-        <p class="eyebrow">240° · PHOTOGRAPHER</p>
-        <h2 class="six">SIX FRAMES</h2>
+        <p class="eyebrow">240° · {t.roles.photographer}</p>
+        <h2 class="six">{t.photography.headline}</h2>
         <div class="counter" aria-hidden="true">
           <div class="nums">
             {
@@ -89,10 +92,8 @@ const sizes = (f: Frame, row: Frame[]) => {
             <div id="shotHead"></div>
           </div>
         </div>
-        <p class="lead blurb">
-          Nothing here poses. You commit to an angle and find out.
-        </p>
-        <p class="hint" id="shotHint">SCROLL TO DEVELOP ↓</p>
+        <p class="lead blurb">{t.photography.blurb}</p>
+        <p class="hint" id="shotHint">{t.photography.hint}</p>
       </div>
 
       <div class="frames">
@@ -129,7 +130,7 @@ const sizes = (f: Frame, row: Frame[]) => {
     </div>
   </div>
 
-  <a class="all" href="/gallery">FULL GALLERY →</a>
+  <a class="all" href={href("/gallery")}>{t.photography.all}</a>
 </section>
 
 <style>

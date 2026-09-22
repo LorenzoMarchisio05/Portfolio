@@ -1,0 +1,64 @@
+---
+import Websites from "../../layouts/Websites.astro";
+import { intlLocale, localeParams, useI18n } from "../../i18n";
+
+export const prerender = true;
+export const getStaticPaths = localeParams;
+
+const { t, lang, href } = useI18n(Astro.url);
+// One policy per locale, in src/i18n/privacy.
+const policies = import.meta.glob<{ frontmatter: { description: string; updated: string }; Content: any }>(
+  "../../i18n/privacy/*.md",
+  { eager: true },
+);
+const { frontmatter, Content } = policies[`../../i18n/privacy/${lang}.md`];
+const updated = new Date(frontmatter.updated).toLocaleDateString(intlLocale[lang], { dateStyle: "long" });
+---
+
+<Websites
+  title={`${t.footer.privacy} · Lorenzo Marchisio`}
+  description={frontmatter.description}
+  back={href("/")}
+  crumbs={[{ label: t.privacy.crumb }]}
+  skip={{ href: "#content", label: t.skip }}
+  jsonLd={[]}
+>
+  <article class="ws-section policy">
+    <h1 class="ws-h2">{t.footer.privacy}</h1>
+    <p class="meta">{t.privacy.updated(updated)}</p>
+    <Content />
+  </article>
+</Websites>
+
+<style>
+  .policy {
+    border-top: 0;
+  }
+
+  .policy > * {
+    max-width: 760px;
+  }
+
+  .meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--warm);
+  }
+
+  /* The policy text is rendered from markdown, outside this scope. */
+  .policy :global(h2) {
+    margin: 36px 0 10px;
+    font-size: 22px;
+    font-weight: 600;
+    font-stretch: 90%;
+  }
+
+  .policy :global(p) {
+    margin: 0 0 12px;
+    color: var(--caption);
+  }
+
+  .policy :global(a) {
+    border-bottom: 1px solid var(--signal);
+  }
+</style>

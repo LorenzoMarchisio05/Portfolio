@@ -10,19 +10,42 @@ const projects = defineCollection({
     // project page slug.
     generateId: ({ entry }) => entry.split("/")[0],
   }),
-  schema: ({ image }) =>
-    z
+  schema: ({ image }) => {
+    // Everything a visitor reads, once per language the site speaks.
+    const text = z.object({
+      category: z.string(), // as shown, e.g. "Café"
+      location: z.string(), // as shown, e.g. "Leuven, Belgium"
+      summary: z.string().max(200),
+      before: z.string(),
+      built: z.array(z.string()).min(1),
+      alt: z.object({
+        desktop: z.string(),
+        mobile: z.string(),
+      }),
+      // The body of the project page: a heading, its paragraphs and, for
+      // the parts of the site worth seeing, one screenshot.
+      sections: z
+        .array(
+          z.object({
+            title: z.string(),
+            body: z.array(z.string()).min(1),
+            image: image().optional(),
+            alt: z.string().optional(),
+          }),
+        )
+        .default([]),
+      seo: z
+        .object({ title: z.string().max(60), description: z.string().max(155) })
+        .optional(),
+    });
+
+    return z
       .object({
         // The project page's URL. A GUID, not the client's name: generate one
         // with `uuidgen` and never change it once the page is published.
         slug: z.string().uuid(),
         status: z.enum(["live", "concept", "archived"]),
         clientName: z.string(),
-        category: z.string(), // as shown, e.g. "Café"
-        location: z.object({
-          city: z.string(),
-          country: z.string(),
-        }),
         package: z.enum(packageChoices),
         languages: z.array(z.enum(allLanguages)).min(1),
         integrations: z.array(z.string()).default([]),
@@ -41,30 +64,8 @@ const projects = defineCollection({
           mobile: image(),
         }),
 
-        text: z.object({
-          summary: z.string().max(200),
-          before: z.string(),
-          built: z.array(z.string()).min(1),
-          alt: z.object({
-            desktop: z.string(),
-            mobile: z.string(),
-          }),
-          // The body of the project page: a heading, its paragraphs and, for
-          // the parts of the site worth seeing, one screenshot.
-          sections: z
-            .array(
-              z.object({
-                title: z.string(),
-                body: z.array(z.string()).min(1),
-                image: image().optional(),
-                alt: z.string().optional(),
-              }),
-            )
-            .default([]),
-          seo: z
-            .object({ title: z.string().max(60), description: z.string().max(155) })
-            .optional(),
-        }),
+        // One per locale in src/i18n/locales.ts.
+        text: z.object({ en: text, it: text, fr: text }),
 
         results: z
           .array(
@@ -121,9 +122,11 @@ const projects = defineCollection({
         }
         if (p.testimonial && !p.consent.testimonial)
           issue("Testimonial present without consent");
-        for (const section of p.text.sections)
-          if (section.image && !section.alt) issue(`Section "${section.title}" needs alt text`);
-      }),
+        for (const text of Object.values(p.text))
+          for (const section of text.sections)
+            if (section.image && !section.alt) issue(`Section "${section.title}" needs alt text`);
+      });
+  },
 });
 
 export const collections = { projects };
