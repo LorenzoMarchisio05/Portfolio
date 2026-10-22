@@ -448,6 +448,52 @@ function shots(vh: number) {
   });
 }
 
+// Where the page rests for a section: its top, except photography, which rests
+// where the last frame has docked so all six photographs are in their slots.
+function topOf(target: HTMLElement) {
+  const y = scrollPos().y;
+  const to =
+    target.id === "photography" && shotTrack && frames.length
+      ? y + shotTrack.getBoundingClientRect().top - (shotPinTop - shotTravel)
+      : y + target.getBoundingClientRect().top;
+  return Math.max(0, to);
+}
+
+// Every in-page link glides the same way. The browser's own smooth scroll is
+// too quick to watch the photographs dock, so this one is timed: ~0.18s per
+// screen, between 0.6s and 1.5s. The photography link rests where the last frame
+// has docked, so all six photographs are in their slots.
+let glideStop = () => {};
+
+function glideTo(to: number) {
+  const from = scrollPos().y;
+  if (reduce.matches) return scrollTo({ top: to, behavior: "instant" });
+  const ms = Math.min(1500, Math.max(600, (Math.abs(to - from) / viewportH()) * 180));
+  const t0 = performance.now();
+  let stop = false;
+  glideStop();
+  glideStop = () => (stop = true);
+  for (const event of ["wheel", "touchstart", "keydown"])
+    addEventListener(event, glideStop, { passive: true, once: true });
+  const step = (now: number) => {
+    if (stop) return;
+    const f = clamp01((now - t0) / ms);
+    scrollTo({ top: from + (to - from) * smooth(f), behavior: "instant" });
+    if (f < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+addEventListener("click", (e) => {
+  const link = (e.target as Element).closest<HTMLAnchorElement>('a[href^="#"]');
+  const id = link?.getAttribute("href")?.slice(1);
+  if (!link || !id || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey) return;
+  const target = document.getElementById(id);
+  if (!target) return;
+  e.preventDefault();
+  glideTo(topOf(target));
+});
+
 // ---- Loop --------------------------------------------------------------
 
 function update() {
@@ -493,7 +539,7 @@ for (const event of ["wheel", "touchstart", "keydown"])
 function aim() {
   if (!aiming) return;
   const target = hashTarget();
-  if (target) target.scrollIntoView({ behavior: "instant", block: "start" });
+  if (target) scrollTo({ top: topOf(target), behavior: "instant" });
 }
 
 // Geometry only the viewport can change is measured here rather than in the

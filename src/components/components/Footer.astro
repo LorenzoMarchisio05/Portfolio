@@ -1,7 +1,6 @@
 ---
 // One footer for every page. Its side padding follows the page's column:
 // the websites pages set --footer-x to their centered gutter.
-import LangSwitch from "./LangSwitch.astro";
 import { useI18n } from "../../i18n";
 
 const { t, href } = useI18n(Astro.url);
@@ -18,7 +17,6 @@ const here = bare(Astro.url.pathname);
 
 <footer>
   <span>© 2026 LORENZO MARCHISIO</span>
-  <LangSwitch />
   <nav aria-label={t.footer.label}>
     {
       links.map(([link, label]) => (
