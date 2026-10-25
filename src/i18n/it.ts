@@ -7,7 +7,7 @@ const it: typeof en = {
   meta: {
     title: "Lorenzo Marchisio · Ingegnere, fondatore, fotografo",
     description:
-      "Studente di ingegneria informatica al Politecnico di Torino, vivo a Leuven. Scrivo software, realizzo siti web per piccole attività e scatto fotografie.",
+      "Studente di ingegneria informatica al Politecnico di Torino, vivo a Leuven. Scrivo software, costruisco prodotti miei e scatto fotografie.",
   },
 
   roles: { engineer: "INGEGNERE", founder: "FONDATORE", photographer: "FOTOGRAFO" },
@@ -86,19 +86,47 @@ const it: typeof en = {
     statement:
       "L'angolazione esiste prima nella geometria. Ruotato l'oggetto fin qui, gli stessi punti si leggono come una rete.",
     headline: "COSA STO<br />COSTRUENDO",
-    studio: {
-      label: "01 · STUDIO WEB",
-      title: "Siti web per piccole attività",
-      text: "Siti veloci e multilingue per ristoranti, negozi e studi professionali, ovunque nel mondo. Prezzi fissi, online in pochi giorni, costruiti con lo stesso metodo del software che scrivo per l'industria.",
-      link: "SCOPRI LO STUDIO →",
+    volstead: {
+      label: "01 · VOLSTEAD CIRCLE",
+      title: "Volstead Circle",
+      text: "Una piattaforma di studio e allenamento per chi lavora al bar: corsi per categoria e ripetizione dilazionata sulle ricette dei cocktail, così bastano cinque minuti prima del turno per migliorare. App per iPhone e sito web, in sviluppo.",
+      link: "SCOPRI DI PIÙ →",
     },
-    unnamed: {
-      label: "02 · SENZA NOME",
-      title: "Troppo presto per un nome",
-      first:
-        "È così presto che descriverlo sarebbe un'affermazione più che un fatto, quindi questa parte tiene la sua forma e aspetta.",
-      second:
-        "Quello che posso dire: nasce dal lavoro che faccio ogni giorno nel software industriale, e da quanto di quel lavoro si fa ancora a mano. Non sto reclutando nessuno e non sto facendo un pitch. E non deve per forza essere questo: qualsiasi idea, qualsiasi campo. Se quello che stai costruendo ha bisogno di ciò che so fare, ti ascolto.",
+    aditus: {
+      label: "02 · ADITUS",
+      title: "Aditus",
+      text: "Un browser desktop open source e leggero, con le schede in una barra laterale verticale e un account separato per ogni sito: due account Google affiancati nella stessa finestra. Rust e Chromium, usabile ogni giorno su macOS.",
+      link: "SCOPRI DI PIÙ →",
+    },
+  },
+
+  work: {
+    crumb: "Progetti",
+    back: "Torna ai progetti",
+    volstead: {
+      title: "Volstead Circle · Lorenzo Marchisio",
+      description: "Volstead Circle è una piattaforma di studio e allenamento per barman: corsi, ricette di cocktail e ripetizione dilazionata. App per iPhone e sito web, in sviluppo.",
+      crumb: "Volstead Circle",
+      headline: "VOLSTEAD<br />CIRCLE",
+      lead: "Una piattaforma di studio e allenamento per i professionisti delle bevande. Prima i cocktail, le altre categorie molto più avanti.",
+      facts: [["STATO", "In sviluppo"], ["PIATTAFORME", "iPhone e web, Android in seguito"], ["LINGUE", "Inglese, italiano, francese, tedesco"], ["REALIZZATO CON", "SwiftUI, Next.js, Supabase"]],
+      body: ["È pensata per chi vuole fare il barman e per chi lo fa già, persone con cinque minuti prima del turno più che una serata sul divano. Corsi strutturati insegnano una categoria; poi un motore di ripetizione dilazionata allena ricette, ingredienti e conoscenze di servizio finché restano.",
+        "Un unico grafo di conoscenza di drink, ingredienti, tecniche e bicchieri alimenta tutto: pagine di consultazione, lezioni e carte di allenamento nascono dagli stessi dati, quindi una correzione si fa una volta sola.",
+        "Ogni carta e ogni ricetta è controllata da una persona prima di uscire, e niente viene chiamato certificazione, perché nessun ente la garantisce. È presto: app e sito sono in costruzione adesso."],
+      link: "VAI A VOLSTEADCIRCLE.APP →",
+    },
+    aditus: {
+      title: "Aditus · Lorenzo Marchisio",
+      description: "Aditus è un browser desktop open source e leggero, con le schede in una barra laterale verticale e un account isolato per ogni sito, costruito su Chromium con Rust.",
+      crumb: "Aditus",
+      headline: "ADITUS",
+      lead: "Un browser desktop open source e leggero, con le schede in una barra laterale verticale e un account isolato per ogni sito.",
+      facts: [["STATO", "Agli inizi, usabile ogni giorno su macOS"], ["PIATTAFORME", "macOS 14+, Windows e Linux non testati"], ["REALIZZATO CON", "Rust, Chromium (CEF), Svelte 5"], ["LICENZA", "GPL-3.0"]],
+      body: ["La maggior parte dei browser spreca spazio e memoria in cose che non uso. Aditus tiene la barra delle schede di lato, riducibile a una striscia di icone, e punta a un eseguibile piccolo, un avvio rapido e poca memoria.",
+        "Ogni sito può essere associato a un profilo suo, un archivio isolato di cookie e accessi. Google Foto su un account e YouTube su un altro, affiancati nella stessa finestra, senza aprirne una seconda.",
+        "Ha un blocco pubblicità integrato, scarta le schede in background dopo 15 minuti di inattività e installa estensioni di Chrome.",
+        "Lo sto costruendo prima di tutto per me: è il browser che voglio usare. È open source con licenza GPL-3.0, quindi codice e versioni sono su GitHub."],
+      link: "CODICE SU GITHUB →",
     },
   },
 

@@ -1,0 +1,140 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import PageBar from "../../../components/components/PageBar.astro";
+import Footer from "../../../components/components/Footer.astro";
+import { locales, useI18n } from "../../../i18n";
+
+export const prerender = true;
+export const getStaticPaths = () =>
+  locales.flatMap((lang) => ["volstead", "aditus"].map((slug) => ({ params: { lang, slug } })));
+
+// Where each project lives on the web; the words are in the dictionaries.
+const urls = {
+  volstead: "https://volsteadcircle.app",
+  aditus: "https://github.com/LorenzoMarchisio05/Aditus",
+};
+
+const { t, href } = useI18n(Astro.url);
+const slug = Astro.params.slug as keyof typeof urls;
+const p = t.work[slug];
+---
+
+<Layout title={p.title} description={p.description}>
+  <PageBar back={href("/#founder")} angle="120°" crumbs={[{ label: t.work.crumb, href: href("/#founder") }, { label: p.crumb }]} />
+
+  <main>
+    <div class="glow"></div>
+
+    <div class="intro">
+      <p class="eyebrow">120° · {t.roles.founder}</p>
+      <h1 class="headline" set:html={p.headline} />
+      <p class="lead">{p.lead}</p>
+    </div>
+
+    <dl class="facts">
+      {
+        p.facts.map(([k, v]) => (
+          <div>
+            <dt>{k}</dt>
+            <dd>{v}</dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <div class="body">
+      {p.body.map((para) => <p>{para}</p>)}
+      <a class="go" href={urls[slug]} rel="noopener">{p.link}</a>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  main {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-y);
+    padding: clamp(60px, 18vh - 70px, 130px) var(--pad-x) var(--pad-y);
+  }
+
+  main .glow {
+    background: radial-gradient(56% 30% at 10% 12%, rgba(255, 47, 29, 0.07), transparent 64%);
+  }
+
+  .intro,
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-width: 640px;
+  }
+
+  p {
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  .body p {
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0 24px;
+    max-width: 1000px;
+    margin: 0;
+  }
+
+  .facts div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px 0;
+    border-top: 1px solid var(--hair-3);
+  }
+
+  dt {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--signal);
+  }
+
+  dd {
+    margin: 0;
+    color: var(--warm);
+  }
+
+  .go {
+    width: fit-content;
+    margin-top: 6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    border-bottom: 1px solid var(--signal);
+    padding-bottom: 6px;
+  }
+
+  @media (max-width: 768px) {
+    main {
+      padding: 32px 20px 72px;
+    }
+
+    .body p {
+      font-size: 16px;
+    }
+
+    .go {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding-bottom: 0;
+    }
+  }
+</style>

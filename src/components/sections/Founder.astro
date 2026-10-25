@@ -30,25 +30,18 @@ const { t, href } = useI18n(Astro.url);
   </div>
 
   <ol class="activities">
-    <li data-par=".04" data-par-m="0">
-      <div class="activity" data-rise>
-        <p class="num">{t.founder.studio.label}</p>
-        <h3 class="name">{t.founder.studio.title}</h3>
-        <p class="first">{t.founder.studio.text}</p>
-        <a class="go" href={href("/websites")}>{t.founder.studio.link}</a>
-      </div>
-    </li>
-
-    <li data-par=".04" data-par-m="0">
-      <div class="activity" data-rise>
-        <p class="num">{t.founder.unnamed.label}</p>
-        <h3 class="name">{t.founder.unnamed.title}</h3>
-        <div class="cols">
-          <p class="first">{t.founder.unnamed.first}</p>
-          <p class="second">{t.founder.unnamed.second}</p>
-        </div>
-      </div>
-    </li>
+    {
+      (["volstead", "aditus"] as const).map((id) => (
+        <li data-par=".04" data-par-m="0">
+          <div class="activity" data-rise>
+            <p class="num">{t.founder[id].label}</p>
+            <h3 class="name">{t.founder[id].title}</h3>
+            <p class="first">{t.founder[id].text}</p>
+            <a class="go" href={href(`/projects/${id}`)}>{t.founder[id].link}</a>
+          </div>
+        </li>
+      ))
+    }
   </ol>
 </section>
 
@@ -175,30 +168,12 @@ const { t, href } = useI18n(Astro.url);
     padding-bottom: 6px;
   }
 
-  .cols {
-    display: flex;
-    gap: 48px;
-    flex-wrap: wrap;
-    max-width: 1100px;
-  }
-
-  .cols p {
-    flex: 1;
-    min-width: 280px;
-    margin: 0;
-    text-wrap: pretty;
-  }
 
   .first {
     font-size: 19px;
     line-height: 1.55;
   }
 
-  .second {
-    font-size: 17px;
-    line-height: 1.6;
-    color: var(--warm);
-  }
 
   @media (max-width: 768px) {
     .backdrop-box {
@@ -236,10 +211,6 @@ const { t, href } = useI18n(Astro.url);
       font-size: clamp(40px, 12vw, 60px);
     }
 
-    .cols {
-      flex-direction: column;
-      gap: 20px;
-    }
 
     .activities {
       gap: 36px;
@@ -256,16 +227,10 @@ const { t, href } = useI18n(Astro.url);
       padding-bottom: 0;
     }
 
-    .cols p {
-      min-width: 0;
-    }
 
     .first {
       font-size: 17px;
     }
 
-    .second {
-      font-size: 16px;
-    }
   }
 </style>

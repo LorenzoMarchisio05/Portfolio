@@ -11,7 +11,7 @@ const fr: typeof en = {
   meta: {
     title: "Lorenzo Marchisio · Ingénieur, fondateur, photographe",
     description:
-      "Étudiant en génie informatique au Politecnico di Torino, installé à Louvain. Logiciels, sites web pour petites entreprises et photographie.",
+      "Étudiant en génie informatique au Politecnico di Torino, installé à Louvain. Logiciels, produits personnels et photographie.",
   },
 
   roles: { engineer: "INGÉNIEUR", founder: "FONDATEUR", photographer: "PHOTOGRAPHE" },
@@ -90,19 +90,47 @@ const fr: typeof en = {
     statement:
       "L'angle existe d'abord dans la géométrie. Tournés jusqu'ici, les mêmes points se lisent comme un réseau.",
     headline: "CE QUE<br />JE CONSTRUIS",
-    studio: {
-      label: "01 · STUDIO WEB",
-      title: "Des sites web pour les petites entreprises",
-      text: "Des sites rapides et multilingues pour les restaurants, les commerces et les cabinets, partout dans le monde. Prix fixes, en ligne en quelques jours, et construits avec la même méthode que les logiciels que j'écris pour l'industrie.",
-      link: "VOIR LE STUDIO →",
+    volstead: {
+      label: "01 · VOLSTEAD CIRCLE",
+      title: "Volstead Circle",
+      text: "Une plateforme d'apprentissage et d'entraînement pour les professionnels du bar : des cours par catégorie et de la répétition espacée sur les recettes de cocktails, pour progresser en cinq minutes avant le service. Application iPhone et site web, en développement.",
+      link: "EN SAVOIR PLUS →",
     },
-    unnamed: {
-      label: "02 · SANS NOM",
-      title: "Trop tôt pour le nommer",
-      first:
-        "C'est encore si tôt que le décrire serait une affirmation plutôt qu'un fait ; cette partie garde donc sa forme et attend.",
-      second:
-        "Ce que je peux dire : cela part du travail que je fais chaque jour dans le logiciel industriel, et de tout ce qui s'y fait encore à la main. Je ne recrute personne, et ceci n'est pas un pitch. Et il ne s'agit pas forcément de ce projet-là : n'importe quelle idée, n'importe quel domaine. Si ce que vous construisez a besoin de ce que je sais faire, je vous écoute.",
+    aditus: {
+      label: "02 · ADITUS",
+      title: "Aditus",
+      text: "Un navigateur de bureau open source et léger, avec les onglets dans une barre latérale verticale et un compte distinct par site : deux comptes Google côte à côte dans une même fenêtre. Rust et Chromium, utilisable au quotidien sur macOS.",
+      link: "EN SAVOIR PLUS →",
+    },
+  },
+
+  work: {
+    crumb: "Projets",
+    back: "Retour aux projets",
+    volstead: {
+      title: "Volstead Circle · Lorenzo Marchisio",
+      description: "Volstead Circle est une plateforme d'apprentissage et d'entraînement pour barmans : cours, recettes de cocktails et répétition espacée. Application iPhone et site web, en développement.",
+      crumb: "Volstead Circle",
+      headline: "VOLSTEAD<br />CIRCLE",
+      lead: "Une plateforme d'apprentissage et d'entraînement pour les professionnels des boissons. Les cocktails d'abord, les autres catégories bien plus tard.",
+      facts: [["STATUT", "En développement"], ["PLATEFORMES", "iPhone et web, Android ensuite"], ["LANGUES", "Anglais, italien, français, allemand"], ["CONSTRUIT AVEC", "SwiftUI, Next.js, Supabase"]],
+      body: ["Elle s'adresse à ceux qui veulent devenir barmans et à ceux qui le sont déjà, des gens qui ont cinq minutes avant le service plutôt qu'une soirée sur le canapé. Des cours structurés enseignent une catégorie ; un moteur de répétition espacée entraîne ensuite recettes, ingrédients et connaissances de service jusqu'à ce qu'ils restent.",
+        "Un seul graphe de connaissances de boissons, d'ingrédients, de techniques et de verres alimente tout : les pages de référence, les leçons et les cartes d'entraînement viennent des mêmes données, donc une correction se fait une seule fois.",
+        "Chaque carte et chaque recette est relue par une personne avant publication, et rien n'est appelé certification, car aucun organisme ne la garantit. C'est tôt : l'application et le site sont en construction en ce moment."],
+      link: "VISITER VOLSTEADCIRCLE.APP →",
+    },
+    aditus: {
+      title: "Aditus · Lorenzo Marchisio",
+      description: "Aditus est un navigateur de bureau open source et léger, avec les onglets dans une barre latérale verticale et un compte isolé par site, construit sur Chromium avec Rust.",
+      crumb: "Aditus",
+      headline: "ADITUS",
+      lead: "Un navigateur de bureau open source et léger, avec les onglets dans une barre latérale verticale et un compte isolé par site.",
+      facts: [["STATUT", "Débutant, utilisable au quotidien sur macOS"], ["PLATEFORMES", "macOS 14+, Windows et Linux non testés"], ["CONSTRUIT AVEC", "Rust, Chromium (CEF), Svelte 5"], ["LICENCE", "GPL-3.0"]],
+      body: ["La plupart des navigateurs dépensent de l'espace et de la mémoire pour des choses que je n'utilise pas. Aditus garde la barre d'onglets sur le côté, réductible en bande d'icônes, et vise un petit binaire, un démarrage rapide et peu de mémoire.",
+        "Chaque site peut être associé à son propre profil, un espace isolé de cookies et de connexions. Google Photos sur un compte et YouTube sur un autre, côte à côte dans la même fenêtre, sans en ouvrir une seconde.",
+        "Il a un bloqueur de publicités intégré, met de côté les onglets en arrière-plan après 15 minutes d'inactivité et installe des extensions Chrome.",
+        "Je le construis d'abord pour moi : c'est le navigateur que je veux utiliser. Il est open source sous licence GPL-3.0, donc le code et les versions sont sur GitHub."],
+      link: "CODE SUR GITHUB →",
     },
   },
 

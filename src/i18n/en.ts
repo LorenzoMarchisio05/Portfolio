@@ -11,7 +11,7 @@ export default {
     title: "Lorenzo Marchisio · Engineer, Founder, Photographer",
     // What Google shows under the name; the intro says nothing out of context.
     description:
-      "Computer engineering student at Politecnico di Torino, based in Leuven. I write software, build websites for small businesses and take photographs.",
+      "Computer engineering student at Politecnico di Torino, based in Leuven. I write software, build my own products and take photographs.",
   },
 
   roles: { engineer: "ENGINEER", founder: "FOUNDER", photographer: "PHOTOGRAPHER" },
@@ -90,19 +90,47 @@ export default {
     statement:
       "The angle exists in the geometry first. Turned this far, the same points read as a network.",
     headline: "WHAT I AM<br />BUILDING",
-    studio: {
-      label: "01 · WEBSITE STUDIO",
-      title: "Websites for small businesses",
-      text: "Fast, multilingual websites for restaurants, shops and practices, anywhere in the world. Fixed prices, live in days, built with the same method as the software I write for industry.",
-      link: "SEE THE STUDIO →",
+    volstead: {
+      label: "01 · VOLSTEAD CIRCLE",
+      title: "Volstead Circle",
+      text: "A learning and drill platform for bartenders: courses by category and spaced repetition over cocktail specs, so five minutes before a shift is enough to get better. iPhone app and website, in development.",
+      link: "READ MORE →",
     },
-    unnamed: {
-      label: "02 · UNNAMED",
-      title: "Too early to name",
-      first:
-        "It is early enough that describing it would be a claim rather than a fact, so this part holds its shape and waits.",
-      second:
-        "What I can say: it starts from work I do every day inside industrial software, and from how much of it is still done by hand. I am not recruiting anyone and I am not pitching. And it does not have to be this: any idea, any field. If what you are building needs what I can do, I am listening.",
+    aditus: {
+      label: "02 · ADITUS",
+      title: "Aditus",
+      text: "A lightweight open-source desktop browser with a vertical tab sidebar and a separate account per site, so two Google accounts sit side by side in one window. Rust and Chromium, usable every day on macOS.",
+      link: "READ MORE →",
+    },
+  },
+
+  work: {
+    crumb: "Projects",
+    back: "Back to the projects",
+    volstead: {
+      title: "Volstead Circle · Lorenzo Marchisio",
+      description: "Volstead Circle is a learning and drill platform for bartenders: courses, cocktail specs and spaced repetition. iPhone app and website, in development.",
+      crumb: "Volstead Circle",
+      headline: "VOLSTEAD<br />CIRCLE",
+      lead: "A learning and drill platform for drinks professionals. Cocktails first, other categories much later.",
+      facts: [["STATUS", "In development"], ["PLATFORMS", "iPhone and web, Android later"], ["LANGUAGES", "English, Italian, French, German"], ["BUILT WITH", "SwiftUI, Next.js, Supabase"]],
+      body: ["It is made for aspiring and working bartenders, people with five minutes before a shift rather than an evening on the sofa. Structured courses teach a category; a spaced-repetition engine then drills the specs, ingredients and service knowledge until they stick.",
+        "One knowledge graph of drinks, ingredients, techniques and glassware feeds everything: the reference pages, the lessons and the drill cards are all generated from the same data, so a correction is made once.",
+        "Every card and spec is reviewed by a person before it ships, and nothing is called a certification, because no body stands behind it. It is early: the app and the website are being built now."],
+      link: "VISIT VOLSTEADCIRCLE.APP →",
+    },
+    aditus: {
+      title: "Aditus · Lorenzo Marchisio",
+      description: "Aditus is a lightweight open-source desktop browser with a vertical tab sidebar and per-site account isolation, built on Chromium with Rust.",
+      crumb: "Aditus",
+      headline: "ADITUS",
+      lead: "A lightweight open-source desktop browser with a vertical tab sidebar and per-site account isolation.",
+      facts: [["STATUS", "Early, usable every day on macOS"], ["PLATFORMS", "macOS 14+, Windows and Linux untested"], ["BUILT WITH", "Rust, Chromium (CEF), Svelte 5"], ["LICENCE", "GPL-3.0"]],
+      body: ["Most browsers spend screen space and memory on things I do not use. Aditus keeps the tab bar on the side, collapsible to an icon strip, and aims for a small binary, a fast start and low memory.",
+        "Each site can be mapped to its own profile, an isolated store of cookies and logins. Google Photos on one account and YouTube on another, side by side in the same window, without a second window.",
+        "It has a built-in ad blocker, discards background tabs after 15 idle minutes, and installs Chrome extensions.",
+        "I am building it for myself first: it is the browser I want to use. It is open source under GPL-3.0, so the code and the releases are on GitHub."],
+      link: "SOURCE ON GITHUB →",
     },
   },
 
