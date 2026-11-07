@@ -338,3 +338,67 @@ html.js [data-rise].is-in {
     to { clip-path: inset(-0.2em -0.1em); }
   }
 }
+
+/* ---- Atmosphere ------------------------------------------------------- */
+/* The root accent is a registered colour so it can cross-fade; Layout sets
+   `data-sec` to the section under the middle of the screen. The bar and the
+   progress line inherit it, and a fixed wash behind the page follows. */
+@property --signal {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #ff2f1d;
+}
+
+html {
+  transition: --signal 700ms linear;
+}
+
+html[data-sec="journey"] { --signal: #ff9f1c; }
+html[data-sec="founder"] { --signal: #7b8cff; }
+html[data-sec="photography"] { --signal: #2fd8b5; }
+
+html::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(70% 55% at 100% 0%, color-mix(in srgb, var(--signal) 17%, transparent), transparent 70%),
+    radial-gradient(60% 50% at 0% 100%, color-mix(in srgb, var(--signal) 9%, transparent), transparent 70%);
+}
+
+/* Each section also gets its own texture, in its own colour. */
+#journey {
+  background-image: repeating-linear-gradient(
+    115deg,
+    transparent 0 26px,
+    color-mix(in srgb, var(--signal) 7%, transparent) 26px 27px
+  );
+}
+
+#founder {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--signal) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--signal) 7%, transparent) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+
+#photography {
+  background-image: radial-gradient(color-mix(in srgb, var(--signal) 22%, transparent) 1px, transparent 1.6px);
+  background-size: 30px 30px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    #journey, #founder, #photography {
+      animation: texture-drift linear both;
+      animation-timeline: view();
+    }
+  }
+
+  @keyframes texture-drift {
+    from { background-position: 0 0; }
+    to { background-position: 0 -240px; }
+  }
+}

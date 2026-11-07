@@ -82,6 +82,16 @@ const og = new URL(image, site);
       // [data-rise] block would sit at opacity 0 forever when scripting is off.
       document.documentElement.classList.add("js");
 
+      // Tells the stylesheet which section holds the middle of the screen, so
+      // the accent and the ambient light can cross-fade as you travel the page.
+      addEventListener("DOMContentLoaded", () => {
+        const io = new IntersectionObserver(
+          (hits) => hits.forEach((h) => h.isIntersecting && (document.documentElement.dataset.sec = h.target.id)),
+          { rootMargin: "-50% 0px -50% 0px" },
+        );
+        document.querySelectorAll("main section[id]").forEach((el) => io.observe(el));
+      });
+
       // No "Save image" menu and no drag-out on photographs. A deterrent for
       // casual saving only; the © mark burned into each file is what sticks.
       for (const type of ["contextmenu", "dragstart"]) {
