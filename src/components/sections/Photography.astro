@@ -166,7 +166,7 @@ const sizes = (f: Frame, row: Frame[]) => {
   .shot-glow {
     background: radial-gradient(
       56% 30% at 10% 62%,
-      rgba(255, 47, 29, 0.07),
+      color-mix(in srgb, var(--signal) 7%, transparent),
       transparent 64%
     );
   }
@@ -287,7 +287,7 @@ const sizes = (f: Frame, row: Frame[]) => {
     top: -1px;
     width: 0;
     height: 1px;
-    background: rgba(255, 47, 29, 0.45);
+    background: color-mix(in srgb, var(--signal) 45%, transparent);
   }
 
   #shotHead {
@@ -400,7 +400,7 @@ const sizes = (f: Frame, row: Frame[]) => {
     .shot-glow {
       background: radial-gradient(
         72% 26% at 14% 64%,
-        rgba(255, 47, 29, 0.07),
+        color-mix(in srgb, var(--signal) 7%, transparent),
         transparent 66%
       );
     }

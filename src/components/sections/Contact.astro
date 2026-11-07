@@ -126,7 +126,7 @@ const spokes = [
     z-index: 0;
     background: radial-gradient(
       64% 40% at 76% 88%,
-      rgba(255, 47, 29, 0.1),
+      color-mix(in srgb, var(--signal) 10%, transparent),
       transparent 64%
     );
   }
@@ -366,7 +366,7 @@ const spokes = [
     transform: rotate(var(--a));
     background: linear-gradient(
       90deg,
-      rgba(255, 47, 29, 0.85),
+      color-mix(in srgb, var(--signal) 85%, transparent),
       rgba(242, 239, 233, 0.06)
     );
     animation: lm-rule 900ms var(--ease) var(--d) both;

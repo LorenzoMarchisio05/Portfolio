@@ -78,7 +78,7 @@ const { t, href } = useI18n(Astro.url);
   .founder-glow {
     background: radial-gradient(
       58% 34% at 14% 22%,
-      rgba(255, 47, 29, 0.09),
+      color-mix(in srgb, var(--signal) 9%, transparent),
       transparent 64%
     );
   }
@@ -189,7 +189,7 @@ const { t, href } = useI18n(Astro.url);
     .founder-glow {
       background: radial-gradient(
         74% 28% at 12% 20%,
-        rgba(255, 47, 29, 0.09),
+        color-mix(in srgb, var(--signal) 9%, transparent),
         transparent 66%
       );
     }

@@ -3,6 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import Chrome from "../../components/components/Chrome.astro";
 import Footer from "../../components/components/Footer.astro";
 import Orbit from "../../components/components/Orbit.astro";
+import Band from "../../components/components/Band.astro";
 import Hero from "../../components/sections/Hero.astro";
 import Engineer from "../../components/sections/Engineer.astro";
 import Journey from "../../components/sections/Journey.astro";
@@ -63,7 +64,9 @@ const website = {
     </Orbit>
 
     <Journey />
+    <Band word={`120° ${t.roles.founder}`} color="#7b8cff" />
     <Founder />
+    <Band word={`240° ${t.roles.photographer}`} color="#2fd8b5" reverse />
     <Photography />
     <Contact />
   </main>

@@ -1,0 +1,102 @@
+---
+// A giant outlined word that slides sideways as the seam scrolls past. It marks
+// the change of section, and carries the colour of the one that follows.
+const { word, color, reverse = false } = Astro.props;
+const run = Array.from({ length: 6 }, (_, i) => i);
+---
+
+<div class:list={["band", { reverse }]} style={`--signal:${color}`} aria-hidden="true">
+  <div class="rail">
+    {run.map((i) => <span class:list={{ solid: i % 2 === 1 }}>{word}<i>✦</i></span>)}
+  </div>
+</div>
+
+<style>
+  .band {
+    position: relative;
+    z-index: 1;
+    overflow: clip;
+    padding: clamp(28px, 5vh, 56px) 0;
+    border-top: 1px solid var(--hair);
+    background: linear-gradient(90deg, color-mix(in srgb, var(--signal) 9%, transparent), transparent 60%);
+  }
+
+  .rail {
+    display: flex;
+    gap: 0.35em;
+    width: max-content;
+    font-size: clamp(64px, 12vw, 190px);
+    font-weight: 700;
+    font-stretch: 79%;
+    letter-spacing: -0.03em;
+    line-height: 0.9;
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  .rail span {
+    color: transparent;
+    -webkit-text-stroke: 1px color-mix(in srgb, var(--signal) 70%, transparent);
+  }
+
+  .rail span.solid {
+    color: var(--signal);
+    -webkit-text-stroke: 0;
+  }
+
+  .rail i {
+    margin-left: 0.35em;
+    font-style: normal;
+    font-size: 0.4em;
+    vertical-align: 0.35em;
+    color: var(--signal);
+    -webkit-text-stroke: 0;
+  }
+
+  .band::before {
+    content: "";
+    position: absolute;
+    inset: -1px 0 auto;
+    height: 2px;
+    background: linear-gradient(90deg, var(--signal), transparent 80%);
+    transform-origin: left;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .rail {
+        animation: band-slide linear both;
+        animation-timeline: view();
+        animation-range: cover 0% cover 100%;
+      }
+
+      .reverse .rail {
+        animation-name: band-slide-back;
+      }
+
+      .band::before {
+        animation: band-draw linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 80%;
+      }
+    }
+  }
+
+  @keyframes band-slide {
+    from { translate: 4% 0; }
+    to { translate: -42% 0; }
+  }
+
+  @keyframes band-slide-back {
+    from { translate: -42% 0; }
+    to { translate: 4% 0; }
+  }
+
+  @keyframes band-draw {
+    from { transform: scaleX(0); }
+  }
+
+  @media (max-width: 768px) {
+    .rail { font-size: clamp(56px, 22vw, 96px); }
+  }
+</style>
