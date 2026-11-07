@@ -42,6 +42,15 @@ const photos = await Promise.all(
 const categories = [...new Set(photos.map((p) => p.category).filter(Boolean))]
   .map((c) => ({ id: c, label: word(c) }))
   .sort((a, b) => a.label.localeCompare(b.label, lang));
+// Showcase picks, spread evenly through the set: landscapes for the pinned
+// strip, one wide frame for the reveal, the rest for two drifting rows.
+const spread = <T,>(list: T[], n: number) =>
+  list.length <= n ? list : Array.from({ length: n }, (_, i) => list[Math.floor((i * list.length) / n)]);
+const wide = photos.filter((p) => p.ratio >= 1.2);
+const strip = spread(wide, 8);
+const feature = wide.filter((p) => p.ratio >= 1.45)[7] ?? wide[0];
+const rest = photos.filter((p) => !strip.includes(p) && p !== feature);
+const rows = [spread(rest.filter((_, i) => i % 2 === 0), 14), spread(rest.filter((_, i) => i % 2 === 1), 14)];
 const count = String(photos.length).padStart(2, "0");
 ---
 
@@ -65,6 +74,53 @@ const count = String(photos.length).padStart(2, "0");
       </div>
       <div class="side">
         <p class="meta"><b class="num">{count}</b> <span>{g.count(count).replace(count, "").trim()}</span></p>
+      </div>
+    </header>
+
+    {
+      strip.length > 3 && (
+        <section class="pin" aria-hidden="true">
+          <div class="stage">
+            <p class="cap"><b>01</b> / 03</p>
+            <div class="track">
+              {strip.map((p, i) => (
+                <button type="button" class="pick" tabindex="-1" data-full={p.src} style={`--r:${p.ratio};--i:${i}`}>
+                  <img src={p.src} alt="" loading="lazy" decoding="async" />
+                  <span>{String(i + 1).padStart(2, "0")}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    <section class="reveal" aria-hidden="true">
+      <p class="cap"><b>02</b> / 03</p>
+      <button type="button" class="pick" tabindex="-1" data-full={feature.src}>
+        <img src={feature.src} alt="" loading="lazy" decoding="async" />
+      </button>
+    </section>
+
+    <section class="rows" aria-hidden="true">
+      <p class="cap"><b>03</b> / 03</p>
+      {
+        rows.map((row, k) => (
+          <div class={`marquee ${k ? "rev" : ""}`}>
+            <div class="belt">
+              {[...row, ...row].map((p) => (
+                <button type="button" class="pick" tabindex="-1" data-full={p.src} style={`--r:${p.ratio}`}>
+                  <img src={p.thumb} alt="" loading="lazy" decoding="async" />
+                </button>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </section>
+
+    <div class="wallhead">
+      <span class="cap"><b>{count}</b></span>
         {
           categories.length > 1 && (
             <div class="filters" role="group" aria-label={g.filter}>
@@ -79,8 +135,7 @@ const count = String(photos.length).padStart(2, "0");
             </div>
           )
         }
-      </div>
-    </header>
+    </div>
 
     <ul class="grid">
       {
@@ -165,6 +220,17 @@ const count = String(photos.length).padStart(2, "0");
   shots.forEach((shot) =>
     shot.addEventListener("click", () => {
       show(shot);
+      viewer.showModal();
+    }),
+  );
+
+  // Showcase frames open the same viewer, on their copy in the wall.
+  document.querySelectorAll<HTMLButtonElement>(".pick").forEach((pick) =>
+    pick.addEventListener("click", () => {
+      const home = shots.find((shot) => shot.dataset.full === pick.dataset.full);
+      if (!home) return;
+      home.parentElement!.hidden = false;
+      show(home);
       viewer.showModal();
     }),
   );
@@ -584,5 +650,188 @@ const count = String(photos.length).padStart(2, "0");
       --row: 38vw;
       --gap: 6px;
     }
+  }
+
+  /* ---- showcase ---- */
+
+  .cap {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: var(--dim);
+  }
+
+  .cap b { color: var(--signal); font-weight: 500; }
+
+  .pick {
+    padding: 0;
+    border: 0;
+    background: var(--frame-fill);
+    cursor: pointer;
+  }
+
+  .pick img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .wallhead {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 14px 32px;
+    padding-top: 22px;
+    border-top: 1px solid var(--hair-3);
+  }
+
+  /* Pinned strip: the page stops, the frames travel sideways. */
+  .pin {
+    height: 300vh;
+    margin-inline: calc(var(--pad-x) * -1);
+    view-timeline: --strip block;
+  }
+
+  .stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 22px;
+    overflow: clip;
+  }
+
+  .stage .cap { padding-inline: var(--pad-x); }
+
+  .track {
+    display: flex;
+    gap: clamp(14px, 2vw, 32px);
+    width: max-content;
+    padding-inline: var(--pad-x);
+  }
+
+  .track .pick {
+    position: relative;
+    height: min(62vh, 560px);
+    aspect-ratio: var(--r);
+    overflow: clip;
+  }
+
+  .track .pick span {
+    position: absolute;
+    left: 14px;
+    bottom: 10px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--bone);
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
+  }
+
+  /* A frame wipes open to full width. */
+  .reveal {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .reveal .pick {
+    width: 100%;
+    aspect-ratio: 2.2;
+    overflow: clip;
+  }
+
+  /* Two belts that never stop, opposite ways. */
+  .rows {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-inline: calc(var(--pad-x) * -1);
+    overflow: clip;
+  }
+
+  .rows .cap { padding-inline: var(--pad-x); }
+
+  .belt {
+    display: flex;
+    gap: 12px;
+    padding-right: 12px;
+    width: max-content;
+  }
+
+  .belt .pick {
+    height: clamp(120px, 15vw, 220px);
+    aspect-ratio: var(--r);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .track {
+        animation: strip-slide linear both;
+        animation-timeline: --strip;
+        animation-range: cover 25% cover 75%;
+      }
+
+      .track .pick img {
+        animation: strip-parallax linear both;
+        animation-timeline: --strip;
+        animation-range: cover 25% cover 75%;
+        scale: 1.25;
+      }
+
+      .reveal .pick {
+        animation: wipe linear both;
+        animation-timeline: view();
+        animation-range: entry 5% cover 45%;
+      }
+
+      .reveal .pick img {
+        animation: wipe-zoom linear both;
+        animation-timeline: view();
+        animation-range: entry 5% exit 40%;
+      }
+    }
+
+    .belt { animation: belt 70s linear infinite; }
+    .rev .belt { animation-direction: reverse; animation-duration: 90s; }
+    .marquee:hover .belt { animation-play-state: paused; }
+
+    .belt .pick { transition: scale 400ms var(--ease), filter 300ms linear; filter: saturate(0.7) brightness(0.8); }
+    .belt .pick:hover { scale: 1.06; filter: none; }
+    .track .pick { transition: filter 300ms linear; }
+  }
+
+  @keyframes strip-slide {
+    to { translate: calc(-100% + 100vw) 0; }
+  }
+
+  @keyframes strip-parallax {
+    from { translate: -9% 0; }
+    to { translate: 9% 0; }
+  }
+
+  @keyframes wipe {
+    from { clip-path: inset(18% 22% 18% 22%); }
+    to { clip-path: inset(0); }
+  }
+
+  @keyframes wipe-zoom {
+    from { scale: 1.35; }
+    to { scale: 1; }
+  }
+
+  @keyframes belt {
+    to { translate: -50% 0; }
+  }
+
+  @media (max-width: 768px) {
+    .pin { height: 240vh; }
+    .track .pick { height: 52vh; }
+    .reveal .pick { aspect-ratio: 1.4; }
   }
 </style>
