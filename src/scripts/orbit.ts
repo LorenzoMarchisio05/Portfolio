@@ -84,7 +84,12 @@ function angleAt(y: number) {
 
 let lastAngle = -1;
 
+// Boot sweep: on a fresh load at the top, the readout and the ruler head run
+// 000° up to where the page rests. `booting` parks chrome() meanwhile.
+let booting = false;
+
 function chrome(angle: number, progress: number) {
+  if (booting) return;
   if (progFill) progFill.style.transform = `scaleX(${(progress / 100).toFixed(4)})`;
   if (angle === lastAngle) return;
   lastAngle = angle;
@@ -574,3 +579,22 @@ const resized = new ResizeObserver(() => {
 });
 for (const el of [corridorTrack, jPin, shotStage, document.body])
   if (el) resized.observe(el);
+
+if (!reduce.matches && scrollY < 4 && angHead) {
+  const to = angleAt(0);
+  const t0 = performance.now() + 250;
+  booting = true;
+  const sweep = (now: number) => {
+    const f = Math.min(1, Math.max(0, (now - t0) / 1100));
+    const a = Math.round(to * (1 - Math.pow(1 - f, 4)));
+    angleOuts.forEach((el) => (el.textContent = String(a).padStart(3, "0") + "°"));
+    angHead.style.left = ((a / 360) * 100).toFixed(2) + "%";
+    if (f < 1) requestAnimationFrame(sweep);
+    else {
+      booting = false;
+      lastAngle = -1;
+      update();
+    }
+  };
+  requestAnimationFrame(sweep);
+}

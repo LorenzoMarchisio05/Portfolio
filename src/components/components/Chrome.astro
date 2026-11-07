@@ -72,6 +72,17 @@ const links = [
     color: var(--warm);
   }
 
+  .links a {
+    background: linear-gradient(var(--signal), var(--signal)) left bottom / 0% 1px no-repeat;
+    padding-bottom: 4px;
+    transition: background-size 260ms var(--ease), color 160ms linear;
+  }
+
+  .links a:hover,
+  .links a[data-active] {
+    background-size: 100% 1px;
+  }
+
   .links a[data-active] {
     color: var(--signal);
   }

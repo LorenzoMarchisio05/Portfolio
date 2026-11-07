@@ -9,7 +9,7 @@ const ticks = ["000", "120", "240", "360"];
 <section id="top">
   <div class="copy" data-par="-.04" data-par-m="0">
     <p class="eyebrow"><span data-angle>068°</span> · {t.hero.status}</p>
-    <h1 class="name">LORENZO<br />MARCHISIO</h1>
+    <h1 class="name"><span class="ln"><span>LORENZO</span></span><span class="ln"><span>MARCHISIO</span></span></h1>
     <p class="intro">{t.hero.intro}</p>
     <p class="meta">
       {t.hero.study}<br />
@@ -69,6 +69,48 @@ const ticks = ["000", "120", "240", "360"];
 
   .eyebrow {
     letter-spacing: 0.2em;
+  }
+
+  .ln {
+    display: block;
+    overflow: clip;
+    overflow-clip-margin: 0;
+    padding: 0.1em 0.04em;
+    margin: -0.1em -0.04em;
+  }
+
+  /* Load sequence: the name rises out of its line, the ruler draws, then the
+     copy settles. Plays once; content is in place without it. */
+  @keyframes hero-line {
+    from { transform: translateY(104%); }
+  }
+  @keyframes hero-fade {
+    from { opacity: 0; translate: 0 12px; }
+  }
+  @keyframes hero-draw {
+    from { transform: scaleX(0); }
+  }
+  @keyframes hero-tick {
+    from { opacity: 0; transform: scaleY(0); }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .ln > span {
+      display: block;
+      animation: hero-line 900ms var(--ease) both;
+    }
+    .ln:nth-child(2) > span { animation-delay: 110ms; }
+    .eyebrow { animation: hero-fade 600ms var(--ease) 60ms both; }
+    .intro { animation: hero-fade 700ms var(--ease) 520ms both; }
+    .meta { animation: hero-fade 700ms var(--ease) 640ms both; }
+    .hint { animation: hero-fade 700ms var(--ease) 1000ms both; }
+    .rule { transform-origin: left; animation: hero-draw 1100ms var(--ease) 250ms both; }
+    .rule i { transform-origin: top; animation: hero-tick 400ms var(--ease) both; }
+    .rule i:nth-of-type(1) { animation-delay: 350ms; }
+    .rule i:nth-of-type(2) { animation-delay: 600ms; }
+    .rule i:nth-of-type(3) { animation-delay: 850ms; }
+    .rule i:nth-of-type(4) { animation-delay: 1100ms; }
+    .ticks { animation: hero-fade 600ms var(--ease) 300ms both; }
   }
 
   .intro {

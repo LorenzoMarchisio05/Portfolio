@@ -298,6 +298,71 @@ html.js [data-rise].is-in {
   will-change: transform;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  /* Call-to-action links: a red fill sweeps under the label, and the label
+     nudges on press. */
+  a.go {
+    align-self: start;
+    background: linear-gradient(var(--signal), var(--signal)) left bottom / 0% 100% no-repeat;
+    transition:
+      background-size 320ms var(--ease),
+      color 200ms linear,
+      translate 120ms linear;
+  }
+
+  a.go:hover {
+    background-size: 100% 100%;
+    color: var(--bone);
+  }
+
+  a.go:active {
+    translate: 3px 0;
+  }
+
+  /* Pointer light: [data-lit] surfaces follow the cursor (set in Layout). */
+  [data-lit] {
+    background: radial-gradient(
+      340px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(255, 47, 29, var(--lit, 0)),
+      transparent 70%
+    );
+    transition: --lit 240ms linear;
+  }
+
+  @property --lit {
+    syntax: "<number>";
+    inherits: true;
+    initial-value: 0;
+  }
+
+  [data-lit]:hover {
+    --lit: 0.07;
+  }
+}
+
+/* Cross-document page changes: a short dissolve instead of a hard cut. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-old(root) {
+    animation: vt-out 160ms linear both;
+  }
+
+  ::view-transition-new(root) {
+    animation: vt-in 380ms var(--ease) 60ms both;
+  }
+
+  @keyframes vt-out {
+    to { opacity: 0; }
+  }
+
+  @keyframes vt-in {
+    from { opacity: 0; }
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

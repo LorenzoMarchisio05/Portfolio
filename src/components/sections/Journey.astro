@@ -19,13 +19,15 @@ const { t, lang } = useI18n(Astro.url);
     >
     </div>
 
-    <header class="head" data-rise>
+    <div>
+  <header class="head" data-rise>
       <div class="title">
         <p class="eyebrow">{t.journey.eyebrow}</p>
         <h2 class="headline" set:html={t.journey.headline} />
       </div>
       <p class="lead note">{t.journey.note}</p>
     </header>
+  </div>
 
     <div id="jStage">
       <div class="frame">
