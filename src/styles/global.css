@@ -319,9 +319,9 @@ html.js [data-rise].is-in {
 /* ---- Colour by section ----------------------------------------------- */
 /* Each stretch of the page re-tints the accent: everything that reads
    `--signal` below follows, so the page changes mood as you travel it. */
-#journey { --signal: #ff9f1c; }
-#founder { --signal: #7b8cff; }
-#photography { --signal: #2fd8b5; }
+#journey { --signal: #e8a33d; }
+#founder { --signal: #ff5d8f; }
+#photography { --signal: #a8c686; }
 
 /* Headings wipe in from the left as their section arrives. */
 @media (prefers-reduced-motion: no-preference) {
@@ -361,14 +361,14 @@ html {
   transition: --signal 700ms linear, --ink 900ms linear;
 }
 
-html[data-sec="journey"] { --ink: #1a1007; }
-html[data-sec="founder"] { --ink: #0b0d24; }
-html[data-sec="photography"] { --ink: #061a19; }
-html[data-sec="contact"] { --ink: #1c0807; }
+html[data-sec="journey"] { --ink: #120e08; }
+html[data-sec="founder"] { --ink: #130c0d; }
+html[data-sec="photography"] { --ink: #0d0f0a; }
+html[data-sec="contact"] { --ink: #130908; }
 
-html[data-sec="journey"] { --signal: #ff9f1c; }
-html[data-sec="founder"] { --signal: #7b8cff; }
-html[data-sec="photography"] { --signal: #2fd8b5; }
+html[data-sec="journey"] { --signal: #e8a33d; }
+html[data-sec="founder"] { --signal: #ff5d8f; }
+html[data-sec="photography"] { --signal: #a8c686; }
 
 html::before {
   content: "";
@@ -377,8 +377,8 @@ html::before {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(70% 55% at 100% 0%, color-mix(in srgb, var(--signal) 24%, transparent), transparent 70%),
-    radial-gradient(60% 50% at 0% 100%, color-mix(in srgb, var(--signal) 9%, transparent), transparent 70%);
+    radial-gradient(70% 55% at 100% 0%, color-mix(in srgb, var(--signal) 12%, transparent), transparent 70%),
+    radial-gradient(60% 50% at 0% 100%, color-mix(in srgb, var(--signal) 6%, transparent), transparent 70%);
 }
 
 /* Each section also gets its own texture, in its own colour. */
@@ -386,19 +386,19 @@ html::before {
   background-image: repeating-linear-gradient(
     115deg,
     transparent 0 26px,
-    color-mix(in srgb, var(--signal) 7%, transparent) 26px 27px
+    color-mix(in srgb, var(--signal) 4%, transparent) 26px 27px
   );
 }
 
 #founder {
   background-image:
-    linear-gradient(color-mix(in srgb, var(--signal) 7%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in srgb, var(--signal) 7%, transparent) 1px, transparent 1px);
+    linear-gradient(color-mix(in srgb, var(--signal) 4%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--signal) 4%, transparent) 1px, transparent 1px);
   background-size: 72px 72px;
 }
 
 #photography {
-  background-image: radial-gradient(color-mix(in srgb, var(--signal) 22%, transparent) 1px, transparent 1.6px);
+  background-image: radial-gradient(color-mix(in srgb, var(--signal) 14%, transparent) 1px, transparent 1.6px);
   background-size: 30px 30px;
 }
 
