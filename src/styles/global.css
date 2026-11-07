@@ -320,7 +320,7 @@ html.js [data-rise].is-in {
 /* Each stretch of the page re-tints the accent: everything that reads
    `--signal` below follows, so the page changes mood as you travel it. */
 #journey { --signal: #e8a33d; }
-#founder { --signal: #ff5d8f; }
+#founder { --signal: #efe0b8; }
 #photography { --signal: #a8c686; }
 
 /* Headings wipe in from the left as their section arrives. */
@@ -362,12 +362,12 @@ html {
 }
 
 html[data-sec="journey"] { --ink: #120e08; }
-html[data-sec="founder"] { --ink: #130c0d; }
+html[data-sec="founder"] { --ink: #110e0b; }
 html[data-sec="photography"] { --ink: #0d0f0a; }
 html[data-sec="contact"] { --ink: #130908; }
 
 html[data-sec="journey"] { --signal: #e8a33d; }
-html[data-sec="founder"] { --signal: #ff5d8f; }
+html[data-sec="founder"] { --signal: #efe0b8; }
 html[data-sec="photography"] { --signal: #a8c686; }
 
 html::before {
