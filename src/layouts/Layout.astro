@@ -96,6 +96,13 @@ const og = new URL(image, site);
       document.addEventListener(
         "pointermove",
         (e) => {
+          // Call-to-action links lean toward the pointer.
+          const go = e.target instanceof Element && e.target.closest("a.go");
+          if (go) {
+            const b = go.getBoundingClientRect();
+            go.style.setProperty("--tx", (e.clientX - b.left - b.width / 2) * 0.18 + "px");
+            go.style.setProperty("--ty", (e.clientY - b.top - b.height / 2) * 0.3 + "px");
+          }
           const el = e.target instanceof Element && e.target.closest("[data-lit]");
           if (!el) return;
           const r = el.getBoundingClientRect();
@@ -104,6 +111,13 @@ const og = new URL(image, site);
         },
         { passive: true },
       );
+
+      document.addEventListener("pointerout", (e) => {
+        if (e.target instanceof Element && e.target.matches("a.go")) {
+          e.target.style.removeProperty("--tx");
+          e.target.style.removeProperty("--ty");
+        }
+      });
 
       // No "Save image" menu and no drag-out on photographs. A deterrent for
       // casual saving only; the © mark burned into each file is what sticks.

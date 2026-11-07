@@ -4,12 +4,19 @@ import { useI18n } from "../../i18n";
 
 const { t } = useI18n(Astro.url);
 const ticks = ["000", "120", "240", "360"];
+const lines = ["LORENZO", "MARCHISIO"];
 ---
 
-<section id="top">
+<section id="top" data-lit>
   <div class="copy" data-par="-.04" data-par-m="0">
     <p class="eyebrow"><span data-angle>068°</span> · {t.hero.status}</p>
-    <h1 class="name"><span class="ln"><span>LORENZO</span></span><span class="ln"><span>MARCHISIO</span></span></h1>
+    <h1 class="name" aria-label="LORENZO MARCHISIO">
+      {lines.map((w) => (
+        <span class="ln" aria-hidden="true">
+          {[...w].map((c, i) => <span class="l" style={`--i:${i}`}>{c}</span>)}
+        </span>
+      ))}
+    </h1>
     <p class="intro">{t.hero.intro}</p>
     <p class="meta">
       {t.hero.study}<br />
@@ -87,6 +94,19 @@ const ticks = ["000", "120", "240", "360"];
   @keyframes hero-fade {
     from { opacity: 0; translate: 0 12px; }
   }
+  @keyframes hint-pulse {
+    50% { opacity: 0.4; }
+  }
+  @keyframes aurora {
+    from { translate: -4% -3%; scale: 1; }
+    to { translate: 5% 4%; scale: 1.18; }
+  }
+  @keyframes spread-l {
+    to { translate: -9vw 0; }
+  }
+  @keyframes spread-r {
+    to { translate: 7vw 0; }
+  }
   @keyframes hero-draw {
     from { transform: scaleX(0); }
   }
@@ -95,15 +115,43 @@ const ticks = ["000", "120", "240", "360"];
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .ln > span {
-      display: block;
-      animation: hero-line 900ms var(--ease) both;
+    .l {
+      display: inline-block;
+      animation: hero-line 900ms var(--ease) calc(var(--i) * 45ms + var(--d, 0ms)) both;
+      transition: translate 320ms var(--ease), color 160ms linear;
     }
-    .ln:nth-child(2) > span { animation-delay: 110ms; }
+    .ln:nth-child(2) { --d: 200ms; }
+    /* Each letter answers the pointer on its own. */
+    .l:hover {
+      color: var(--signal);
+      translate: 0 -0.05em;
+    }
+    .hint { animation: hero-fade 700ms var(--ease) 1000ms both, hint-pulse 2.6s ease-in-out 2.2s infinite; }
+
+    /* A slow aurora behind the name: two blobs of colour that never settle. */
+    #top::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(38% 46% at 28% 42%, color-mix(in srgb, var(--signal) 15%, transparent), transparent 70%),
+        radial-gradient(30% 40% at 72% 62%, rgba(232, 163, 61, 0.09), transparent 70%);
+      animation: aurora 22s ease-in-out infinite alternate;
+    }
+
+    /* On the way out the two lines of the name part, one each side. */
+    @supports (animation-timeline: scroll()) {
+      .ln {
+        animation: spread-l linear both;
+        animation-timeline: scroll(root);
+        animation-range: 0 70vh;
+      }
+      .ln:nth-child(2) { animation-name: spread-r; }
+    }
     .eyebrow { animation: hero-fade 600ms var(--ease) 60ms both; }
     .intro { animation: hero-fade 700ms var(--ease) 520ms both; }
     .meta { animation: hero-fade 700ms var(--ease) 640ms both; }
-    .hint { animation: hero-fade 700ms var(--ease) 1000ms both; }
     .rule { transform-origin: left; animation: hero-draw 1100ms var(--ease) 250ms both; }
     .rule i { transform-origin: top; animation: hero-tick 400ms var(--ease) both; }
     .rule i:nth-of-type(1) { animation-delay: 350ms; }

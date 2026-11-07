@@ -315,6 +315,10 @@ html.js [data-rise].is-in {
     color: var(--bone);
   }
 
+  a.go {
+    translate: var(--tx, 0px) var(--ty, 0px);
+  }
+
   a.go:active {
     translate: 3px 0;
   }
