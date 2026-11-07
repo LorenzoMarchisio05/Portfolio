@@ -869,6 +869,7 @@ const count = String(photos.length).padStart(2, "0");
   }
 
   @media (max-width: 768px) {
+    .pin, .reveal, .rows { display: none; }
     @keyframes wipe {
       from { clip-path: inset(8% 10% 8% 10%); }
       to { clip-path: inset(0); }
