@@ -212,8 +212,9 @@ img {
   font-size: clamp(40px, 6vw, 76px);
   font-weight: 700;
   font-stretch: 80%;
-  letter-spacing: -0.03em;
-  line-height: 0.94;
+  letter-spacing: -0.012em;
+  word-spacing: 0.08em;
+  line-height: 0.96;
   margin: 0;
 }
 

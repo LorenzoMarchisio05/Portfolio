@@ -112,7 +112,7 @@ const { t, lang } = useI18n(Astro.url);
     padding: 0 var(--pad-x);
     display: flex;
     align-items: flex-end;
-    gap: 40px;
+    gap: 40px clamp(40px, 7vw, 120px);
     flex-wrap: wrap;
   }
 
@@ -126,8 +126,16 @@ const { t, lang } = useI18n(Astro.url);
     gap: 14px;
   }
 
+
+  /* The paragraph sits against the headline's last line, set off by a rule,
+     instead of floating in the far corner. */
   .note {
-    max-width: 420px;
+    max-width: 380px;
+    padding: 4px 0 4px 24px;
+    border-left: 1px solid color-mix(in srgb, var(--signal) 55%, transparent);
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 0.4em;
   }
 
   .frame {
