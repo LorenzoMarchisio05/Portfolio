@@ -98,7 +98,6 @@ const { t } = useI18n(Astro.url);
     flex: 1 1 520px;
     min-width: 300px;
     margin: 0;
-    padding: 0;
     list-style: none;
   }
 
@@ -137,26 +136,99 @@ const { t } = useI18n(Astro.url);
       transform: scaleX(1);
     }
 
+    /* Reading order: the row near the middle of the screen is lit, the rest
+       recede. A copper rail beside the list fills as you pass through it. */
     @supports (animation-timeline: view()) {
       .method li {
-        animation: method-in linear both;
+        animation: method-focus linear both;
         animation-timeline: view();
-        animation-range: entry 0% entry 60%;
+        animation-range: cover 0% cover 100%;
+      }
+
+      .method li .index {
+        display: inline-block;
+        transform-origin: left center;
+        animation: index-focus linear both;
+        animation-timeline: view();
+        animation-range: cover 0% cover 100%;
+      }
+
+      .method li h3 {
+        animation: title-focus linear both;
+        animation-timeline: view();
+        animation-range: cover 0% cover 100%;
+      }
+
+      .method::after {
+        animation: rail-fill linear both;
+        animation-timeline: view();
+        animation-range: cover 18% cover 82%;
+      }
+
+      .glyph .tilt {
+        animation: glyph-turn linear both;
+        animation-timeline: view(block);
+        animation-range: cover 0% cover 100%;
       }
     }
   }
 
-  @keyframes method-in {
-    from { opacity: 0.15; translate: 36px 0; }
+  @keyframes method-focus {
+    0% { opacity: 0.16; translate: 28px 0; }
+    38%, 62% { opacity: 1; translate: 0 0; }
+    100% { opacity: 0.16; translate: 0 0; }
+  }
+
+  @keyframes index-focus {
+    0%, 100% { scale: 1; }
+    38%, 62% { scale: 1.5; }
+  }
+
+  @keyframes title-focus {
+    38%, 62% { color: var(--bone); }
+    0%, 100% { color: var(--warm); }
+  }
+
+  @keyframes rail-fill {
+    from { transform: scaleY(0); }
+  }
+
+  @keyframes glyph-turn {
+    from { rotate: -6deg; }
+    to { rotate: 6deg; }
+  }
+
+  .method {
+    position: relative;
+    padding-left: clamp(18px, 2.4vw, 32px);
+  }
+
+  .method::before,
+  .method::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--hair-3);
+  }
+
+  .method::after {
+    width: 2px;
+    background: var(--signal);
+    transform-origin: top;
+    box-shadow: 0 0 14px color-mix(in srgb, var(--signal) 60%, transparent);
   }
 
   .index {
     flex: 0 0 auto;
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: 0.1em;
     color: var(--signal);
     padding-top: 6px;
+    min-width: 2ch;
   }
 
   .principle {
