@@ -86,7 +86,7 @@ const count = String(photos.length).padStart(2, "0");
             <div class="bar"><i></i></div>
             <div class="track">
               {strip.map((p, i) => (
-                <button type="button" class="pick" tabindex="-1" data-full={p.src} style={`--r:${p.ratio};--i:${i}`}>
+                <button type="button" class="pick" data-cursor="frame" tabindex="-1" data-full={p.src} style={`--r:${p.ratio};--i:${i}`}>
                   <img src={p.src} alt="" loading="lazy" decoding="async" />
                   <span>{String(i + 1).padStart(2, "0")}</span>
                 </button>
@@ -99,7 +99,7 @@ const count = String(photos.length).padStart(2, "0");
 
     <section class="reveal" aria-hidden="true">
       <p class="cap"><b>02</b> / 03</p>
-      <button type="button" class="pick" tabindex="-1" data-full={feature.src}>
+      <button type="button" class="pick" data-cursor="frame" tabindex="-1" data-full={feature.src}>
         <img src={feature.src} alt="" loading="lazy" decoding="async" />
       </button>
     </section>
@@ -111,7 +111,7 @@ const count = String(photos.length).padStart(2, "0");
           <div class={`marquee ${k ? "rev" : ""}`}>
             <div class="belt">
               {[...row, ...row].map((p) => (
-                <button type="button" class="pick" tabindex="-1" data-full={p.src} style={`--r:${p.ratio}`}>
+                <button type="button" class="pick" data-cursor="frame" tabindex="-1" data-full={p.src} style={`--r:${p.ratio}`}>
                   <img src={p.thumb} alt="" loading="lazy" decoding="async" />
                 </button>
               ))}
@@ -685,7 +685,6 @@ const count = String(photos.length).padStart(2, "0");
     padding: 0;
     border: 0;
     background: var(--frame-fill);
-    cursor: pointer;
   }
 
   .pick img {
