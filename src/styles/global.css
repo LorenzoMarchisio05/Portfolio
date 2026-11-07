@@ -349,9 +349,22 @@ html.js [data-rise].is-in {
   initial-value: #ff2f1d;
 }
 
-html {
-  transition: --signal 700ms linear;
+/* The page's own black drifts too: each section sits on a deep tint of its
+   accent instead of the same flat ink. */
+@property --ink {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #0c0b0a;
 }
+
+html {
+  transition: --signal 700ms linear, --ink 900ms linear;
+}
+
+html[data-sec="journey"] { --ink: #1a1007; }
+html[data-sec="founder"] { --ink: #0b0d24; }
+html[data-sec="photography"] { --ink: #061a19; }
+html[data-sec="contact"] { --ink: #1c0807; }
 
 html[data-sec="journey"] { --signal: #ff9f1c; }
 html[data-sec="founder"] { --signal: #7b8cff; }
@@ -364,7 +377,7 @@ html::before {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(70% 55% at 100% 0%, color-mix(in srgb, var(--signal) 17%, transparent), transparent 70%),
+    radial-gradient(70% 55% at 100% 0%, color-mix(in srgb, var(--signal) 24%, transparent), transparent 70%),
     radial-gradient(60% 50% at 0% 100%, color-mix(in srgb, var(--signal) 9%, transparent), transparent 70%);
 }
 
