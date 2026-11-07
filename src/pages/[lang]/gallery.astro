@@ -715,6 +715,7 @@ const count = String(photos.length).padStart(2, "0");
     position: sticky;
     top: 0;
     height: 100vh;
+    height: 100svh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -817,8 +818,11 @@ const count = String(photos.length).padStart(2, "0");
     .rev .belt { animation-direction: reverse; animation-duration: 90s; }
     .marquee:hover .belt { animation-play-state: paused; }
 
-    .belt .pick { transition: scale 400ms var(--ease), filter 300ms linear; filter: saturate(0.7) brightness(0.8); }
-    .belt .pick:hover { scale: 1.06; filter: none; }
+    .belt .pick { transition: scale 400ms var(--ease); }
+    @media (pointer: fine) {
+      .belt .pick { transition: scale 400ms var(--ease), filter 300ms linear; filter: saturate(0.7) brightness(0.8); }
+      .belt .pick:hover { scale: 1.06; filter: none; }
+    }
     .track .pick { transition: filter 300ms linear; }
   }
 
@@ -847,7 +851,7 @@ const count = String(photos.length).padStart(2, "0");
 
   @media (max-width: 768px) {
     .pin { height: 240vh; }
-    .track .pick { height: 52vh; }
+    .track .pick { height: 52vh; height: 52svh; }
     .reveal .pick { aspect-ratio: 1.4; }
   }
 
