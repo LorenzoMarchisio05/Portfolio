@@ -197,11 +197,16 @@ function glide(t: number) {
 // Journey.astro), built from the same glide() so both paths agree, and this
 // loop only keeps the card opacities and the counter in step with it.
 const scrollDriven = CSS.supports("animation-timeline: view()");
-if (scrollDriven && corridorTrack)
-  corridorTrack.style.animationTimingFunction = `linear(${Array.from(
-    { length: 41 },
-    (_, i) => glide(i / 40).toFixed(4),
+if (scrollDriven && corridorTrack) {
+  const ease = `linear(${Array.from({ length: 41 }, (_, i) =>
+    glide(i / 40).toFixed(4),
   ).join(", ")})`;
+  corridorTrack.style.animationTimingFunction = ease;
+  // The route line follows the cards' travel, easing included.
+  document
+    .querySelectorAll<HTMLElement>(".route-line i, .route-line b")
+    .forEach((el) => (el.style.animationTimingFunction = ease));
+}
 
 // Elsewhere this loop moves the track, easing toward the scroll position over
 // this many ms: the page scrolls on a thread of its own and this loop sees it
@@ -240,6 +245,20 @@ function measureCorridor() {
   // screen to its bottom meeting the screen's — less the part a tall pin
   // spends parking and the rests at either end.
   journeySection.style.setProperty("--j-travel", corridorMax + "px");
+  // Where along the travel the Leuven stop reaches the left edge: the route
+  // line's mark for it.
+  const leuven = corridorTrack.querySelector("[data-leuven]");
+  if (leuven && corridorMax)
+    journeySection.style.setProperty(
+      "--j-leuven",
+      String(
+        clamp01(
+          (leuven.getBoundingClientRect().left -
+            corridorTrack.getBoundingClientRect().left) /
+            corridorMax,
+        ),
+      ),
+    );
   journeySection.style.setProperty("--j-start", -pinTop + dwell + "px");
   journeySection.style.setProperty("--j-end", dwell + "px");
   // WebKit hands a running animation to its compositor with the values the

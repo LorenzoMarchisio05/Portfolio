@@ -43,6 +43,7 @@ const { t, lang } = useI18n(Astro.url);
                   <li
                     class:list={[{ next: s.next }]}
                     data-card
+                    data-leuven={s.en.name.startsWith("Leuven") || undefined}
                     style={`--w:${s.w}px;--size:${s.size}px;--msize:${s.mSize}px`}
                   >
                     <span class="year" style={s.yearRed ? "color:var(--signal)" : ""}>
@@ -80,8 +81,8 @@ const { t, lang } = useI18n(Astro.url);
            follow the corridor's own scroll timeline. -->
       <div class="route" aria-hidden="true">
         <span>CUNEO</span>
-        <div class="route-line"><i></i><b></b></div>
-        <span>LEUVEN</span>
+        <div class="route-line"><i></i><b></b><em>LEUVEN</em></div>
+        <span>2026 →</span>
       </div>
 
       <!-- Phone only: one stop per screen, so a counter replaces the widening
@@ -383,6 +384,30 @@ const { t, lang } = useI18n(Astro.url);
     transform-origin: left;
     transform: scaleX(0);
     box-shadow: 0 0 12px color-mix(in srgb, var(--signal) 55%, transparent);
+  }
+
+  /* Sits where the Leuven stop reaches the left edge, so the marker lands on
+     it as the move happens; the line carries on after it. orbit.ts sets the
+     fraction. */
+  .route-line em {
+    position: absolute;
+    top: 0;
+    left: calc(var(--j-leuven, 0.6) * 100%);
+    padding-top: 12px;
+    white-space: nowrap;
+    font-style: normal;
+    color: var(--warm);
+    transform: translateX(-50%);
+  }
+
+  .route-line em::before {
+    content: "";
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    width: 1px;
+    height: 9px;
+    background: var(--warm);
   }
 
   .route-line b {
