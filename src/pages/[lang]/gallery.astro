@@ -177,6 +177,19 @@ const count = String(photos.length).padStart(2, "0");
 </Layout>
 
 <script>
+  // The pin lasts exactly as long as the strip has to travel: one scrolled
+  // pixel moves the frames one pixel, then the page lets go.
+  const pin = document.querySelector<HTMLElement>(".pin");
+  const lane = pin?.querySelector<HTMLElement>(".track");
+  const fit = () => {
+    if (!pin || !lane) return;
+    const travel = Math.max(0, lane.scrollWidth - window.innerWidth);
+    pin.style.setProperty("--pin", `calc(100svh + ${travel}px)`);
+  };
+  fit();
+  addEventListener("resize", fit);
+  addEventListener("load", fit);
+
   const viewer = document.getElementById("viewer") as HTMLDialogElement;
   const big = viewer.querySelector("img")!;
   const remove = viewer.querySelector<HTMLAnchorElement>(".remove")!;
@@ -706,7 +719,7 @@ const count = String(photos.length).padStart(2, "0");
 
   /* Pinned strip: the page stops, the frames travel sideways. */
   .pin {
-    height: 300vh;
+    height: var(--pin, 300vh);
     margin-inline: calc(var(--pad-x) * -1);
     view-timeline: --strip block;
   }
@@ -791,20 +804,20 @@ const count = String(photos.length).padStart(2, "0");
       .track {
         animation: strip-slide linear both;
         animation-timeline: --strip;
-        animation-range: cover 25% cover 75%;
+        animation-range: cover 100svh cover calc(100% - 100svh);
       }
 
       .track .pick img {
         animation: strip-parallax linear both;
         animation-timeline: --strip;
-        animation-range: cover 25% cover 75%;
+        animation-range: cover 100svh cover calc(100% - 100svh);
         scale: 1.25;
       }
 
       .reveal .pick {
         animation: wipe linear both;
         animation-timeline: view();
-        animation-range: entry 5% cover 45%;
+        animation-range: entry 0% entry 100%;
       }
 
       .reveal .pick img {
@@ -814,8 +827,8 @@ const count = String(photos.length).padStart(2, "0");
       }
     }
 
-    .belt { animation: belt 70s linear infinite; }
-    .rev .belt { animation-direction: reverse; animation-duration: 90s; }
+    .belt { animation: belt 80s linear infinite; will-change: transform; }
+    .rev .belt { animation-name: belt-rev; }
     .marquee:hover .belt { animation-play-state: paused; }
 
     .belt .pick { transition: scale 400ms var(--ease); }
@@ -846,11 +859,20 @@ const count = String(photos.length).padStart(2, "0");
   }
 
   @keyframes belt {
-    to { translate: -50% 0; }
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-50%, 0, 0); }
+  }
+
+  @keyframes belt-rev {
+    from { transform: translate3d(-50%, 0, 0); }
+    to { transform: translate3d(0, 0, 0); }
   }
 
   @media (max-width: 768px) {
-    .pin { height: 240vh; }
+    @keyframes wipe {
+      from { clip-path: inset(8% 10% 8% 10%); }
+      to { clip-path: inset(0); }
+    }
     .track .pick { height: 52vh; height: 52svh; }
     .reveal .pick { aspect-ratio: 1.4; }
   }
@@ -941,7 +963,7 @@ const count = String(photos.length).padStart(2, "0");
       .bar i {
         animation: rail linear both;
         animation-timeline: --strip;
-        animation-range: cover 25% cover 75%;
+        animation-range: cover 100svh cover calc(100% - 100svh);
       }
     }
 
