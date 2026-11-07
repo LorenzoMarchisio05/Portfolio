@@ -63,9 +63,9 @@ const { t } = useI18n(Astro.url);
 <style>
   .head {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: clamp(22px, 3vh, 34px);
+    align-items: flex-end;
+    gap: 24px clamp(32px, 4vw, 64px);
+    flex-wrap: wrap;
   }
 
   .head p {
@@ -79,11 +79,12 @@ const { t } = useI18n(Astro.url);
   }
 
 
-  /* Stacked under the headline on the same left edge. */
+  /* Sits right beside the headline, level with its last line. */
   .intro {
-    max-width: 52ch;
+    max-width: 36ch;
     font-size: 17px;
-    line-height: 1.6;
+    line-height: 1.55;
+    margin-bottom: 0.45em;
   }
 
   /* In the headline, which is set from the dictionary as HTML. */
