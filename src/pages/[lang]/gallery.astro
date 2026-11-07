@@ -16,12 +16,6 @@ const g = t.gallery;
 // A filename word in the page's language; one the dictionary leaves out as it is spelled.
 const word = (w: string) => g.words[w] ?? w.replaceAll("_", " ");
 
-// Grid rows are 2/3 of a column wide, so these spans land on the common ratios:
-// 2×2 is 3:2, 1×2 is 3:4, 2×3 is square, 4×2 is 3:1. A photo in between is
-// cropped a little to the nearest cell; the viewer always shows it whole.
-const shape = (ratio: number) =>
-  ratio >= 2.1 ? "pano" : ratio >= 1.2 ? "land" : ratio > 0.87 ? "square" : "port";
-
 // Every photograph in /public/photos/, as written by scripts/photos.sh. Files
 // are named `<number>-<category>[-more-words].webp`: `07-alpine-lake` is photo 7
 // in ALPINE. Any number of digits, sorted numerically so 9 comes before 10; a
@@ -40,7 +34,7 @@ const photos = await Promise.all(
         thumb: `/photos/thumbs/${name}.webp`,
         alt: g.alt(n, subject),
         category,
-        shape: shape(width / height),
+        ratio: +(width / height).toFixed(3),
       };
     }),
 );
@@ -91,7 +85,7 @@ const count = String(photos.length).padStart(2, "0");
     <ul class="grid">
       {
         photos.map((p, i) => (
-          <li class={p.shape} data-category={p.category}>
+          <li style={`--r:${p.ratio}`} data-category={p.category}>
             <button class="shot" type="button" data-cursor="frame" data-full={p.src}>
               <img src={p.thumb} alt={p.alt} loading="lazy" decoding="async" />
               <span class="tag" aria-hidden="true">
@@ -290,41 +284,29 @@ const count = String(photos.length).padStart(2, "0");
     border-bottom-color: var(--signal);
   }
 
-  /* Dense packing: when a photo does not fit the space left in a row, a later
-     one that does moves up into it. That is what keeps rows full — and why the
-     visual order drifts from the filename order. */
+  /* Justified rows: every photo keeps its own ratio, grows to fill its row, and
+     the row height follows. No crops, no holes, filename order kept. */
   .grid {
-    --cols: 6;
-    --gap: 14px;
+    --row: clamp(150px, 21vw, 340px);
+    --gap: 8px;
     list-style: none;
     margin: 0;
     padding: 0;
-    display: grid;
-    grid-template-columns: repeat(var(--cols), 1fr);
-    grid-auto-rows: calc(
-      (100cqi - (var(--cols) - 1) * var(--gap)) / var(--cols) * 2 / 3
-    );
-    grid-auto-flow: dense;
+    display: flex;
+    flex-wrap: wrap;
     gap: var(--gap);
   }
 
-  .land {
-    grid-column: span 2;
-    grid-row: span 2;
+  .grid li {
+    flex: calc(var(--r) * 100) 1 calc(var(--r) * var(--row));
+    aspect-ratio: var(--r);
+    min-width: 0;
   }
 
-  .port {
-    grid-row: span 2;
-  }
-
-  .square {
-    grid-column: span 2;
-    grid-row: span 3;
-  }
-
-  .pano {
-    grid-column: span 4;
-    grid-row: span 2;
+  /* Lets the last row stay at its natural height instead of stretching. */
+  .grid::after {
+    content: "";
+    flex: 999 1 0;
   }
 
   .shot {
@@ -400,17 +382,32 @@ const count = String(photos.length).padStart(2, "0");
       filter: none;
     }
 
+    /* The wall moves: tiles rise in from alternating sides, then drift at
+       three different speeds while they cross the screen. */
     @supports (animation-timeline: view()) {
       .grid li {
-        animation: tile-in linear both;
-        animation-timeline: view();
-        animation-range: entry 0% entry 55%;
+        animation: tile-in linear both, tile-drift linear both;
+        animation-timeline: view(), view();
+        animation-range: entry 0% entry 60%, cover 0% cover 100%;
       }
+      .grid li:nth-child(3n + 1) { --dy: 14px; }
+      .grid li:nth-child(3n + 2) { --dy: -10px; --rot: 2deg; }
+      .grid li:nth-child(3n) { --dy: 22px; --rot: -2deg; }
+    }
+
+    /* One frame lit, the rest step back. */
+    .grid:has(.shot:hover) li:not(:hover) .shot img {
+      filter: saturate(0.4) brightness(0.55);
     }
   }
 
+  @keyframes tile-drift {
+    from { translate: 0 var(--dy, 20px); }
+    to { translate: 0 calc(var(--dy, 20px) * -1); }
+  }
+
   @keyframes tile-in {
-    from { opacity: 0; translate: 0 36px; scale: 0.96; }
+    from { opacity: 0; rotate: var(--rot, 0deg); scale: 0.92; }
   }
 
   @media (pointer: coarse) {
@@ -533,24 +530,8 @@ const count = String(photos.length).padStart(2, "0");
     }
   }
 
-  /* Wide screens: a tighter, denser wall. Cells are smaller, so spans grow to
-     keep the same ratios (3:2 = 3×3, 3:4 = 2×4, square = 2×3, 3:1 = 4×2). */
-  @media (min-width: 1025px) {
-    .grid {
-      --cols: 8;
-      --gap: 8px;
-    }
-
-    .land { grid-column: span 3; grid-row: span 3; }
-    .port { grid-column: span 2; grid-row: span 4; }
-    .square { grid-column: span 2; grid-row: span 3; }
-    .pano { grid-column: span 4; grid-row: span 2; }
-  }
-
   @media (max-width: 1024px) {
-    .grid {
-      --cols: 4;
-    }
+    .grid { --row: 22vw; }
   }
 
   @media (max-width: 768px) {
@@ -598,17 +579,10 @@ const count = String(photos.length).padStart(2, "0");
     }
   }
 
-  /* Two columns: portraits pair up side by side, everything wider takes the
-     full width — a panorama as 2×1, which is still 3:1. */
   @media (max-width: 600px) {
     .grid {
-      --cols: 2;
-      --gap: 10px;
-    }
-
-    .pano {
-      grid-row: span 1;
-      grid-column: span 2;
+      --row: 38vw;
+      --gap: 6px;
     }
   }
 </style>
