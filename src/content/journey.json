@@ -1,7 +1,7 @@
 [
   {
-    "w": 168,
-    "size": 21,
+    "w": 400,
+    "size": 36,
     "mSize": 26,
     "yearRed": false,
     "tick": "2019",
@@ -12,7 +12,8 @@
       "detail": [
         "IT DIPLOMA",
         "FOSSANO"
-      ]
+      ],
+      "pitch": "Five years of technical IT schooling in Fossano, with a mail client written in Rust, Flutter and Angular as the diploma project."
     },
     "it": {
       "year": "2019 → 2024",
@@ -20,7 +21,8 @@
       "detail": [
         "PERITO INFORMATICO",
         "FOSSANO"
-      ]
+      ],
+      "pitch": "Cinque anni di istituto tecnico informatico a Fossano, con un client di posta scritto in Rust, Flutter e Angular come progetto di maturità."
     },
     "fr": {
       "year": "2019 → 2024",
@@ -28,12 +30,13 @@
       "detail": [
         "DIPLÔME EN INFORMATIQUE",
         "FOSSANO"
-      ]
+      ],
+      "pitch": "Cinq ans d'études techniques en informatique à Fossano, avec un client mail en Rust, Flutter et Angular comme projet de diplôme."
     }
   },
   {
-    "w": 186,
-    "size": 24,
+    "w": 400,
+    "size": 36,
     "mSize": 28,
     "yearRed": false,
     "tick": "2022",
@@ -44,7 +47,8 @@
       "detail": [
         "FIRST INTERNSHIP",
         "PUBLIC-SECTOR SOFTWARE"
-      ]
+      ],
+      "pitch": "A one-month school placement in public-sector software: a log aggregator for all company projects and a metrics system, mostly backend."
     },
     "it": {
       "year": "2022",
@@ -52,7 +56,8 @@
       "detail": [
         "PRIMO TIROCINIO",
         "SOFTWARE PER LA PA"
-      ]
+      ],
+      "pitch": "Un mese di tirocinio scolastico nel software per la PA: un aggregatore di log per tutti i progetti aziendali e un sistema di metriche, soprattutto backend."
     },
     "fr": {
       "year": "2022",
@@ -60,12 +65,13 @@
       "detail": [
         "PREMIER STAGE",
         "LOGICIELS POUR LE SECTEUR PUBLIC"
-      ]
+      ],
+      "pitch": "Un mois de stage scolaire dans le logiciel pour le secteur public : un agrégateur de logs pour tous les projets de l'entreprise et un système de métriques, surtout backend."
     }
   },
   {
-    "w": 210,
-    "size": 27,
+    "w": 400,
+    "size": 36,
     "mSize": 30,
     "yearRed": false,
     "tick": "2023",
@@ -76,7 +82,8 @@
       "detail": [
         "SECOND INTERNSHIP",
         "FEATURES AND FIXES"
-      ]
+      ],
+      "pitch": "Back for a second month, shipping fixes and features across frontend and backend."
     },
     "it": {
       "year": "2023",
@@ -84,7 +91,8 @@
       "detail": [
         "SECONDO TIROCINIO",
         "FUNZIONALITÀ E BUGFIX"
-      ]
+      ],
+      "pitch": "Tornato per un secondo mese, a consegnare correzioni e funzionalità su frontend e backend."
     },
     "fr": {
       "year": "2023",
@@ -92,12 +100,13 @@
       "detail": [
         "DEUXIÈME STAGE",
         "FONCTIONNALITÉS ET CORRECTIFS"
-      ]
+      ],
+      "pitch": "De retour pour un deuxième mois, à livrer correctifs et fonctionnalités sur le frontend et le backend."
     }
   },
   {
-    "w": 252,
-    "size": 30,
+    "w": 400,
+    "size": 36,
     "mSize": 30,
     "yearRed": false,
     "tick": "2023",
@@ -108,14 +117,16 @@
       "detail": [
         "GARA NAZIONALE DI INFORMATICA",
         "NATIONAL FINALIST"
-      ]
+      ],
+      "pitch": "Through my school's qualifying round to the national final: 25 students from technical schools across Italy solving system design and coding problems."
     },
     "it": {
       "year": "2023",
       "name": "Gara Nazionale di Informatica",
       "detail": [
         "FINALISTA NAZIONALE"
-      ]
+      ],
+      "pitch": "Dalla selezione scolastica alla finale nazionale: 25 studenti degli istituti tecnici di tutta Italia alle prese con problemi di progettazione di sistemi e di programmazione."
     },
     "fr": {
       "year": "2023",
@@ -123,11 +134,12 @@
       "detail": [
         "GARA NAZIONALE DI INFORMATICA",
         "FINALISTE NATIONAL"
-      ]
+      ],
+      "pitch": "De la sélection de mon école à la finale nationale : 25 élèves d'écoles techniques de toute l'Italie face à des problèmes de conception de systèmes et de programmation."
     }
   },
   {
-    "w": 288,
+    "w": 400,
     "size": 36,
     "mSize": 32,
     "yearRed": true,
@@ -139,7 +151,8 @@
       "detail": [
         "COMPUTER ENGINEERING",
         "BSc, IN PROGRESS"
-      ]
+      ],
+      "pitch": "A computer engineering degree alongside part-time and full-time work. Expected 2028."
     },
     "it": {
       "year": "2024 → IN CORSO",
@@ -147,7 +160,8 @@
       "detail": [
         "INGEGNERIA INFORMATICA",
         "LAUREA TRIENNALE, IN CORSO"
-      ]
+      ],
+      "pitch": "Una laurea in ingegneria informatica portata avanti insieme al lavoro, part-time e full-time. Prevista nel 2028."
     },
     "fr": {
       "year": "2024 → EN COURS",
@@ -155,11 +169,12 @@
       "detail": [
         "GÉNIE INFORMATIQUE",
         "BACHELIER, EN COURS"
-      ]
+      ],
+      "pitch": "Un diplôme d'ingénieur informaticien mené en parallèle d'un travail à temps partiel et à temps plein. Prévu en 2028."
     }
   },
   {
-    "w": 326,
+    "w": 400,
     "size": 42,
     "mSize": 34,
     "yearRed": false,
@@ -172,7 +187,8 @@
         "FULL-STACK SOFTWARE ENGINEER",
         "C# / .NET · FLUTTER · POSTGRES",
         "PIEMONTE, IT"
-      ]
+      ],
+      "pitch": "Designed about 90% of the architecture and led the modular .NET 8 API replacing the legacy backend of a multi-tenant ERP and e-invoicing platform used by about 200 Italian companies. Mentored the team from 2 to 5 developers."
     },
     "it": {
       "year": "2024 → 2026",
@@ -181,7 +197,8 @@
         "SOFTWARE ENGINEER FULL-STACK",
         "C# / .NET · FLUTTER · POSTGRES",
         "PIEMONTE, IT"
-      ]
+      ],
+      "pitch": "Ho progettato circa il 90% dell'architettura e guidato l'API modulare .NET 8 che sostituisce il backend legacy di una piattaforma ERP e fatturazione elettronica multi-tenant usata da circa 200 aziende italiane. Ho affiancato il team da 2 a 5 sviluppatori."
     },
     "fr": {
       "year": "2024 → 2026",
@@ -190,19 +207,19 @@
         "INGÉNIEUR LOGICIEL FULL-STACK",
         "C# / .NET · FLUTTER · POSTGRES",
         "PIÉMONT, IT"
-      ]
+      ],
+      "pitch": "J'ai conçu environ 90 % de l'architecture et dirigé l'API modulaire .NET 8 qui remplace le backend historique d'une plateforme ERP et de facturation électronique multi-tenant utilisée par environ 200 entreprises italiennes. J'ai accompagné l'équipe de 2 à 5 développeurs."
     }
   },
   {
     "w": 430,
     "size": 52,
     "mSize": 38,
-    "yearRed": true,
-    "next": true,
-    "tick": "2026 →",
-    "tickRed": true,
+    "yearRed": false,
+    "tick": "2026",
+    "tickRed": false,
     "en": {
-      "year": "2026 → NEXT",
+      "year": "2026",
       "name": "Leuven,\nBelgium",
       "pitch": "Moving for the pace: fast engineering culture, people who think at that speed, and room to start something of my own.",
       "detail": [
@@ -211,7 +228,7 @@
       ]
     },
     "it": {
-      "year": "2026 → PROSSIMA TAPPA",
+      "year": "2026",
       "name": "Leuven,\nBelgio",
       "pitch": "Mi trasferisco per il ritmo: una cultura ingegneristica veloce, persone che pensano a quella velocità e spazio per avviare qualcosa di mio.",
       "detail": [
@@ -220,12 +237,121 @@
       ]
     },
     "fr": {
-      "year": "2026 → PROCHAINE ÉTAPE",
+      "year": "2026",
       "name": "Louvain,\nBelgique",
       "pitch": "Je m'y installe pour le rythme\u00a0: une culture d'ingénierie rapide, des gens qui pensent à cette vitesse, et de la place pour lancer mon propre projet.",
       "detail": [
         "50.88°N 4.70°E · +560KM",
         "LA CRÊTE DEVIENT PLAINE"
+      ]
+    }
+  },
+  {
+    "w": 420,
+    "size": 38,
+    "mSize": 32,
+    "yearRed": false,
+    "tick": "2026",
+    "tickRed": false,
+    "en": {
+      "year": "2026 → ONGOING",
+      "name": "High Tech Lab\nMaakleerplek",
+      "pitch": "During open lab shifts I help people bring projects to life, from laser cutting and 3D printing to electronics, and I help keep the lab stocked, clean and running.",
+      "detail": [
+        "VOLUNTEER",
+        "LEUVEN, BE"
+      ]
+    },
+    "it": {
+      "year": "2026 → IN CORSO",
+      "name": "High Tech Lab\nMaakleerplek",
+      "pitch": "Durante i turni di laboratorio aperto aiuto le persone a realizzare i loro progetti, dal taglio laser e la stampa 3D all'elettronica, e contribuisco a tenere il laboratorio rifornito, pulito e in funzione.",
+      "detail": [
+        "VOLONTARIO",
+        "LOVANIO, BE"
+      ]
+    },
+    "fr": {
+      "year": "2026 → EN COURS",
+      "name": "High Tech Lab\nMaakleerplek",
+      "pitch": "Pendant les permanences du lab ouvert, j'aide les gens à concrétiser leurs projets, de la découpe laser et l'impression 3D à l'électronique, et je contribue à garder le lab approvisionné, propre et en marche.",
+      "detail": [
+        "BÉNÉVOLE",
+        "LOUVAIN, BE"
+      ]
+    }
+  },
+  {
+    "w": 430,
+    "size": 52,
+    "mSize": 38,
+    "yearRed": true,
+    "tick": "2026 →",
+    "tickRed": true,
+    "en": {
+      "year": "2026 → ONGOING",
+      "name": "Incutec",
+      "pitch": "Core team of an open-source startup. I built the infrastructure for the company and its projects, Open Drone first: multi-region high availability, CI/CD with automated testing, ticket handling and the management app that runs the company, and moved the application from Python to Go for faster deploys and a faster app.",
+      "detail": [
+        "SYSTEM ARCHITECT & ENGINEER",
+        "GO · DOCKER · CI/CD · IAC",
+        "LEUVEN, BE · HYBRID"
+      ]
+    },
+    "it": {
+      "year": "2026 → IN CORSO",
+      "name": "Incutec",
+      "pitch": "Core team di una startup open source. Ho costruito l'infrastruttura per l'azienda e i suoi progetti, prima di tutto Open Drone: alta disponibilità multi-regione, CI/CD con test automatici, gestione dei ticket e l'app di gestione che fa funzionare l'azienda, e ho portato l'applicazione da Python a Go per deploy più rapidi e un'app più veloce.",
+      "detail": [
+        "SYSTEM ARCHITECT & ENGINEER",
+        "GO · DOCKER · CI/CD · IAC",
+        "LOVANIO, BE · IBRIDO"
+      ]
+    },
+    "fr": {
+      "year": "2026 → EN COURS",
+      "name": "Incutec",
+      "pitch": "Équipe cœur d'une startup open source. J'ai construit l'infrastructure de l'entreprise et de ses projets, Open Drone en premier : haute disponibilité multi-région, CI/CD avec tests automatisés, gestion des tickets et l'application de gestion qui fait tourner l'entreprise, et j'ai fait passer l'application de Python à Go pour des déploiements plus rapides et une application plus rapide.",
+      "detail": [
+        "SYSTEM ARCHITECT & ENGINEER",
+        "GO · DOCKER · CI/CD · IAC",
+        "LOUVAIN, BE · HYBRIDE"
+      ]
+    },
+    "next": true
+  },
+  {
+    "w": 420,
+    "size": 38,
+    "mSize": 32,
+    "yearRed": false,
+    "tick": "2026",
+    "tickRed": false,
+    "en": {
+      "year": "2026",
+      "name": "24urenloop\nLeuven",
+      "pitch": "On the live broadcast team of the 24-hour student relay run, I helped build a camera system worn by runners for a first-person view of the race, and ran it during the event.",
+      "detail": [
+        "BROADCAST CREW – POV CAMERA SYSTEM",
+        "VOLUNTEER"
+      ]
+    },
+    "it": {
+      "year": "2026",
+      "name": "24urenloop\nLovanio",
+      "pitch": "Nel team della diretta della staffetta studentesca di 24 ore ho aiutato a costruire un sistema di telecamere indossate dai corridori per una vista in prima persona della gara, e l'ho gestito durante l'evento.",
+      "detail": [
+        "BROADCAST CREW – POV CAMERA SYSTEM",
+        "VOLONTARIO"
+      ]
+    },
+    "fr": {
+      "year": "2026",
+      "name": "24urenloop\nLouvain",
+      "pitch": "Dans l'équipe de retransmission du relais étudiant de 24 heures, j'ai aidé à construire un système de caméras portées par les coureurs pour une vue à la première personne de la course, et je l'ai géré pendant l'événement.",
+      "detail": [
+        "BROADCAST CREW – POV CAMERA SYSTEM",
+        "BÉNÉVOLE"
       ]
     }
   }

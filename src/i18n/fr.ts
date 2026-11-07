@@ -113,10 +113,33 @@ const fr: typeof en = {
       crumb: "Volstead Circle",
       headline: "VOLSTEAD<br />CIRCLE",
       lead: "Une plateforme d'apprentissage et d'entraînement pour les professionnels des boissons. Les cocktails d'abord, les autres catégories bien plus tard.",
-      facts: [["STATUT", "En développement"], ["PLATEFORMES", "iPhone et web, Android ensuite"], ["LANGUES", "Anglais, italien, français, allemand"], ["CONSTRUIT AVEC", "SwiftUI, Next.js, Supabase"]],
-      body: ["Elle s'adresse à ceux qui veulent devenir barmans et à ceux qui le sont déjà, des gens qui ont cinq minutes avant le service plutôt qu'une soirée sur le canapé. Des cours structurés enseignent une catégorie ; un moteur de répétition espacée entraîne ensuite recettes, ingrédients et connaissances de service jusqu'à ce qu'ils restent.",
+      facts: [["STATUT", "En développement, bêta privée"], ["PLATEFORMES", "iPhone, Android prévu"], ["LANGUES", "Anglais pour l'instant, italien, français et allemand prévus"], ["CONSTRUIT AVEC", "SwiftUI, Next.js, Supabase"]],
+      body: [
+        "Elle est faite pour ceux qui veulent devenir barman et ceux qui le sont déjà, des gens qui ont cinq minutes avant le service plutôt qu'une soirée sur le canapé : de courts entraînements quotidiens sur les recettes, les ingrédients et la technique jusqu'à ce qu'ils restent. Les amateurs ont un parcours gratuit à eux. Je la construis avec un associé, avec l'aide de l'IA.",
         "Un seul graphe de connaissances de boissons, d'ingrédients, de techniques et de verres alimente tout : les pages de référence, les leçons et les cartes d'entraînement viennent des mêmes données, donc une correction se fait une seule fois.",
-        "Chaque carte et chaque recette est relue par une personne avant publication, et rien n'est appelé certification, car aucun organisme ne la garantit. C'est tôt : l'application et le site sont en construction en ce moment."],
+        "Le planificateur est un portage en Swift du projet open source ts-fsrs, vérifié sur des jeux de test générés par le cœur TypeScript, si bien qu'iOS et la future application Android se comportent à l'identique. Le contenu est du JSON validé dans un paquet versionné ; le backend est Supabase dans l'UE.",
+        "C'est tôt. Les recettes et les étapes sont rédigées avec l'IA et pas encore vérifiées par un barman, et rien n'est appelé certification, car aucun organisme ne la garantit."
+],
+      featuresTitle: "CE QU'ELLE FAIT",
+      features: [
+        [
+                "Entraînements quotidiens",
+                "Répétition espacée sur les recettes, avec séries, maîtrise par boisson, test de placement et leçons. Les cartes sont des jeux : construire une boisson versement après versement, ou changer l'ingrédient qui ne va pas."
+        ],
+        [
+                "694 cocktails et shots",
+                "Chacun a sa recette sur un ticket en papier, une méthode numérotée, l'effet de la bouteille choisie, son histoire et sa famille. Les termes du glossaire s'ouvrent sur place."
+        ],
+        [
+                "Mon bar",
+                "Cochez les bouteilles que vous avez et filtrez ce que vous pouvez préparer. Photographiez votre étagère : le texte est lu sur l'appareil et rien ne quitte le téléphone."
+        ],
+        [
+                "Un parcours gratuit pour essayer",
+                "Parcours guidés par chapitre, un passeport des boissons goûtées et une liste à essayer, pour ceux qui aiment simplement les boissons."
+        ]
+],
+      alt: "Le symbole de Volstead Circle : un verre à cocktail dans un cercle",
       link: "VISITER VOLSTEADCIRCLE.APP →",
     },
     aditus: {
@@ -128,8 +151,11 @@ const fr: typeof en = {
       facts: [["STATUT", "Débutant, utilisable au quotidien sur macOS"], ["PLATEFORMES", "macOS 14+, Windows et Linux non testés"], ["CONSTRUIT AVEC", "Rust, Chromium (CEF), Svelte 5"], ["LICENCE", "GPL-3.0"]],
       body: ["La plupart des navigateurs dépensent de l'espace et de la mémoire pour des choses que je n'utilise pas. Aditus garde la barre d'onglets sur le côté, réductible en bande d'icônes, et vise un petit binaire, un démarrage rapide et peu de mémoire.",
         "Chaque site peut être associé à son propre profil, un espace isolé de cookies et de connexions. Google Photos sur un compte et YouTube sur un autre, côte à côte dans la même fenêtre, sans en ouvrir une seconde.",
-        "Il a un bloqueur de publicités intégré, met de côté les onglets en arrière-plan après 15 minutes d'inactivité et installe des extensions Chrome.",
+        "Il a un bloqueur de publicités intégré, met de côté les onglets en arrière-plan après 10 minutes d'inactivité et installe des extensions Chrome.",
         "Je le construis d'abord pour moi : c'est le navigateur que je veux utiliser. Il est open source sous licence GPL-3.0, donc le code et les versions sont sur GitHub."],
+      featuresTitle: "CE QU'IL FAIT",
+      features: [["Onglets verticaux", "Les onglets vivent dans une barre latérale réductible en bande d'icônes : la page gagne en largeur et la liste reste lisible quel que soit le nombre d'onglets."], ["Un profil par site", "Associez un site à son propre profil, un espace isolé de cookies et de connexions : deux comptes Google côte à côte dans une même fenêtre."], ["Léger en mémoire", "Les onglets en arrière-plan sont mis de côté après 10 minutes d'inactivité, et l'objectif est un petit binaire et un démarrage rapide."], ["Intégré et ouvert", "Un bloqueur de publicités est inclus, les extensions Chrome s'installent et le code est GPL-3.0 sur GitHub."]],
+      alt: "Fenêtre du navigateur Aditus",
       link: "CODE SUR GITHUB →",
     },
   },

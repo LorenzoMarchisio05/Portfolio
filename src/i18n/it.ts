@@ -109,10 +109,33 @@ const it: typeof en = {
       crumb: "Volstead Circle",
       headline: "VOLSTEAD<br />CIRCLE",
       lead: "Una piattaforma di studio e allenamento per i professionisti delle bevande. Prima i cocktail, le altre categorie molto più avanti.",
-      facts: [["STATO", "In sviluppo"], ["PIATTAFORME", "iPhone e web, Android in seguito"], ["LINGUE", "Inglese, italiano, francese, tedesco"], ["REALIZZATO CON", "SwiftUI, Next.js, Supabase"]],
-      body: ["È pensata per chi vuole fare il barman e per chi lo fa già, persone con cinque minuti prima del turno più che una serata sul divano. Corsi strutturati insegnano una categoria; poi un motore di ripetizione dilazionata allena ricette, ingredienti e conoscenze di servizio finché restano.",
+      facts: [["STATO", "In sviluppo, beta privata"], ["PIATTAFORME", "iPhone, Android in programma"], ["LINGUE", "Inglese ora, italiano, francese e tedesco in programma"], ["REALIZZATO CON", "SwiftUI, Next.js, Supabase"]],
+      body: [
+        "È pensata per chi vuole fare il barman e per chi lo fa già, persone con cinque minuti prima del turno più che una serata sul divano: brevi allenamenti quotidiani su ricette, ingredienti e tecnica finché restano. Gli appassionati hanno un percorso gratuito tutto loro. La costruisco con un socio, con l'aiuto dell'IA.",
         "Un unico grafo di conoscenza di drink, ingredienti, tecniche e bicchieri alimenta tutto: pagine di consultazione, lezioni e carte di allenamento nascono dagli stessi dati, quindi una correzione si fa una volta sola.",
-        "Ogni carta e ogni ricetta è controllata da una persona prima di uscire, e niente viene chiamato certificazione, perché nessun ente la garantisce. È presto: app e sito sono in costruzione adesso."],
+        "Lo scheduler è un port in Swift del progetto open source ts-fsrs, verificato su fixture generate dal nucleo TypeScript, così iOS e la futura app Android si comportano allo stesso modo. I contenuti sono JSON validato in un pacchetto versionato; il backend è Supabase in UE.",
+        "È presto. Ricette e passaggi sono scritti con l'IA e non ancora controllati da un barman, e niente viene chiamato certificazione, perché nessun ente la garantisce."
+],
+      featuresTitle: "COSA FA",
+      features: [
+        [
+                "Allenamenti quotidiani",
+                "Ripetizione dilazionata sulle ricette, con serie, padronanza per drink, test di piazzamento e lezioni. Le carte sono giochi: costruisci un drink versando passo dopo passo, o cambia l'ingrediente sbagliato."
+        ],
+        [
+                "694 cocktail e shot",
+                "Ognuno ha la ricetta su un biglietto di carta, un metodo numerato, come la bottiglia scelta cambia il drink, la sua storia e la sua famiglia. I termini del glossario si aprono sul posto."
+        ],
+        [
+                "Il mio bar",
+                "Spunta le bottiglie che hai e filtra cosa puoi preparare. Fotografa la tua mensola: il testo viene letto sul dispositivo e nulla lascia il telefono."
+        ],
+        [
+                "Un percorso gratuito per provare",
+                "Percorsi guidati per capitolo, un passaporto dei drink provati e una lista di quelli da provare, per chi i drink li ama e basta."
+        ]
+],
+      alt: "Il simbolo di Volstead Circle: un calice da cocktail dentro un cerchio",
       link: "VAI A VOLSTEADCIRCLE.APP →",
     },
     aditus: {
@@ -124,8 +147,11 @@ const it: typeof en = {
       facts: [["STATO", "Agli inizi, usabile ogni giorno su macOS"], ["PIATTAFORME", "macOS 14+, Windows e Linux non testati"], ["REALIZZATO CON", "Rust, Chromium (CEF), Svelte 5"], ["LICENZA", "GPL-3.0"]],
       body: ["La maggior parte dei browser spreca spazio e memoria in cose che non uso. Aditus tiene la barra delle schede di lato, riducibile a una striscia di icone, e punta a un eseguibile piccolo, un avvio rapido e poca memoria.",
         "Ogni sito può essere associato a un profilo suo, un archivio isolato di cookie e accessi. Google Foto su un account e YouTube su un altro, affiancati nella stessa finestra, senza aprirne una seconda.",
-        "Ha un blocco pubblicità integrato, scarta le schede in background dopo 15 minuti di inattività e installa estensioni di Chrome.",
+        "Ha un blocco pubblicità integrato, scarta le schede in background dopo 10 minuti di inattività e installa estensioni di Chrome.",
         "Lo sto costruendo prima di tutto per me: è il browser che voglio usare. È open source con licenza GPL-3.0, quindi codice e versioni sono su GitHub."],
+      featuresTitle: "COSA FA",
+      features: [["Schede verticali", "Le schede stanno in una barra laterale riducibile a una striscia di icone: la pagina guadagna larghezza e l'elenco resta leggibile con qualsiasi numero di schede."], ["Un profilo per sito", "Associa un sito a un profilo suo, un archivio isolato di cookie e accessi: due account Google affiancati nella stessa finestra."], ["Leggero in memoria", "Le schede in background vengono scartate dopo 10 minuti di inattività, e l'obiettivo è un eseguibile piccolo e un avvio rapido."], ["Integrato e aperto", "Il blocco pubblicità è incluso, le estensioni di Chrome si installano e il codice è GPL-3.0 su GitHub."]],
+      alt: "Finestra del browser Aditus",
       link: "CODICE SU GITHUB →",
     },
   },
