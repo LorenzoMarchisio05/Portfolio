@@ -82,6 +82,19 @@ const og = new URL(image, site);
       // [data-rise] block would sit at opacity 0 forever when scripting is off.
       document.documentElement.classList.add("js");
 
+      // Pointer light for [data-lit] surfaces: hand the cursor position to CSS.
+      document.addEventListener(
+        "pointermove",
+        (e) => {
+          const el = e.target instanceof Element && e.target.closest("[data-lit]");
+          if (!el) return;
+          const r = el.getBoundingClientRect();
+          el.style.setProperty("--mx", e.clientX - r.left + "px");
+          el.style.setProperty("--my", e.clientY - r.top + "px");
+        },
+        { passive: true },
+      );
+
       // No "Save image" menu and no drag-out on photographs. A deterrent for
       // casual saving only; the © mark burned into each file is what sticks.
       for (const type of ["contextmenu", "dragstart"]) {

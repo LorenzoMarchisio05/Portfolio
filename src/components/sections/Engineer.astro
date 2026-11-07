@@ -16,6 +16,7 @@ const { t } = useI18n(Astro.url);
     </div>
   </div>
 
+  <div data-par=".04" data-par-m="0">
   <header class="head" data-rise>
     <div class="title">
       <p class="eyebrow">000° · {t.roles.engineer}</p>
@@ -23,6 +24,7 @@ const { t } = useI18n(Astro.url);
     </div>
     <p class="lead intro">{t.engineer.intro}</p>
   </header>
+  </div>
 
   <div class="body">
     <ol class="method" data-rise>
@@ -106,6 +108,46 @@ const { t } = useI18n(Astro.url);
     align-items: baseline;
     padding: 26px 0 24px;
     border-top: 1px solid var(--hair-2);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .method li {
+      position: relative;
+      transition: padding-left 320ms var(--ease);
+    }
+
+    .method li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: -1px;
+      width: 100%;
+      height: 1px;
+      background: var(--signal);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 520ms var(--ease);
+    }
+
+    .method li:hover {
+      padding-left: 12px;
+    }
+
+    .method li:hover::before {
+      transform: scaleX(1);
+    }
+
+    @supports (animation-timeline: view()) {
+      .method li {
+        animation: method-in linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 60%;
+      }
+    }
+  }
+
+  @keyframes method-in {
+    from { opacity: 0.15; translate: 36px 0; }
   }
 
   .index {

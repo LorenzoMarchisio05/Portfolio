@@ -3,6 +3,11 @@ import Silhouette from "../components/Silhouette.astro";
 import { useI18n } from "../../i18n";
 
 const { t, href } = useI18n(Astro.url);
+// Product screenshots shown as decoration beside each card, front one last.
+const shots = {
+  volstead: ["4-specs", "2-build-it", "1-today"].map((f) => `/projects/volstead-${f}.webp`),
+  aditus: ["04-tab-search", "01-tabs-sidebar"].map((f) => `/projects/aditus-${f}.webp`),
+};
 ---
 
 <section id="founder" class="section">
@@ -33,11 +38,14 @@ const { t, href } = useI18n(Astro.url);
     {
       (["volstead", "aditus"] as const).map((id) => (
         <li data-par=".04" data-par-m="0">
-          <div class="activity" data-rise>
+          <div class="activity" data-rise data-lit>
             <p class="num">{t.founder[id].label}</p>
             <h3 class="name">{t.founder[id].title}</h3>
             <p class="first">{t.founder[id].text}</p>
             <a class="go" href={href(`/projects/${id}`)}>{t.founder[id].link}</a>
+            <div class={`visual ${id}`} aria-hidden="true">
+              {shots[id].map((src) => <img src={src} alt="" loading="lazy" decoding="async" />)}
+            </div>
           </div>
         </li>
       ))
@@ -125,15 +133,92 @@ const { t, href } = useI18n(Astro.url);
     margin: 0;
     padding: 0;
     list-style: none;
-    max-width: 1100px;
+    max-width: 1240px;
   }
 
   .activity {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    grid-auto-rows: min-content;
+    align-content: center;
+    gap: 14px clamp(24px, 5vw, 72px);
     padding-top: 22px;
     border-top: 1px solid var(--hair-3);
+  }
+
+  .activity > :not(.visual) {
+    grid-column: 1;
+  }
+
+  /* Screenshots: a fan of phones for Volstead, a stack of windows for Aditus. */
+  .visual {
+    grid-column: 2;
+    grid-row: 1 / span 4;
+    position: relative;
+    height: clamp(260px, 30vw, 400px);
+    pointer-events: none;
+  }
+
+  li:nth-child(even) .activity > :not(.visual) {
+    grid-column: 2;
+  }
+
+  li:nth-child(even) .visual {
+    grid-column: 1;
+  }
+
+  .visual img {
+    position: absolute;
+    border: 1px solid var(--hair-3);
+    box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.95);
+    transition:
+      translate 520ms var(--ease),
+      rotate 520ms var(--ease);
+  }
+
+  .visual.volstead img {
+    width: 36%;
+    height: auto;
+    bottom: 0;
+    left: 32%;
+    border-radius: 16px;
+  }
+
+  .visual.volstead img:nth-child(1) { rotate: -9deg; translate: -78% 4%; }
+  .visual.volstead img:nth-child(2) { rotate: -1deg; translate: -4% -4%; }
+  .visual.volstead img:nth-child(3) { rotate: 8deg; translate: 72% 2%; }
+
+  .activity:hover .visual.volstead img:nth-child(1) { rotate: -13deg; translate: -96% 6%; }
+  .activity:hover .visual.volstead img:nth-child(2) { rotate: -3deg; translate: -10% -8%; }
+  .activity:hover .visual.volstead img:nth-child(3) { rotate: 12deg; translate: 92% 4%; }
+
+  .visual.aditus img {
+    width: 82%;
+    height: auto;
+    border-radius: 10px;
+  }
+
+  .visual.aditus img:nth-child(1) { top: 0; right: 0; opacity: 0.7; translate: 0 0; }
+  .visual.aditus img:nth-child(2) { bottom: 0; left: 0; translate: 0 0; }
+  .activity:hover .visual.aditus img:nth-child(1) { translate: 14px -12px; }
+  .activity:hover .visual.aditus img:nth-child(2) { translate: -10px 10px; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .visual {
+        animation: visual-in linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 70%;
+      }
+    }
+  }
+
+  @keyframes visual-in {
+    from { opacity: 0; translate: 0 48px; scale: 0.94; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .visual img { transition: none; }
   }
 
   .activity > p {
@@ -169,6 +254,30 @@ const { t, href } = useI18n(Astro.url);
   }
 
 
+  @media (prefers-reduced-motion: no-preference) {
+    .name {
+      transition: translate 360ms var(--ease);
+    }
+
+    .activity:hover .name {
+      translate: 10px 0;
+    }
+
+    /* The backdrop graph drifts against the scroll: a slow turn, no loop. */
+    @supports (animation-timeline: scroll()) {
+      .tilt {
+        animation: founder-turn linear both;
+        animation-timeline: view();
+        animation-range: cover 0% cover 100%;
+      }
+    }
+  }
+
+  @keyframes founder-turn {
+    from { rotate: 0deg; scale: 0.94; }
+    to { rotate: 6deg; scale: 1.04; }
+  }
+
   .first {
     font-size: 19px;
     line-height: 1.55;
@@ -176,6 +285,23 @@ const { t, href } = useI18n(Astro.url);
 
 
   @media (max-width: 768px) {
+    .activity {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .activity > :not(.visual),
+    li:nth-child(even) .activity > :not(.visual),
+    .visual,
+    li:nth-child(even) .visual {
+      grid-column: 1;
+    }
+
+    .visual {
+      grid-row: auto;
+      height: min(64vw, 300px);
+      margin-top: 18px;
+    }
+
     .backdrop-box {
       top: 96px;
       width: min(520px, 112vw);

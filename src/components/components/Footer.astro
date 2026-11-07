@@ -15,6 +15,7 @@ const here = bare(Astro.url.pathname);
 ---
 
 <footer>
+  <p class="mark" aria-hidden="true">LORENZO MARCHISIO</p>
   <span>© 2026 LORENZO MARCHISIO</span>
   <nav aria-label={t.footer.label}>
     {
@@ -28,6 +29,39 @@ const here = bare(Astro.url.pathname);
 </footer>
 
 <style>
+  .mark {
+    flex: 1 0 100%;
+    margin: 0 0 18px;
+    font-family: var(--sans, inherit);
+    font-size: clamp(40px, 11.4vw, 190px);
+    font-weight: 700;
+    font-stretch: 78%;
+    letter-spacing: -0.035em;
+    line-height: 0.85;
+    white-space: nowrap;
+    overflow: clip;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(242, 239, 233, 0.22);
+    background: linear-gradient(90deg, var(--bone) 50%, transparent 50%) 100% 0 / 200% 100% no-repeat;
+    background-clip: text;
+    -webkit-background-clip: text;
+  }
+
+  /* The outline fills with bone as the footer scrolls into view. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .mark {
+        animation: mark-fill linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 90%;
+      }
+    }
+  }
+
+  @keyframes mark-fill {
+    to { background-position: 0 0; }
+  }
+
   footer {
     display: flex;
     justify-content: space-between;

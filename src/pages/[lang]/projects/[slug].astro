@@ -86,7 +86,7 @@ const shots = shotSets[slug] ?? [];
       <h2>{p.featuresTitle}</h2>
       <ol>
         {p.features.map(([title, text], i) => (
-          <li>
+          <li data-lit>
             <span class="n">{String(i + 1).padStart(2, "0")}</span>
             <h3>{title}</h3>
             <p>{text}</p>
@@ -308,6 +308,112 @@ const shots = shotSets[slug] ?? [];
     letter-spacing: 0.14em;
     border-bottom: 1px solid var(--signal);
     padding-bottom: 6px;
+  }
+
+  /* Motion: the hero settles in sequence; shots, facts and features arrive as
+     they enter the viewport (scroll-driven where supported, else already there).
+     `translate` is used so the staggered `transform` above is left alone. */
+  @keyframes arrive {
+    from { opacity: 0; translate: 0 28px; }
+  }
+  @keyframes mark-in {
+    from { opacity: 0; scale: 0.86; rotate: -6deg; }
+  }
+  @keyframes drift {
+    to { translate: 0 90px; }
+  }
+  @keyframes glow-drift {
+    to { translate: 0 -160px; }
+  }
+  @keyframes shot-drift {
+    from { translate: 0 8px; }
+    to { translate: 0 -8px; }
+  }
+  @keyframes shot-drift-fast {
+    from { translate: 0 16px; }
+    to { translate: 0 -16px; }
+  }
+  @keyframes rule-in {
+    from { transform: scaleX(0); }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .intro > * { animation: arrive 700ms var(--ease) both; }
+    .intro > :nth-child(2) { animation-delay: 80ms; }
+    .intro > :nth-child(3) { animation-delay: 180ms; }
+    .intro > :nth-child(4) { animation-delay: 280ms; }
+    .mark { animation: mark-in 900ms var(--ease) 200ms both; }
+
+    @supports (animation-timeline: view()) {
+      .shots figure,
+      .facts > div,
+      .features li,
+      .body p {
+        animation: arrive linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 55%;
+      }
+    }
+
+    /* Depth: the mark and glow lag the page; each screenshot slides inside its
+       frame, the staggered ones faster. */
+    @supports (animation-timeline: view()) {
+      .mark {
+        animation: mark-in 900ms var(--ease) 200ms both, drift linear both;
+        animation-timeline: auto, scroll(root);
+        animation-range: normal, 0 700px;
+      }
+
+      main .glow {
+        animation: glow-drift linear both;
+        animation-timeline: scroll(root);
+        animation-range: 0 1200px;
+      }
+
+      .shots img {
+        animation: shot-drift linear both;
+        animation-timeline: view();
+      }
+
+      .shots figure:nth-child(even) img {
+        animation-name: shot-drift-fast;
+      }
+    }
+
+    .features li {
+      position: relative;
+      transition: padding-left 240ms var(--ease);
+    }
+
+    .features li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: -1px;
+      height: 1px;
+      width: 100%;
+      background: var(--signal);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 480ms var(--ease);
+    }
+
+    .features li:hover::before {
+      transform: scaleX(1);
+    }
+
+    .features li:hover .n {
+      color: var(--signal);
+    }
+
+    .shots img {
+      transition: transform 360ms var(--ease), border-color 200ms linear;
+    }
+
+    .shots figure:hover img {
+      transform: translateY(-6px);
+      border-color: rgba(242, 239, 233, 0.28);
+    }
   }
 
   @media (max-width: 900px) {
