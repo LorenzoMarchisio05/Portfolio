@@ -76,6 +76,14 @@ const { t, lang } = useI18n(Astro.url);
         </div>
       </div>
 
+      <!-- Desktop: the whole trip as one line. The copper fill and its marker
+           follow the corridor's own scroll timeline. -->
+      <div class="route" aria-hidden="true">
+        <span>CUNEO</span>
+        <div class="route-line"><i></i><b></b></div>
+        <span>LEUVEN</span>
+      </div>
+
       <!-- Phone only: one stop per screen, so a counter replaces the widening
            card widths as the sense of travel. -->
       <div class="counter" aria-hidden="true">
@@ -349,6 +357,68 @@ const { t, lang } = useI18n(Astro.url);
     display: none;
   }
 
+  .route {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 34px var(--pad-x) 0;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--dim);
+  }
+
+  .route-line {
+    position: relative;
+    flex: 1;
+    height: 1px;
+    background: var(--hair-3);
+  }
+
+  .route-line i {
+    position: absolute;
+    inset: -1px 0 auto 0;
+    height: 3px;
+    background: var(--signal);
+    transform-origin: left;
+    transform: scaleX(0);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--signal) 55%, transparent);
+  }
+
+  .route-line b {
+    position: absolute;
+    top: -4px;
+    left: 0;
+    width: 9px;
+    height: 9px;
+    margin-left: -4px;
+    border-radius: 50%;
+    background: var(--signal);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--signal) 22%, transparent);
+  }
+
+  @supports (animation-timeline: view()) {
+    :global(.js) .route-line i,
+    :global(.js) .route-line b {
+      animation: route-go linear both;
+      animation-timeline: --journey;
+      animation-range: contain var(--j-start, 0px) contain
+        calc(100% - var(--j-end, 0px));
+    }
+
+    :global(.js) .route-line b {
+      animation-name: route-dot;
+    }
+  }
+
+  @keyframes route-go {
+    to { transform: scaleX(1); }
+  }
+
+  @keyframes route-dot {
+    to { left: 100%; }
+  }
+
   @media (max-width: 768px) {
     .pin {
       padding: 64px 0 72px;
@@ -410,6 +480,10 @@ const { t, lang } = useI18n(Astro.url);
     .axis > div {
       padding: 8px 0 0 14px;
       font-size: 10px;
+    }
+
+    .route {
+      display: none;
     }
 
     .counter {
