@@ -66,6 +66,7 @@ const count = String(photos.length).padStart(2, "0");
 
   <main>
     <div class="glow"></div>
+    <div class="rail" aria-hidden="true"></div>
 
     <header class="intro">
       <div class="lead">
@@ -73,7 +74,7 @@ const count = String(photos.length).padStart(2, "0");
         <h1 class="headline" set:html={g.headline} />
       </div>
       <div class="side">
-        <p class="meta"><b class="num">{count}</b> <span>{g.count(count).replace(count, "").trim()}</span></p>
+        <p class="meta"><b class="num" style={`--to:${photos.length}`} aria-label={count}><span aria-hidden="true">{count}</span></b> <span>{g.count(count).replace(count, "").trim()}</span></p>
       </div>
     </header>
 
@@ -82,6 +83,7 @@ const count = String(photos.length).padStart(2, "0");
         <section class="pin" aria-hidden="true">
           <div class="stage">
             <p class="cap"><b>01</b> / 03</p>
+            <div class="bar"><i></i></div>
             <div class="track">
               {strip.map((p, i) => (
                 <button type="button" class="pick" tabindex="-1" data-full={p.src} style={`--r:${p.ratio};--i:${i}`}>
@@ -162,6 +164,8 @@ const count = String(photos.length).padStart(2, "0");
       <img alt="" />
       <span class="pip"></span>
     </figure>
+    <button class="nav prev" type="button" aria-label="←" data-step="-1">←</button>
+    <button class="nav next" type="button" aria-label="→" data-step="1">→</button>
     <p class="keys" aria-hidden="true"><span class="at"></span> · {g.keys}</p>
     <a
       class="remove"
@@ -195,11 +199,17 @@ const count = String(photos.length).padStart(2, "0");
     }),
   );
 
+  let dir = 0;
   const show = (shot: HTMLButtonElement) => {
     current = shot;
     const shown = shots.filter((s) => !s.parentElement!.hidden);
     at.textContent = `${String(shown.indexOf(shot) + 1).padStart(2, "0")} / ${String(shown.length).padStart(2, "0")}`;
     big.src = shot.dataset.full!;
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches)
+      big.animate(
+        [{ opacity: 0, translate: `${dir * 36}px 0`, scale: 0.97 }, { opacity: 1, translate: "0 0", scale: 1 }],
+        { duration: 380, easing: "cubic-bezier(.2,.7,.1,1)" },
+      );
     big.alt = shot.querySelector("img")!.alt;
     // No server and no email quota: the request leaves from the visitor's own
     // mail app, already naming the photo, with an address to reply to.
@@ -212,6 +222,7 @@ const count = String(photos.length).padStart(2, "0");
   // Browses only what the filter shows, in filename order rather than the
   // grid's packed order, and wraps: → on the last frame goes back to the first.
   const step = (by: number) => {
+    dir = by;
     const shown = shots.filter((shot) => !shot.parentElement!.hidden);
     const at = shown.indexOf(current);
     show(shown[(at + by + shown.length) % shown.length]);
@@ -219,6 +230,7 @@ const count = String(photos.length).padStart(2, "0");
 
   shots.forEach((shot) =>
     shot.addEventListener("click", () => {
+      dir = 0;
       show(shot);
       viewer.showModal();
     }),
@@ -230,6 +242,7 @@ const count = String(photos.length).padStart(2, "0");
       const home = shots.find((shot) => shot.dataset.full === pick.dataset.full);
       if (!home) return;
       home.parentElement!.hidden = false;
+      dir = 0;
       show(home);
       viewer.showModal();
     }),
@@ -244,6 +257,8 @@ const count = String(photos.length).padStart(2, "0");
   // click, so any other click — the close button included — puts it away.
   // Escape is native to <dialog>.
   viewer.addEventListener("click", (event) => {
+    const nav = (event.target as Element).closest<HTMLElement>("[data-step]");
+    if (nav) return step(Number(nav.dataset.step));
     if (!(event.target as Element).closest(".remove")) viewer.close();
   });
 
@@ -263,7 +278,9 @@ const count = String(photos.length).padStart(2, "0");
     container-type: inline-size;
   }
 
+  /* Starts above main, behind the sticky bar, so the wash has no top edge. */
   main .glow {
+    inset-block-start: -120px;
     background:
       radial-gradient(56% 30% at 10% 12%, color-mix(in srgb, var(--signal) 12%, transparent), transparent 64%),
       radial-gradient(40% 24% at 95% 60%, color-mix(in srgb, var(--signal) 7%, transparent), transparent 70%);
@@ -833,5 +850,115 @@ const count = String(photos.length).padStart(2, "0");
     .pin { height: 240vh; }
     .track .pick { height: 52vh; }
     .reveal .pick { aspect-ratio: 1.4; }
+  }
+
+  /* ---- round two ---- */
+
+  .pin { margin-top: calc(var(--gap-y) * -0.6); }
+
+  .bar {
+    margin-inline: var(--pad-x);
+    height: 1px;
+    background: var(--hair-3);
+  }
+
+  .bar i {
+    display: block;
+    height: 100%;
+    background: var(--signal);
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+
+  .rail {
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: 2px;
+    z-index: 30;
+    pointer-events: none;
+    background: var(--signal);
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+
+  .nav {
+    position: absolute;
+    top: 50%;
+    translate: 0 -50%;
+    width: 52px;
+    height: 52px;
+    font-family: var(--mono);
+    font-size: 18px;
+    color: var(--warm);
+    background: transparent;
+    border: 1px solid var(--hair-4);
+    border-radius: 50%;
+    transition: color 160ms linear, border-color 160ms linear, background 160ms linear;
+  }
+
+  .prev { left: var(--pad-x); }
+  .next { right: var(--pad-x); }
+
+  .nav:hover {
+    color: var(--ink);
+    background: var(--signal);
+    border-color: var(--signal);
+  }
+
+  @media (pointer: coarse) {
+    .nav { display: none; }
+  }
+
+  @property --n {
+    syntax: "<integer>";
+    inherits: false;
+    initial-value: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* The count runs up, the headline wipes open and later parts. */
+    .num { animation: count 1.6s var(--ease) both; counter-reset: n var(--n); }
+    .num span { display: none; }
+    .num::before { content: counter(n); }
+
+    .headline { animation: head-in 1s var(--ease) both; }
+
+    @supports (animation-timeline: scroll()) {
+      .headline {
+        animation: head-in 1s var(--ease) both, head-out linear both;
+        animation-timeline: auto, scroll(root);
+        animation-range: normal, 0 70vh;
+      }
+
+      .rail {
+        animation: rail linear both;
+        animation-timeline: scroll(root);
+      }
+
+      .bar i {
+        animation: rail linear both;
+        animation-timeline: --strip;
+        animation-range: cover 25% cover 75%;
+      }
+    }
+
+    .pick { transition: scale 400ms var(--ease); }
+  }
+
+  @keyframes count {
+    from { --n: 0; }
+    to { --n: var(--to); }
+  }
+
+  @keyframes head-in {
+    from { clip-path: inset(0 100% 0 0); translate: -3% 0; }
+  }
+
+  @keyframes head-out {
+    to { translate: -7vw 0; opacity: 0.2; }
+  }
+
+  @keyframes rail {
+    to { transform: scaleX(1); }
   }
 </style>

@@ -79,9 +79,27 @@ const breadcrumbs = {
     align-items: center;
     gap: 32px;
     padding: 13px var(--pad-x);
-    background: linear-gradient(color-mix(in srgb, var(--ink) 92%, transparent), color-mix(in srgb, var(--ink) 55%, transparent) 45%, color-mix(in srgb, var(--ink) 18%, transparent) 78%, transparent);
-    /* The bar itself must not eat clicks on the page behind it. */
+        /* The bar itself must not eat clicks on the page behind it. */
     pointer-events: none;
+  }
+
+  /* Scrim runs past the bar and eases out over many stops, so there is no
+     visible bottom edge. */
+  .bar::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 -48px;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(
+      color-mix(in srgb, var(--ink) 90%, transparent),
+      color-mix(in srgb, var(--ink) 76%, transparent) 20%,
+      color-mix(in srgb, var(--ink) 54%, transparent) 40%,
+      color-mix(in srgb, var(--ink) 32%, transparent) 58%,
+      color-mix(in srgb, var(--ink) 15%, transparent) 74%,
+      color-mix(in srgb, var(--ink) 5%, transparent) 88%,
+      transparent
+    );
   }
 
   /* Global: the nav and the call to action come from the page. */
@@ -174,8 +192,7 @@ const breadcrumbs = {
     .bar {
       gap: 12px;
       padding: 16px 20px 20px;
-      background: linear-gradient(color-mix(in srgb, var(--ink) 92%, transparent), color-mix(in srgb, var(--ink) 55%, transparent) 45%, color-mix(in srgb, var(--ink) 18%, transparent) 78%, transparent);
-    }
+          }
 
     .wordmark {
       font-size: 13px;
