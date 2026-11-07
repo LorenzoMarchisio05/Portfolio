@@ -57,32 +57,36 @@ const count = String(photos.length).padStart(2, "0");
   image="/social/og-gallery.jpg"
 >
   <style is:global>
-    html { --signal: #c8794a; --ink: #110b08; }
+    html:root { --signal: #c8794a; --ink: #110b08; }
   </style>
   <PageBar back={href("/#photography")} angle="240°" crumbs={[{ label: g.crumb }]} />
 
   <main>
     <div class="glow"></div>
 
-    <div class="intro">
-      <p class="eyebrow">240° · {t.roles.photographer}</p>
-      <h1 class="headline" set:html={g.headline} />
-      <p class="meta"><b class="num">{count}</b> <span>{g.count(count).replace(count, "").trim()}</span></p>
-      {
-        categories.length > 1 && (
-          <div class="filters" role="group" aria-label={g.filter}>
-            <button type="button" data-filter="" aria-pressed="true">
-              {g.all}
-            </button>
-            {categories.map((c) => (
-              <button type="button" data-filter={c.id} aria-pressed="false">
-                {c.label.toLocaleUpperCase(lang)}
+    <header class="intro">
+      <div class="lead">
+        <p class="eyebrow">240° · {t.roles.photographer}</p>
+        <h1 class="headline" set:html={g.headline} />
+      </div>
+      <div class="side">
+        <p class="meta"><b class="num">{count}</b> <span>{g.count(count).replace(count, "").trim()}</span></p>
+        {
+          categories.length > 1 && (
+            <div class="filters" role="group" aria-label={g.filter}>
+              <button type="button" data-filter="" aria-pressed="true">
+                {g.all}
               </button>
-            ))}
-          </div>
-        )
-      }
-    </div>
+              {categories.map((c) => (
+                <button type="button" data-filter={c.id} aria-pressed="false">
+                  {c.label.toLocaleUpperCase(lang)}
+                </button>
+              ))}
+            </div>
+          )
+        }
+      </div>
+    </header>
 
     <ul class="grid">
       {
@@ -205,10 +209,45 @@ const count = String(photos.length).padStart(2, "0");
       radial-gradient(40% 24% at 95% 60%, color-mix(in srgb, var(--signal) 7%, transparent), transparent 70%);
   }
 
+  .intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 28px clamp(32px, 6vw, 96px);
+    max-width: none;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--hair-3);
+  }
+
+  .lead {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-width: 0;
+  }
+
+  .headline {
+    margin: 0;
+    font-size: clamp(52px, 9.5vw, 148px);
+    font-weight: 700;
+    font-stretch: 78%;
+    letter-spacing: -0.035em;
+    line-height: 0.84;
+  }
+
+  .side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 22px;
+    max-width: 420px;
+    text-align: right;
+  }
+
   .meta {
     display: flex;
     align-items: baseline;
-    gap: 14px;
+    gap: 12px;
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.16em;
@@ -216,8 +255,7 @@ const count = String(photos.length).padStart(2, "0");
   }
 
   .meta .num {
-    font-family: var(--sans, inherit);
-    font-size: clamp(44px, 7vw, 88px);
+    font-size: clamp(40px, 5vw, 72px);
     font-weight: 700;
     font-stretch: 79%;
     letter-spacing: -0.03em;
@@ -225,42 +263,11 @@ const count = String(photos.length).padStart(2, "0");
     color: var(--signal);
   }
 
-  .headline {
-    margin: 0;
-    font-size: clamp(64px, 14vw, 200px);
-    font-weight: 700;
-    font-stretch: 78%;
-    letter-spacing: -0.035em;
-    line-height: 0.82;
-  }
-
-  .intro { max-width: none; }
-
-  /* Filters stay in reach while you scroll the wall. */
-  .filters {
-    position: sticky;
-    top: 64px;
-    z-index: 5;
-    padding: 12px 0;
-    background: linear-gradient(var(--ink) 70%, transparent);
-  }
-
-  .intro {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    max-width: 640px;
-  }
-
-  .intro p {
-    margin: 0;
-  }
-
   .filters {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px 28px;
-    padding-top: 6px;
+    justify-content: flex-end;
+    gap: 8px 24px;
   }
 
   .filters button {
@@ -526,6 +533,20 @@ const count = String(photos.length).padStart(2, "0");
     }
   }
 
+  /* Wide screens: a tighter, denser wall. Cells are smaller, so spans grow to
+     keep the same ratios (3:2 = 3×3, 3:4 = 2×4, square = 2×3, 3:1 = 4×2). */
+  @media (min-width: 1025px) {
+    .grid {
+      --cols: 8;
+      --gap: 8px;
+    }
+
+    .land { grid-column: span 3; grid-row: span 3; }
+    .port { grid-column: span 2; grid-row: span 4; }
+    .square { grid-column: span 2; grid-row: span 3; }
+    .pano { grid-column: span 4; grid-row: span 2; }
+  }
+
   @media (max-width: 1024px) {
     .grid {
       --cols: 4;
@@ -533,7 +554,17 @@ const count = String(photos.length).padStart(2, "0");
   }
 
   @media (max-width: 768px) {
+    .intro {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .side {
+      align-items: flex-start;
+      text-align: left;
+    }
+
     .filters {
+      justify-content: flex-start;
       gap: 0 22px;
       padding-top: 0;
     }
