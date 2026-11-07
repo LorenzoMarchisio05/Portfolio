@@ -19,6 +19,7 @@ const { t } = useI18n(Astro.url);
   <div data-par=".04" data-par-m="0">
   <header class="head" data-rise>
     <div class="title">
+      <i class="hand" aria-hidden="true"></i>
       <p class="eyebrow">000° · {t.roles.engineer}</p>
       <h2 class="headline" set:html={t.engineer.headline} />
     </div>
@@ -66,6 +67,41 @@ const { t } = useI18n(Astro.url);
     gap: 14px;
   }
 
+
+  /* Handoff from the hero ruler: its copper head, parked at 000°, draws a
+     hairline out as the section arrives. */
+  .hand {
+    display: block;
+    width: min(320px, 80vw);
+    height: 1px;
+    background: var(--hair-4);
+    position: relative;
+  }
+
+  .hand::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: -7px;
+    width: 2px;
+    height: 15px;
+    background: var(--signal);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .hand {
+        transform-origin: left;
+        animation: hand-draw linear both;
+        animation-timeline: view();
+        animation-range: entry 10% entry 90%;
+      }
+    }
+  }
+
+  @keyframes hand-draw {
+    from { transform: scaleX(0); }
+  }
 
   /* Sits right beside the headline, level with its last line. */
   .intro {
