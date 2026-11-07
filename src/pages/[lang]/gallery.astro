@@ -56,6 +56,9 @@ const count = String(photos.length).padStart(2, "0");
   description={g.description}
   image="/social/og-gallery.jpg"
 >
+  <style is:global>
+    html { --signal: #c8794a; --ink: #110b08; }
+  </style>
   <PageBar back={href("/#photography")} angle="240°" crumbs={[{ label: g.crumb }]} />
 
   <main>
@@ -64,7 +67,7 @@ const count = String(photos.length).padStart(2, "0");
     <div class="intro">
       <p class="eyebrow">240° · {t.roles.photographer}</p>
       <h1 class="headline" set:html={g.headline} />
-      <p class="meta">{g.count(count)}</p>
+      <p class="meta"><b class="num">{count}</b> <span>{g.count(count).replace(count, "").trim()}</span></p>
       {
         categories.length > 1 && (
           <div class="filters" role="group" aria-label={g.filter}>
@@ -83,10 +86,14 @@ const count = String(photos.length).padStart(2, "0");
 
     <ul class="grid">
       {
-        photos.map((p) => (
+        photos.map((p, i) => (
           <li class={p.shape} data-category={p.category}>
             <button class="shot" type="button" data-cursor="frame" data-full={p.src}>
               <img src={p.thumb} alt={p.alt} loading="lazy" decoding="async" />
+              <span class="tag" aria-hidden="true">
+                <i>{String(i + 1).padStart(2, "0")}</i>
+                {p.category && <i>{word(p.category).toLocaleUpperCase(lang)}</i>}
+              </span>
             </button>
           </li>
         ))
@@ -102,7 +109,7 @@ const count = String(photos.length).padStart(2, "0");
       <img alt="" />
       <span class="pip"></span>
     </figure>
-    <p class="keys" aria-hidden="true">{g.keys}</p>
+    <p class="keys" aria-hidden="true"><span class="at"></span> · {g.keys}</p>
     <a
       class="remove"
       href="mailto:me@lorenzomarchisio.me"
@@ -119,6 +126,7 @@ const count = String(photos.length).padStart(2, "0");
   const inbox = remove.href;
   const shots = Array.from(document.querySelectorAll<HTMLButtonElement>(".shot"));
   const filters = document.querySelectorAll<HTMLButtonElement>("[data-filter]");
+  const at = viewer.querySelector(".at")!;
   let current = shots[0];
 
   // A filtered-out photo leaves the grid entirely, so the dense packing closes
@@ -136,6 +144,8 @@ const count = String(photos.length).padStart(2, "0");
 
   const show = (shot: HTMLButtonElement) => {
     current = shot;
+    const shown = shots.filter((s) => !s.parentElement!.hidden);
+    at.textContent = `${String(shown.indexOf(shot) + 1).padStart(2, "0")} / ${String(shown.length).padStart(2, "0")}`;
     big.src = shot.dataset.full!;
     big.alt = shot.querySelector("img")!.alt;
     // No server and no email quota: the request leaves from the visitor's own
@@ -190,11 +200,49 @@ const count = String(photos.length).padStart(2, "0");
   }
 
   main .glow {
-    background: radial-gradient(
-      56% 30% at 10% 12%,
-      rgba(255, 47, 29, 0.07),
-      transparent 64%
-    );
+    background:
+      radial-gradient(56% 30% at 10% 12%, color-mix(in srgb, var(--signal) 12%, transparent), transparent 64%),
+      radial-gradient(40% 24% at 95% 60%, color-mix(in srgb, var(--signal) 7%, transparent), transparent 70%);
+  }
+
+  .meta {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: var(--warm);
+  }
+
+  .meta .num {
+    font-family: var(--sans, inherit);
+    font-size: clamp(44px, 7vw, 88px);
+    font-weight: 700;
+    font-stretch: 79%;
+    letter-spacing: -0.03em;
+    line-height: 0.9;
+    color: var(--signal);
+  }
+
+  .headline {
+    margin: 0;
+    font-size: clamp(64px, 14vw, 200px);
+    font-weight: 700;
+    font-stretch: 78%;
+    letter-spacing: -0.035em;
+    line-height: 0.82;
+  }
+
+  .intro { max-width: none; }
+
+  /* Filters stay in reach while you scroll the wall. */
+  .filters {
+    position: sticky;
+    top: 64px;
+    z-index: 5;
+    padding: 12px 0;
+    background: linear-gradient(var(--ink) 70%, transparent);
   }
 
   .intro {
@@ -298,8 +346,69 @@ const count = String(photos.length).padStart(2, "0");
     transition: box-shadow 140ms var(--ease);
   }
 
-  .shot:hover::after {
-    box-shadow: inset 0 0 0 1px rgba(242, 239, 233, 0.55);
+  .shot:hover::after,
+  .shot:focus-visible::after {
+    box-shadow: inset 0 0 0 1px var(--signal);
+  }
+
+  .shot { overflow: clip; }
+
+  .tag {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 34px 12px 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    font-style: normal;
+    color: var(--bone);
+    background: linear-gradient(transparent, rgba(12, 11, 10, 0.78));
+    opacity: 0;
+    translate: 0 8px;
+    transition: opacity 240ms var(--ease), translate 240ms var(--ease);
+    pointer-events: none;
+  }
+
+  .tag i { font-style: normal; }
+
+  .shot:hover .tag,
+  .shot:focus-visible .tag {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .shot img {
+      transition: scale 900ms var(--ease), filter 400ms linear;
+      filter: saturate(0.82) brightness(0.92);
+    }
+
+    .shot:hover img,
+    .shot:focus-visible img {
+      scale: 1.05;
+      filter: none;
+    }
+
+    @supports (animation-timeline: view()) {
+      .grid li {
+        animation: tile-in linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 55%;
+      }
+    }
+  }
+
+  @keyframes tile-in {
+    from { opacity: 0; translate: 0 36px; scale: 0.96; }
+  }
+
+  @media (pointer: coarse) {
+    .tag { display: none; }
+    .shot img { filter: none; }
   }
 
   /* ---- viewer ---- */
